@@ -4,111 +4,61 @@
   <meta charset="utf-8">
   <title>Voice Controlled Robot | Jenniefer Farhan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="../styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-  <header class="topbar">
-    <div class="topbar__inner">
-      <a class="brand" href="../index.html">
-        <span class="brand__mark"></span>
-        JENNIEFER FARHAN
-      </a>
-      <nav class="nav">
-        <a class="nav__link" href="../index.html#projects">Back to Projects</a>
-      </nav>
-    </div>
-  </header>
 
-  <main class="wrap">
-    <header class="project-header">
-      <span class="tag">Engineering Thesis</span>
+  <nav class="nav-wrap">
+    <a href="index.html" class="brand">Jenniefer <span>Farhan.</span></a>
+    <a href="index.html" class="btn-link">← Back to Home</a>
+  </nav>
+
+  <main class="container">
+    <header style="padding: 4rem 0;">
+      <span class="label">Engineering Thesis</span>
       <h1 class="h1">Voice Controlled Robot<br>(Wheelchair Implementation)</h1>
-      <p class="lead">
-        A self-sufficient robotic vehicle using speech recognition to perform navigation tasks, 
-        [cite_start]engineered to assist individuals with disabilities[cite: 51, 56].
-      </p>
-      
-      <div class="tech-stack">
-        <span class="tech-item">Arduino Uno</span>
-        <span class="tech-item">C++</span>
-        <span class="tech-item">MIT App Inventor</span>
-        <span class="tech-item">HC-05 Bluetooth</span>
-        <span class="tech-item">Buck Converter</span>
-      </div>
     </header>
 
-    <div class="section" style="margin-top: 0;">
-      <div class="section__label">
-        <h2 class="h2">Overview</h2>
-      </div>
+    <section style="display: grid; grid-template-columns: 1fr 2fr; gap: 3rem; margin-bottom: 4rem;">
       <div>
-        <p class="p">
-          The primary objective of this project was to design a system that minimizes human intervention in mobility 
-          devices. By utilizing an Android-based voice recognition application, we successfully controlled a robotic 
-          [cite_start]wheelchair via Bluetooth connectivity[cite: 53, 54].
-        </p>
-        <p class="p">
-          The system processes voice commands (Forward, Backward, Left, Right, Stop) and translates them into 
-          [cite_start]motor signals driven by an Arduino microcontroller[cite: 308].
-        </p>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section__label">
-        <h2 class="h2">Technical Architecture</h2>
-      </div>
-      <div class="grid" style="grid-template-columns: 1fr;">
-        
-        <div class="tile">
-          <h3 class="h3">1. Hardware Interface</h3>
-          <p class="p">
-            [cite_start]The core is the <strong>Arduino Uno (ATmega328)</strong>, which acts as the brain of the robot[cite: 162]. 
-            To handle wireless communication, we integrated the <strong>HC-05 Bluetooth Module</strong>, operating within a 
-            [cite_start]100m range with a data transfer speed of 3Mbps[cite: 275].
-          </p>
-          
-        </div>
-
-        <div class="tile">
-          <h3 class="h3">2. Power Management (Buck Converter)</h3>
-          <p class="p">
-            A critical challenge was powering the 12V DC Geared Motors (60 RPM) while maintaining sufficient torque for a load 
-            [cite_start]of 80kg[cite: 315, 317].
-          </p>
-          <p class="p">
-            We implemented a <strong>Buck Converter (DC-to-DC)</strong> to step down voltage and step up current. This ensured 
-            [cite_start]high efficiency (losses restricted to 5-15%) and stable power delivery under varying load conditions[cite: 331, 333].
-          </p>
-           
-        </div>
-
-        <div class="tile">
-          <h3 class="h3">3. Android Integration</h3>
-          <p class="p">
-            The user interface was built using <strong>MIT App Inventor</strong>. The app handles Speech-to-Text conversion 
-            [cite_start]utilizing Google's speech recognition API, then transmits the text string via Bluetooth to the Arduino[cite: 256].
-          </p>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section__label">
-        <h2 class="h2">Results & Conclusion</h2>
-      </div>
-      <div>
-        <ul style="color: var(--text-muted); list-style: disc; padding-left: 20px;">
-          [cite_start]<li>Successfully ported the robotic wheel prototype to a real wheelchair chassis[cite: 363].</li>
-          [cite_start]<li>Achieved seamless voice command processing for 5 distinct navigation states[cite: 367].</li>
-          [cite_start]<li>Integrated Relays to safely drive high-current loads from the low-voltage Arduino signals[cite: 364].</li>
+        <h3 class="h3">Tech Stack</h3>
+        <ul style="list-style: none; padding: 0; color: var(--text-muted);">
+          [cite_start]<li>Arduino Uno (ATmega328) [cite: 163]</li>
+          [cite_start]<li>MIT App Inventor [cite: 164]</li>
+          [cite_start]<li>HC-05 Bluetooth [cite: 159]</li>
+          [cite_start]<li>L293D Motor Driver [cite: 225]</li>
         </ul>
       </div>
-    </div>
+      <div>
+        <h3 class="h3">Overview</h3>
+        <p>
+          This project aimed to minimize human intervention for mobility devices. [cite_start]I engineered a system that allows users to control a wheelchair using simple voice commands (Forward, Backward, Left, Right, Stop) via an Android application[cite: 152, 201].
+        </p>
+      </div>
+    </section>
+    
+    
 
+    <div class="section">
+      <h2 class="h2">Technical Implementation</h2>
+      
+      <h3 class="h3">1. Power Management</h3>
+      <p class="project-desc">
+        [cite_start]A critical challenge was powering 12V DC Geared Motors (60 RPM) while maintaining torque for an 80kg load capacity[cite: 317]. [cite_start]I implemented a <strong>Buck Converter</strong> (DC-to-DC) to step down voltage and step up current, ensuring efficiency losses were restricted to 5-15%[cite: 331, 333].
+      </p>
+       
+
+      <h3 class="h3" style="margin-top: 2rem;">2. Hardware Interface</h3>
+      <p class="project-desc">
+        The system uses an Arduino Uno as the central controller. [cite_start]The <strong>HC-05 Bluetooth Module</strong> handles data transmission from the phone within a 100m range [cite: 161][cite_start], while the <strong>L293D Motor Driver</strong> acts as the interface between the low-voltage microcontroller and the high-power motors[cite: 222].
+      </p>
+
+      <h3 class="h3" style="margin-top: 2rem;">3. Software Logic</h3>
+      <p class="project-desc">
+        [cite_start]The Android app uses Google's speech recognition API to convert voice to text[cite: 165]. [cite_start]This text is sent via Bluetooth to the Arduino, which executes specific functions (e.g., `digitalWrite` High/Low) to control wheel rotation direction[cite: 289].
+      </p>
+    </div>
   </main>
 </body>
 </html>
