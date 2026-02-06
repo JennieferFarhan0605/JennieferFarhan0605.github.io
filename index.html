@@ -1,10 +1,586 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <title>My GitHub Page</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Jenniefer Farhan — Digital Marketing & IT Project Coordinator portfolio" />
+  <title>Jenniefer Farhan | Digital Marketing & IT Projects</title>
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #070A12;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.085);
+      --stroke: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --muted2: rgba(255,255,255,.55);
+      --shadow: 0 18px 70px rgba(0,0,0,.55);
+
+      --a: #7C5CFF;
+      --b: #00E5FF;
+      --c: #25F4B7;
+
+      --radius: 22px;
+      --radius2: 16px;
+      --max: 1120px;
+    }
+
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 600px at 20% 15%, rgba(124,92,255,.25), transparent 55%),
+        radial-gradient(900px 600px at 80% 10%, rgba(0,229,255,.18), transparent 55%),
+        radial-gradient(900px 700px at 60% 85%, rgba(37,244,183,.10), transparent 60%),
+        linear-gradient(180deg, #050712 0%, #070A12 55%, #060813 100%);
+      color: var(--text);
+      overflow-x:hidden;
+    }
+
+    a{ color: inherit; text-decoration:none; }
+    .wrap{ max-width: var(--max); margin: 0 auto; padding: 28px 20px 80px; }
+
+    /* Top nav */
+    .nav{
+      position: sticky; top: 16px; z-index: 20;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(7,10,18,.55);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 12px 50px rgba(0,0,0,.35);
+      border-radius: 999px;
+      padding: 10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; padding: 6px 10px;
+    }
+    .dot{
+      width: 11px; height: 11px; border-radius: 999px;
+      background: linear-gradient(135deg,var(--a),var(--b),var(--c));
+      box-shadow: 0 0 0 6px rgba(124,92,255,.12);
+    }
+    .brand strong{ font-size: 14px; letter-spacing: .3px; }
+    .links{ display:flex; gap: 10px; align-items:center; padding-right: 6px; }
+    .links a{
+      font-size: 13px;
+      color: var(--muted);
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: .2s ease;
+    }
+    .links a:hover{
+      color: var(--text);
+      border-color: rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+    }
+
+    /* Hero */
+    .hero{
+      margin-top: 22px;
+      border-radius: var(--radius);
+      padding: 34px 26px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow:hidden;
+    }
+    .glow{
+      position:absolute; inset: -2px;
+      background:
+        radial-gradient(600px 220px at 15% 10%, rgba(124,92,255,.25), transparent 65%),
+        radial-gradient(520px 220px at 75% 0%, rgba(0,229,255,.18), transparent 60%),
+        radial-gradient(540px 240px at 60% 100%, rgba(37,244,183,.12), transparent 60%);
+      pointer-events:none;
+      filter: blur(6px);
+      opacity:.9;
+    }
+    .heroGrid{
+      position: relative;
+      display:grid;
+      grid-template-columns: 1.4fr .9fr;
+      gap: 22px;
+      align-items: start;
+    }
+    @media (max-width: 920px){
+      .heroGrid{ grid-template-columns: 1fr; }
+    }
+
+    .kicker{
+      display:inline-flex;
+      gap: 10px; align-items:center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      font-size: 13px;
+      width: fit-content;
+    }
+    .pill{
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(124,92,255,.14);
+      border: 1px solid rgba(124,92,255,.25);
+      color: rgba(255,255,255,.86);
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    h1{
+      margin: 14px 0 10px;
+      font-size: clamp(34px, 4.2vw, 56px);
+      line-height: 1.02;
+      letter-spacing: -1.2px;
+    }
+    .subtitle{
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 62ch;
+      margin-bottom: 18px;
+    }
+
+    .ctaRow{ display:flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.88);
+      font-weight: 600;
+      font-size: 14px;
+      transition: .2s ease;
+      cursor:pointer;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.09); }
+    .btn.primary{
+      border-color: rgba(124,92,255,.40);
+      background: linear-gradient(135deg, rgba(124,92,255,.30), rgba(0,229,255,.15));
+      box-shadow: 0 14px 40px rgba(124,92,255,.15);
+    }
+    .btn.primary:hover{ box-shadow: 0 18px 56px rgba(124,92,255,.20); }
+
+    /* Right card */
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      padding: 18px;
+    }
+    .miniTitle{ font-size: 13px; color: var(--muted2); margin: 0 0 10px; }
+    .bigRole{
+      font-size: 18px; font-weight: 700; margin: 0 0 8px;
+      letter-spacing: -.2px;
+    }
+    .meta{
+      display:grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .metaItem{
+      display:flex; justify-content:space-between; gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .metaItem strong{ color: rgba(255,255,255,.88); font-weight: 600; }
+
+    /* Sections */
+    .section{
+      margin-top: 26px;
+      display:grid;
+      grid-template-columns: .55fr 1fr;
+      gap: 18px;
+      align-items:start;
+    }
+    @media (max-width: 920px){
+      .section{ grid-template-columns: 1fr; }
+    }
+    .section h2{
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: -.2px;
+    }
+    .section p.lead{
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+      max-width: 46ch;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 14px;
+    }
+    @media (max-width: 720px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+    .tile{
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      padding: 16px 16px 14px;
+      transition: .2s ease;
+      position:relative;
+      overflow:hidden;
+    }
+    .tile:hover{ transform: translateY(-2px); background: rgba(255,255,255,.065); }
+
+    .tagRow{ display:flex; flex-wrap:wrap; gap: 8px; margin-top: 10px; }
+    .tag{
+      font-size: 12px;
+      color: rgba(255,255,255,.72);
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+    }
+    .tile h3{
+      margin: 0 0 6px;
+      font-size: 15px;
+      letter-spacing: -.2px;
+    }
+    .tile p{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    /* Timeline */
+    .timeline{
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      padding: 16px;
+    }
+    .tItem{
+      display:grid;
+      grid-template-columns: 18px 1fr;
+      gap: 12px;
+      padding: 12px 6px;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .tItem:first-child{ border-top: 0; padding-top: 4px; }
+    .tDot{
+      width: 10px; height: 10px; margin-top: 6px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(124,92,255,.9), rgba(0,229,255,.7));
+      box-shadow: 0 0 0 6px rgba(124,92,255,.12);
+    }
+    .tHead{
+      display:flex; flex-wrap:wrap; justify-content:space-between; gap: 10px;
+      align-items: baseline;
+    }
+    .tHead strong{ font-size: 14px; }
+    .tHead span{ color: var(--muted2); font-size: 12px; }
+    .tBody{ color: var(--muted); font-size: 13px; line-height: 1.65; margin-top: 6px; }
+    .tBody ul{ margin: 8px 0 0 16px; padding: 0; }
+    .tBody li{ margin: 6px 0; }
+
+    /* Footer */
+    .footer{
+      margin-top: 28px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding: 18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .footer a{ color: rgba(255,255,255,.82); text-decoration: underline; text-underline-offset: 3px; }
+
+    /* Motion */
+    @media (prefers-reduced-motion: no-preference){
+      .fadeIn{ animation: rise .7s ease both; }
+      .delay1{ animation-delay: .05s; }
+      .delay2{ animation-delay: .12s; }
+      .delay3{ animation-delay: .18s; }
+      @keyframes rise{
+        from{ opacity:0; transform: translateY(10px); }
+        to{ opacity:1; transform: translateY(0); }
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Hello, I’m Jenniefer</h1>
-  <p>This is my free GitHub website.</p>
+  <div class="wrap">
+    <div class="nav fadeIn">
+      <div class="brand">
+        <div class="dot"></div>
+        <strong>Jenniefer Farhan</strong>
+      </div>
+      <div class="links">
+        <a href="#about">About</a>
+        <a href="#strengths">Strengths</a>
+        <a href="#projects">Projects</a>
+        <a href="#experience">Experience</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+
+    <section class="hero fadeIn delay1">
+      <div class="glow"></div>
+
+      <div class="heroGrid">
+        <div>
+          <div class="kicker">
+            <span class="pill">EU-ready profile</span>
+            Digital Marketing • IT Project Coordination • Analytics
+          </div>
+
+          <h1>Engineering mindset for<br/>digital & IT delivery.</h1>
+
+          <p class="subtitle">
+            Engineering graduate with structured research experience, transitioning into <b>Digital Marketing</b> and <b>IT Project Management</b>.
+            I support planning, execution, documentation, and performance tracking—connecting technical work with clear outcomes.
+          </p>
+
+          <div class="ctaRow">
+            <!-- Replace # with your actual files/links if you add them to the repo -->
+            <a class="btn primary" href="#contact">Let’s connect</a>
+            <a class="btn" href="#projects">View projects</a>
+            <a class="btn" href="mailto:jenniefarhan@gmail.com">Email</a>
+          </div>
+        </div>
+
+        <aside class="card fadeIn delay2">
+          <p class="miniTitle">Current focus</p>
+          <p class="bigRole">Digital Marketing & IT Project Coordinator</p>
+          <div class="meta">
+            <div class="metaItem"><span>Location</span><strong>Guwahati, India</strong></div>
+            <div class="metaItem"><span>Email</span><strong>jenniefarhan@gmail.com</strong></div>
+            <div class="metaItem"><span>Phone</span><strong>+91 8453826055</strong></div>
+            <div class="metaItem"><span>Languages</span><strong>English • Hindi • Assamese</strong></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section fadeIn delay2">
+      <div>
+        <h2>About</h2>
+        <p class="lead">
+          I bring a structured, engineering-based approach to modern digital work—planning, tracking, and measuring progress with clarity.
+        </p>
+      </div>
+
+      <div class="tile">
+        <h3>What I do</h3>
+        <p>
+          I support digital and IT initiatives by organizing tasks, coordinating stakeholders, creating clear documentation,
+          and using data to evaluate performance and improve workflows.
+        </p>
+        <div class="tagRow">
+          <span class="tag">Project coordination</span>
+          <span class="tag">Reporting & documentation</span>
+          <span class="tag">Data & insights</span>
+          <span class="tag">Process improvement</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- STRENGTHS -->
+    <section id="strengths" class="section fadeIn delay2">
+      <div>
+        <h2>Strengths</h2>
+        <p class="lead">
+          A practical mix of communication, structure, and analytics—suited to entry-level EU roles in digital operations or project coordination.
+        </p>
+      </div>
+
+      <div class="grid">
+        <div class="tile">
+          <h3>Structured delivery</h3>
+          <p>Break complex work into clear milestones, prioritize tasks, and keep progress visible for stakeholders.</p>
+          <div class="tagRow"><span class="tag">Planning</span><span class="tag">Tracking</span><span class="tag">Ownership</span></div>
+        </div>
+
+        <div class="tile">
+          <h3>Clear communication</h3>
+          <p>Create concise updates, stakeholder-ready summaries, and documentation that supports decisions.</p>
+          <div class="tagRow"><span class="tag">Stakeholders</span><span class="tag">Reporting</span><span class="tag">Documentation</span></div>
+        </div>
+
+        <div class="tile">
+          <h3>Data-driven mindset</h3>
+          <p>Use basic analytics and structured reporting to evaluate outcomes and recommend improvements.</p>
+          <div class="tagRow"><span class="tag">Excel</span><span class="tag">KPIs</span><span class="tag">Insights</span></div>
+        </div>
+
+        <div class="tile">
+          <h3>Process improvement</h3>
+          <p>Identify workflow gaps, standardize documentation, and improve coordination efficiency.</p>
+          <div class="tagRow"><span class="tag">Efficiency</span><span class="tag">Consistency</span><span class="tag">Quality</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="section fadeIn delay3">
+      <div>
+        <h2>Projects</h2>
+        <p class="lead">
+          Self-guided projects to demonstrate project structure, digital thinking, and measurable outputs.
+        </p>
+      </div>
+
+      <div class="grid">
+        <div class="tile">
+          <h3>Digital Campaign Plan & Performance Report</h3>
+          <p>
+            Designed a mock campaign (audience, content calendar, KPIs) and produced a performance summary with optimization insights.
+          </p>
+          <div class="tagRow">
+            <span class="tag">Content calendar</span>
+            <span class="tag">KPIs</span>
+            <span class="tag">Reporting</span>
+          </div>
+        </div>
+
+        <div class="tile">
+          <h3>IT Project Rollout Simulation</h3>
+          <p>
+            Defined scope, milestones, risks, and dependencies for a hypothetical IT rollout; created status reporting and task tracking.
+          </p>
+          <div class="tagRow">
+            <span class="tag">Scope</span>
+            <span class="tag">Risks</span>
+            <span class="tag">Milestones</span>
+          </div>
+        </div>
+
+        <div class="tile">
+          <h3>Excel Dashboard for Operational Reporting</h3>
+          <p>
+            Built an Excel dashboard concept using structured datasets, summaries, and charts to support decision-making.
+          </p>
+          <div class="tagRow">
+            <span class="tag">Excel</span>
+            <span class="tag">Dashboards</span>
+            <span class="tag">Data</span>
+          </div>
+        </div>
+
+        <div class="tile">
+          <h3>Content & Online Presence Optimization</h3>
+          <p>
+            Created audience personas and content structure guidelines; drafted sample posts and engagement improvement ideas.
+          </p>
+          <div class="tagRow">
+            <span class="tag">Personas</span>
+            <span class="tag">Content</span>
+            <span class="tag">Engagement</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience" class="section fadeIn delay3">
+      <div>
+        <h2>Experience</h2>
+        <p class="lead">
+          Research experience framed with project delivery, documentation, and stakeholder communication—relevant for EU roles.
+        </p>
+      </div>
+
+      <div class="timeline">
+        <div class="tItem">
+          <div class="tDot"></div>
+          <div>
+            <div class="tHead">
+              <strong>Research Scholar / Project & Research Associate — NERERL, IIT Guwahati</strong>
+              <span>1 year</span>
+            </div>
+            <div class="tBody">
+              Supported structured research initiatives in a deadline-driven environment, coordinating tasks and reporting progress.
+              <ul>
+                <li>Coordinated project tasks, schedules, and documentation across academic stakeholders</li>
+                <li>Prepared reports and presentations to communicate findings clearly and professionally</li>
+                <li>Supported analysis and synthesis of data to enable informed decisions and conclusions</li>
+                <li>Improved workflow consistency through structured documentation and task organization</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="tItem">
+          <div class="tDot"></div>
+          <div>
+            <div class="tHead">
+              <strong>Education — B.E. Electrical Engineering</strong>
+              <span>Assam Engineering College (Gauhati University), 2020</span>
+            </div>
+            <div class="tBody">
+              Strong analytical foundation, engineering discipline, and problem-solving mindset.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section fadeIn delay3">
+      <div>
+        <h2>Contact</h2>
+        <p class="lead">
+          For EU roles in Digital Operations, Marketing Ops, IT Project Coordination, or PMO.
+        </p>
+      </div>
+
+      <div class="grid">
+        <div class="tile">
+          <h3>Email</h3>
+          <p><a href="mailto:jenniefarhan@gmail.com">jenniefarhan@gmail.com</a></p>
+          <div class="tagRow"><span class="tag">Fast response</span><span class="tag">Professional</span></div>
+        </div>
+        <div class="tile">
+          <h3>Phone</h3>
+          <p><a href="tel:+918453826055">+91 8453826055</a></p>
+          <div class="tagRow"><span class="tag">WhatsApp</span><span class="tag">Calls</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      <div>© <span id="year"></span> Jenniefer Farhan • Portfolio</div>
+      <div>
+        Built with GitHub Pages • <a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to top</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
