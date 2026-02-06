@@ -16,7 +16,7 @@
 
   <main class="container">
     <header style="padding: 4rem 0;">
-      <span class="label">Engineering Thesis</span>
+      <span class="label">Engineering Thesis & IoT Integration</span>
       <h1 class="h1">Voice Controlled Robot<br>(Wheelchair Implementation)</h1>
     </header>
 
@@ -24,40 +24,72 @@
       <div>
         <h3 class="h3">Tech Stack</h3>
         <ul style="list-style: none; padding: 0; color: var(--text-muted);">
-          [cite_start]<li>Arduino Uno (ATmega328) [cite: 163]</li>
-          [cite_start]<li>MIT App Inventor [cite: 164]</li>
-          [cite_start]<li>HC-05 Bluetooth [cite: 159]</li>
-          [cite_start]<li>L293D Motor Driver [cite: 225]</li>
+          <li><strong>Core:</strong> Arduino Uno (ATmega328)</li>
+          <li><strong>Software:</strong> MIT App Inventor (Android)</li>
+          <li><strong>Comms:</strong> HC-05 Bluetooth Module</li>
+          <li><strong>Drive:</strong> L293D Motor Driver & Relays</li>
+          <li><strong>Power:</strong> Buck Converter (DC/DC)</li>
         </ul>
       </div>
       <div>
-        <h3 class="h3">Overview</h3>
+        <h3 class="h3">Executive Overview</h3>
         <p>
-          This project aimed to minimize human intervention for mobility devices. [cite_start]I engineered a system that allows users to control a wheelchair using simple voice commands (Forward, Backward, Left, Right, Stop) via an Android application[cite: 152, 201].
+          This project was engineered to address a critical accessibility gap: minimizing human intervention for mobility devices.
+          By integrating Android OS with embedded systems, I developed a hands-free navigation aid that processes acoustic input into mechanical motion.
+        </p>
+        <p>
+          The system allows users to control a robotic wheelchair using five distinct voice commands
+          (Forward, Backward, Left, Right, Stop), translating digital signals into high-torque physical movement.
         </p>
       </div>
     </section>
-    
-    
 
     <div class="section">
       <h2 class="h2">Technical Implementation</h2>
       
-      <h3 class="h3">1. Power Management</h3>
-      <p class="project-desc">
-        [cite_start]A critical challenge was powering 12V DC Geared Motors (60 RPM) while maintaining torque for an 80kg load capacity[cite: 317]. [cite_start]I implemented a <strong>Buck Converter</strong> (DC-to-DC) to step down voltage and step up current, ensuring efficiency losses were restricted to 5-15%[cite: 331, 333].
-      </p>
-       
+      <div style="margin-bottom: 3rem;">
+        <h3 class="h3">1. Power Engineering & Load Management</h3>
+        <p class="project-desc">
+          Porting the prototype to a real-world wheelchair presented a significant challenge:
+          the system needed to withstand a <strong>load capacity of 80kg</strong>.
+          Standard microcontroller outputs are insufficient for the 12V 60RPM DC Geared Motors required for this torque.
+        </p>
+        <p class="project-desc">
+          To solve this, I engineered a power stage using a <strong>Buck Converter (DC-to-DC)</strong>.
+          This Switched-Mode Power Supply (SMPS) steps down voltage while stepping up current,
+          ensuring the motors receive sufficient drive without draining the battery inefficiently.
+          This architecture restricted efficiency losses to just 5–15%, ensuring consistent performance under varying load conditions.
+        </p>
+      </div>
 
-      <h3 class="h3" style="margin-top: 2rem;">2. Hardware Interface</h3>
-      <p class="project-desc">
-        The system uses an Arduino Uno as the central controller. [cite_start]The <strong>HC-05 Bluetooth Module</strong> handles data transmission from the phone within a 100m range [cite: 161][cite_start], while the <strong>L293D Motor Driver</strong> acts as the interface between the low-voltage microcontroller and the high-power motors[cite: 222].
-      </p>
+      <div style="margin-bottom: 3rem;">
+        <h3 class="h3">2. Hardware Interface & Logic</h3>
+        <p class="project-desc">
+          The <strong>Arduino Uno</strong> serves as the central processing unit.
+          It interfaces with the <strong>L293D Motor Driver</strong>, which acts as a bridge between
+          low-voltage logic (5V) and the high-power motor requirements.
+        </p>
+        <p class="project-desc">
+          For directional control, I implemented H-bridge logic.
+          To execute a "Left" turn, the system sends a reverse DC supply to the left motor and a positive DC supply to the right motor,
+          pivoting the chassis on its axis.
+          High-current relays were integrated to safely isolate the microcontroller from the heavy load of the wheelchair motors.
+        </p>
+      </div>
 
-      <h3 class="h3" style="margin-top: 2rem;">3. Software Logic</h3>
-      <p class="project-desc">
-        [cite_start]The Android app uses Google's speech recognition API to convert voice to text[cite: 165]. [cite_start]This text is sent via Bluetooth to the Arduino, which executes specific functions (e.g., `digitalWrite` High/Low) to control wheel rotation direction[cite: 289].
-      </p>
+      <div style="margin-bottom: 3rem;">
+        <h3 class="h3">3. Signal Processing & Communication</h3>
+        <p class="project-desc">
+          The control interface was built using <strong>MIT App Inventor</strong>,
+          leveraging Google Speech Recognition to transcode voice input into text strings.
+        </p>
+        <p class="project-desc">
+          These strings are transmitted via the <strong>HC-05 Bluetooth Module</strong> to the Arduino.
+          I programmed the microcontroller to initiate serial communication at a baud rate of 9600.
+          The code continuously polls for incoming characters; for example, if the data stream contains
+          “Forward,” the system triggers Pins 10 and 12 to HIGH, engaging the forward drive sequence.
+        </p>
+      </div>
     </div>
   </main>
 </body>
