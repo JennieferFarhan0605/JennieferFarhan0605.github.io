@@ -9,7 +9,7 @@
 
   /* Fixed header sizing */
   --topbar-height: 96px;
-  --topbar-gap: 24px;
+  --topbar-gap: 28px;
 
   --radius-lg: 22px;
   --radius-md: 16px;
@@ -30,7 +30,7 @@ body{
   margin: 0;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 
-  /* IMPORTANT: this is what prevents content from going under the header */
+  /* CRITICAL: prevents content from going under the fixed header */
   padding-top: calc(var(--topbar-height) + var(--topbar-gap));
 
   background:
@@ -38,7 +38,7 @@ body{
     radial-gradient(800px 420px at 85% 20%, rgba(255,79,163,.18), rgba(255,255,255,0) 60%),
     linear-gradient(180deg, var(--white) 0%, var(--white) 100%);
 
-  color: rgba(0,0,0,.86);
+  color: rgba(0,0,0,.88);
 }
 
 a{
@@ -51,7 +51,7 @@ strong{
 }
 
 /* ================================
-   FIXED TOP BAR
+   FIXED TOP BAR (OPAQUE)
 ================================ */
 .topbar{
   position: fixed;
@@ -64,9 +64,11 @@ strong{
   display: flex;
   align-items: center;
 
-  background: rgba(255,255,255,.96);
-  border-bottom: 1px solid rgba(255,79,163,.28);
-  box-shadow: 0 10px 30px rgba(255,79,163,.18);
+  /* FULLY OPAQUE */
+  background-color: var(--white);
+
+  border-bottom: 2px solid rgba(255,79,163,.45);
+  box-shadow: 0 12px 32px rgba(255,79,163,.25);
 }
 
 .topbar__inner{
@@ -92,7 +94,7 @@ strong{
   height: 12px;
   border-radius: 50%;
   background: var(--pink);
-  box-shadow: 0 0 0 6px rgba(255,79,163,.22);
+  box-shadow: 0 0 0 6px rgba(255,79,163,.30);
 }
 
 .brand__name{
@@ -101,29 +103,31 @@ strong{
   letter-spacing: .2px;
 }
 
+/* ================================
+   NAVIGATION
+================================ */
 .nav{
   display: flex;
-  gap: 6px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .nav a{
   font-size: 14px;
-  padding: 10px 12px;
+  padding: 10px 14px;
   border-radius: 999px;
-  color: rgba(0,0,0,.72);
-  transition: all .18s ease;
+  color: rgba(0,0,0,.80);
+  transition: background .18s ease, color .18s ease;
 }
 
 .nav a:hover{
-  background: rgba(255,79,163,.12);
-  color: rgba(0,0,0,.88);
+  background: rgba(255,79,163,.15);
+  color: rgba(0,0,0,.95);
 }
 
 /* ================================
    ANCHOR OFFSET FIX
 ================================ */
-/* This guarantees anchor jumps never hide content */
 section[id]{
   scroll-margin-top: calc(var(--topbar-height) + var(--topbar-gap));
 }
@@ -134,24 +138,24 @@ section[id]{
 .wrap{
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 20px 90px;
+  padding: 0 20px 96px;
 }
 
 /* ================================
    HERO
 ================================ */
 .hero{
-  background: rgba(255,255,255,.9);
-  border: 1px solid rgba(255,79,163,.24);
+  background: var(--white);
+  border: 2px solid rgba(255,79,163,.35);
   border-radius: var(--radius-lg);
-  box-shadow: 0 18px 60px rgba(255,79,163,.16);
-  padding: 40px 28px;
+  box-shadow: 0 20px 60px rgba(255,79,163,.20);
+  padding: 42px 30px;
 }
 
 .hero__grid{
   display: grid;
   grid-template-columns: 1.4fr .9fr;
-  gap: 28px;
+  gap: 32px;
 }
 
 @media (max-width: 900px){
@@ -164,25 +168,25 @@ section[id]{
   display: inline-flex;
   gap: 10px;
   align-items: center;
-  padding: 8px 14px;
+  padding: 9px 16px;
   border-radius: 999px;
-  background: rgba(255,79,163,.12);
-  border: 1px solid rgba(255,79,163,.32);
+  background: rgba(255,79,163,.14);
+  border: 1px solid rgba(255,79,163,.38);
   font-size: 13px;
 }
 
 .pill{
   background: var(--pink);
   color: var(--white);
-  padding: 6px 10px;
+  padding: 6px 11px;
   border-radius: 999px;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 12px;
 }
 
 .h1{
-  margin: 16px 0 12px;
-  font-size: clamp(36px, 4.4vw, 56px);
+  margin: 18px 0 14px;
+  font-size: clamp(38px, 4.6vw, 56px);
   line-height: 1.05;
   letter-spacing: -1px;
 }
@@ -190,23 +194,26 @@ section[id]{
 .subtitle{
   font-size: 16px;
   line-height: 1.65;
-  color: rgba(0,0,0,.70);
-  max-width: 65ch;
+  color: rgba(0,0,0,.72);
+  max-width: 66ch;
 }
 
 .cta{
-  margin-top: 20px;
+  margin-top: 22px;
   display: flex;
-  gap: 12px;
+  gap: 14px;
   flex-wrap: wrap;
 }
 
+/* ================================
+   BUTTONS
+================================ */
 .btn{
-  padding: 13px 16px;
+  padding: 14px 18px;
   border-radius: 14px;
-  border: 1px solid rgba(255,79,163,.35);
+  border: 2px solid rgba(255,79,163,.40);
   background: var(--white);
-  font-weight: 700;
+  font-weight: 800;
   font-size: 14px;
   cursor: pointer;
   transition: transform .15s ease, background .15s ease;
@@ -220,17 +227,21 @@ section[id]{
 .btn--primary{
   background: var(--pink);
   color: var(--white);
-  box-shadow: 0 14px 40px rgba(255,79,163,.30);
+  box-shadow: 0 16px 44px rgba(255,79,163,.40);
+}
+
+.btn--primary:hover{
+  background: #ff3897;
 }
 
 /* ================================
    CARD
 ================================ */
 .card{
-  background: rgba(255,255,255,.92);
-  border: 1px solid rgba(255,79,163,.24);
+  background: var(--white);
+  border: 2px solid rgba(255,79,163,.35);
   border-radius: var(--radius-lg);
-  padding: 20px;
+  padding: 22px;
 }
 
 .miniTitle{
@@ -240,22 +251,22 @@ section[id]{
 
 .bigRole{
   font-size: 18px;
-  font-weight: 800;
-  margin: 6px 0 10px;
+  font-weight: 900;
+  margin: 6px 0 12px;
 }
 
 .meta{
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
 .metaItem{
   display: flex;
   justify-content: space-between;
-  padding: 10px 12px;
+  padding: 12px 14px;
   border-radius: var(--radius-md);
-  background: rgba(255,79,163,.08);
-  border: 1px solid rgba(255,79,163,.22);
+  background: rgba(255,79,163,.10);
+  border: 1px solid rgba(255,79,163,.30);
   font-size: 13px;
 }
 
@@ -263,10 +274,10 @@ section[id]{
    SECTIONS
 ================================ */
 .section{
-  margin-top: 48px;
+  margin-top: 56px;
   display: grid;
   grid-template-columns: .55fr 1fr;
-  gap: 22px;
+  gap: 26px;
 }
 
 @media (max-width: 900px){
@@ -281,10 +292,10 @@ section[id]{
 }
 
 .lead{
-  margin-top: 10px;
+  margin-top: 12px;
   font-size: 14px;
-  line-height: 1.7;
-  color: rgba(0,0,0,.68);
+  line-height: 1.75;
+  color: rgba(0,0,0,.70);
 }
 
 /* ================================
@@ -293,7 +304,7 @@ section[id]{
 .grid{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  gap: 18px;
 }
 
 @media (max-width: 720px){
@@ -303,56 +314,56 @@ section[id]{
 }
 
 .tile{
-  background: rgba(255,255,255,.92);
-  border: 1px solid rgba(255,79,163,.24);
+  background: var(--white);
+  border: 2px solid rgba(255,79,163,.30);
   border-radius: var(--radius-lg);
-  padding: 18px;
-  box-shadow: 0 12px 30px rgba(255,79,163,.14);
+  padding: 20px;
+  box-shadow: 0 14px 36px rgba(255,79,163,.20);
 }
 
 .h3{
   font-size: 15px;
-  font-weight: 800;
-  margin: 0 0 6px;
+  font-weight: 900;
+  margin: 0 0 8px;
 }
 
 .p{
   font-size: 13px;
-  line-height: 1.65;
+  line-height: 1.7;
   color: rgba(0,0,0,.72);
 }
 
 .tags{
-  margin-top: 10px;
+  margin-top: 12px;
   display: flex;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
 .tag{
-  padding: 6px 10px;
+  padding: 7px 12px;
   font-size: 12px;
   border-radius: 999px;
-  background: rgba(255,79,163,.12);
-  border: 1px solid rgba(255,79,163,.28);
+  background: rgba(255,79,163,.18);
+  border: 1px solid rgba(255,79,163,.40);
 }
 
 /* ================================
    TIMELINE
 ================================ */
 .timeline{
-  background: rgba(255,255,255,.92);
-  border: 1px solid rgba(255,79,163,.24);
+  background: var(--white);
+  border: 2px solid rgba(255,79,163,.35);
   border-radius: var(--radius-lg);
-  padding: 20px;
+  padding: 22px;
 }
 
 .tItem{
   display: grid;
   grid-template-columns: 18px 1fr;
-  gap: 14px;
-  padding: 14px 0;
-  border-top: 1px solid rgba(255,79,163,.24);
+  gap: 16px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(255,79,163,.35);
 }
 
 .tItem:first-child{
@@ -364,7 +375,7 @@ section[id]{
   height: 10px;
   border-radius: 50%;
   background: var(--pink);
-  box-shadow: 0 0 0 6px rgba(255,79,163,.24);
+  box-shadow: 0 0 0 6px rgba(255,79,163,.35);
 }
 
 .tHead{
@@ -383,14 +394,14 @@ section[id]{
    FOOTER
 ================================ */
 .footer{
-  margin-top: 64px;
-  background: rgba(255,255,255,.92);
-  border: 1px solid rgba(255,79,163,.24);
+  margin-top: 72px;
+  background: var(--white);
+  border: 2px solid rgba(255,79,163,.35);
   border-radius: var(--radius-lg);
-  padding: 20px;
+  padding: 22px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 14px;
   font-size: 13px;
 }
