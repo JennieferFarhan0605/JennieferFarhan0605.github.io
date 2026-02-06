@@ -2,18 +2,16 @@
    THEME: Modern Editorial (Mulberry & Charcoal)
 ================================================= */
 :root {
-  --bg-paper: #f9f9f7;       /* Warm off-white, easier on eyes than pure white */
-  --bg-white: #ffffff;
-  --text-main: #1c1917;      /* Soft charcoal, not harsh black */
+  --bg-paper: #f9f9f7;       /* Warm off-white, easier on eyes */
+  --text-main: #1c1917;      /* Soft charcoal */
   --text-muted: #57534e;     /* Stone grey */
   --accent: #9d174d;         /* Mulberry - Professional, deep pink/red */
-  --accent-light: #fce7f3;   /* Very soft pink for backgrounds */
   --border: #e7e5e4;
   
-  --font-serif: 'Playfair Display', serif; /* Adds personality */
-  --font-sans: 'Lato', sans-serif;        /* Adds readability */
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Lato', sans-serif;
   
-  --max-width: 960px; /* Tighter width for better reading experience */
+  --max-width: 960px;
 }
 
 /* =================================================
@@ -26,12 +24,12 @@ body {
   background-color: var(--bg-paper);
   color: var(--text-main);
   font-family: var(--font-sans);
-  line-height: 1.8; /* More whitespace between lines */
+  line-height: 1.8;
   -webkit-font-smoothing: antialiased;
 }
 
 a { text-decoration: none; color: inherit; transition: 0.2s; }
-img { max-width: 100%; display: block; }
+img { max-width: 100%; display: block; border-radius: 4px; margin: 2rem 0; }
 
 /* =================================================
    TYPOGRAPHY
@@ -52,13 +50,13 @@ h1, h2, h3, .brand {
 .h2 {
   font-size: 1.75rem;
   margin-bottom: 1rem;
-  position: relative;
-  display: inline-block;
+  color: var(--text-main);
 }
 
 .h3 {
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
+  color: var(--text-main);
 }
 
 .subtitle {
@@ -81,10 +79,12 @@ h1, h2, h3, .brand {
 }
 
 /* =================================================
-   NAVIGATION (Clean & Minimal)
+   NAVIGATION
 ================================================= */
 .nav-wrap {
   padding: 2rem 5%;
+  max-width: var(--max-width);
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -94,14 +94,9 @@ h1, h2, h3, .brand {
   font-size: 1.5rem;
   letter-spacing: -0.5px;
 }
-
 .brand span { color: var(--accent); }
 
-.nav-links {
-  display: flex;
-  gap: 2rem;
-}
-
+.nav-links { display: flex; gap: 2rem; }
 .nav-links a {
   font-size: 0.9rem;
   font-weight: 700;
@@ -109,11 +104,10 @@ h1, h2, h3, .brand {
   letter-spacing: 1px;
   color: var(--text-muted);
 }
-
 .nav-links a:hover { color: var(--accent); }
 
 /* =================================================
-   LAYOUT
+   LAYOUT & COMPONENTS
 ================================================= */
 .container {
   max-width: var(--max-width);
@@ -126,18 +120,11 @@ h1, h2, h3, .brand {
   border-top: 1px solid var(--border);
 }
 
-/* =================================================
-   PROJECT CARDS (Editorial Style)
-================================================= */
+/* Project List */
 .project-list {
   display: flex;
   flex-direction: column;
   gap: 4rem;
-}
-
-.project-item {
-  display: group;
-  transition: transform 0.3s ease;
 }
 
 .project-item:hover .project-title { color: var(--accent); }
@@ -170,9 +157,7 @@ h1, h2, h3, .brand {
   padding-bottom: 2px;
 }
 
-/* =================================================
-   EXPERIENCE LIST
-================================================= */
+/* Experience Layout */
 .exp-row {
   display: grid;
   grid-template-columns: 1fr 3fr;
@@ -187,21 +172,19 @@ h1, h2, h3, .brand {
   margin-top: 6px;
 }
 
-.exp-content h3 { margin-top: 0; }
 .exp-org { font-style: italic; color: var(--text-muted); margin-bottom: 1rem; display: block; }
 .exp-content ul { padding-left: 1rem; color: var(--text-muted); }
 
-@media (max-width: 700px) {
-  .exp-row { grid-template-columns: 1fr; gap: 0.5rem; }
-  .h1 { font-size: 3rem; }
-}
-
-/* =================================================
-   FOOTER
-================================================= */
+/* Footer */
 footer {
   text-align: center;
   padding: 4rem 0;
   font-size: 0.9rem;
   color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 700px) {
+  .exp-row { grid-template-columns: 1fr; gap: 0.5rem; }
+  .h1 { font-size: 3rem; }
 }
