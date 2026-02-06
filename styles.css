@@ -1,335 +1,242 @@
 /* =================================================
-   ROOT VARIABLES: The "Deep Space" Palette
+   THEME: Modern Editorial (Mulberry & Charcoal)
+   STATUS: Responsive
 ================================================= */
 :root {
-  --bg-dark: #0f172a;        /* Deep Slate Background */
-  --bg-card: rgba(30, 41, 59, 0.6); /* Translucent Slate */
-  --accent-primary: #38bdf8; /* Electric Blue */
-  --accent-secondary: #818cf8; /* Soft Indigo */
-  --text-main: #f1f5f9;      /* Off-White */
-  --text-muted: #94a3b8;     /* Cool Grey */
-  --border-glass: rgba(255, 255, 255, 0.08);
-  --glass-blur: blur(16px);
-  --shadow-glow: 0 0 80px rgba(56, 189, 248, 0.15);
+  --bg-paper: #f9f9f7;       /* Warm off-white */
+  --text-main: #1c1917;      /* Soft charcoal */
+  --text-muted: #57534e;     /* Stone grey */
+  --accent: #9d174d;         /* Mulberry */
+  --border: #e7e5e4;
   
-  --max-width: 1100px;
-  --nav-height: 80px;
-  --radius-lg: 16px;
-  --radius-md: 8px;
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Lato', sans-serif;
   
-  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --max-width: 960px;
 }
 
 /* =================================================
-   BASE RESET & TYPOGRAPHY
+   BASE SETTINGS
 ================================================= */
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
-
 body {
   margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: var(--bg-dark);
-  background-image: 
-    radial-gradient(circle at 15% 10%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 85% 80%, rgba(129, 140, 248, 0.08) 0%, transparent 40%);
-  background-attachment: fixed;
+  background-color: var(--bg-paper);
   color: var(--text-main);
-  line-height: 1.7;
-  /* Prevent horizontal scroll on mobile */
-  overflow-x: hidden;
+  font-family: var(--font-sans);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden; /* Prevents horizontal scroll on mobile */
 }
 
-a { text-decoration: none; color: inherit; transition: color 0.3s var(--ease); }
-ul { list-style: none; padding: 0; }
-img { max-width: 100%; height: auto; display: block; }
+a { text-decoration: none; color: inherit; transition: 0.2s; }
+img { max-width: 100%; height: auto; display: block; border-radius: 4px; margin: 2rem 0; }
 
 /* =================================================
-   GLASS NAVIGATION (Responsive)
+   TYPOGRAPHY
 ================================================= */
-.topbar {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: var(--nav-height);
-  background: rgba(15, 23, 42, 0.85); /* Slightly more opaque for readability */
-  backdrop-filter: var(--glass-blur);
-  border-bottom: 1px solid var(--border-glass);
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  transition: height 0.3s ease;
+h1, h2, h3, .brand {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  margin: 0;
 }
 
-.topbar__inner {
-  width: 100%;
+.h1 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1.1;
+  color: var(--text-main);
+  margin-bottom: 1.5rem;
+}
+
+.h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: var(--text-main);
+  line-height: 1.3;
+}
+
+.h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-main);
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  max-width: 60ch;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent);
+  font-weight: 900;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+/* =================================================
+   NAVIGATION (RESPONSIVE)
+================================================= */
+.nav-wrap {
+  padding: 2rem 5%;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .brand {
-  font-weight: 800;
-  font-size: 1.1rem;
-  letter-spacing: -0.02em;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0; /* Prevents brand from squishing */
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+.brand span { color: var(--accent); }
+
+.nav-links { 
+  display: flex; 
+  gap: 2rem; 
 }
 
-.brand__mark {
-  width: 12px;
-  height: 12px;
-  background: var(--accent-primary);
-  transform: rotate(45deg);
-  box-shadow: 0 0 10px var(--accent-primary);
-}
-
-.nav { display: flex; gap: 32px; }
-
-.nav__link {
+.nav-links a {
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   color: var(--text-muted);
-  white-space: nowrap; /* Prevents text wrap */
+  white-space: nowrap;
 }
-.nav__link:hover { color: var(--accent-primary); }
+.nav-links a:hover { color: var(--accent); }
 
-/* Mobile Nav Adjustments */
+/* Mobile Navigation Breakpoint */
 @media (max-width: 768px) {
-  .topbar {
-    height: auto;
-    padding: 12px 0;
-  }
-  
-  .topbar__inner {
+  .nav-wrap {
     flex-direction: column;
-    gap: 16px;
+    gap: 1.5rem;
+    padding: 1.5rem 5%;
   }
   
-  .nav {
-    gap: 20px;
-    width: 100%;
+  .nav-links {
+    flex-wrap: wrap;
     justify-content: center;
-    flex-wrap: wrap; /* Allows links to wrap if needed on very small screens */
+    gap: 1.5rem;
   }
-  
-  .nav__link { font-size: 0.85rem; }
 }
 
 /* =================================================
-   LAYOUT CONTAINERS
+   LAYOUT & COMPONENTS
 ================================================= */
-.wrap {
+.container {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 24px 120px;
+  padding: 0 5%;
 }
 
-/* Sidebar Layout Logic */
 .section {
-  margin-top: 120px;
-  display: grid;
-  grid-template-columns: 280px 1fr; 
-  gap: 48px;
+  padding: 6rem 0;
+  border-top: 1px solid var(--border);
 }
 
-/* Tablet & Mobile Layout */
-@media (max-width: 900px) {
-  .section { 
-    grid-template-columns: 1fr; /* Stack sidebar on top */
-    margin-top: 80px; 
-    gap: 24px;
-  }
-  
-  /* Reduce side padding on mobile */
-  .wrap { padding: 0 20px 80px; }
+/* Adjust padding on smaller screens */
+@media (max-width: 768px) {
+  .section { padding: 4rem 0; }
+  .h1 { font-size: 2.2rem; }
+  .subtitle { font-size: 1.1rem; }
 }
 
 /* =================================================
-   TYPOGRAPHY COMPONENTS
+   PROJECT LIST
 ================================================= */
-.h1 {
-  font-size: clamp(2rem, 5vw, 4rem); /* Responsive scaling */
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  margin: 0 0 24px;
-  background: linear-gradient(to right, #fff, #94a3b8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.h2 {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--accent-primary);
-  margin: 0 0 16px;
-  font-weight: 700;
-}
-
-.h3 { font-size: 1.5rem; font-weight: 700; margin: 0 0 12px; color: #fff; }
-
-.lead { 
-  font-size: 1.15rem; 
-  color: var(--text-muted); 
-  max-width: 60ch; 
-  line-height: 1.6;
-}
-
-.p { color: var(--text-muted); margin-bottom: 24px; }
-
-@media (max-width: 600px) {
-  .lead { font-size: 1rem; }
-  .h1 { margin-bottom: 16px; }
-}
-
-/* =================================================
-   CARDS & TILES (The "Depth" Effect)
-================================================= */
-.grid {
-  display: grid;
-  /* UPDATED: Lowered min-width to 280px to fit mobile screens */
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-}
-
-.tile {
-  background: var(--bg-card);
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-lg);
-  padding: 32px;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.4s var(--ease), border-color 0.4s var(--ease);
-  height: 100%; /* Ensures cards in same row match height */
+.project-list {
   display: flex;
   flex-direction: column;
+  gap: 4rem;
 }
 
-/* Ensure content inside tile expands */
-.tile > *:last-child { margin-top: auto; }
-.tile p { margin-bottom: auto; } /* Push button/link to bottom */
+.project-item:hover .project-title { color: var(--accent); }
 
-/* Hover Glow Effect */
-.tile::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.06), transparent 40%);
-  opacity: 0;
-  transition: opacity 0.4s;
-  pointer-events: none;
+.project-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  font-family: var(--font-serif);
+  font-style: italic;
 }
 
-.tile:hover {
-  transform: translateY(-6px);
-  border-color: rgba(56, 189, 248, 0.3);
-  box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+.project-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  transition: color 0.2s;
 }
 
-.tile:hover::before { opacity: 1; }
+.project-desc {
+  max-width: 600px;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
 
-.tag {
+.btn-link {
   display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 6px 12px;
-  background: rgba(56, 189, 248, 0.1);
-  color: var(--accent-primary);
-  border-radius: 100px;
-  margin-bottom: 20px;
-  border: 1px solid rgba(56, 189, 248, 0.2);
-  align-self: flex-start;
+  font-weight: 900;
+  font-size: 0.9rem;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 2px;
+  margin-top: 0.5rem;
 }
 
 @media (max-width: 600px) {
-  .tile { padding: 24px; }
+  .project-title { font-size: 1.6rem; }
+  .project-list { gap: 3rem; }
 }
 
 /* =================================================
-   BUTTONS
+   EXPERIENCE LAYOUT (RESPONSIVE)
 ================================================= */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px 28px;
-  font-weight: 600;
-  border-radius: var(--radius-md);
-  transition: all 0.3s var(--ease);
+.exp-row {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.exp-date {
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 0.9rem;
+  margin-top: 6px;
+}
+
+.exp-org { font-style: italic; color: var(--text-muted); margin-bottom: 1rem; display: block; }
+.exp-content ul { padding-left: 1rem; color: var(--text-muted); }
+
+/* Stack Experience on Mobile */
+@media (max-width: 700px) {
+  .exp-row { 
+    grid-template-columns: 1fr; 
+    gap: 0.5rem; 
+  }
+  
+  .exp-date {
+    margin-top: 0;
+    margin-bottom: 0.25rem;
+  }
+}
+
+/* =================================================
+   FOOTER
+================================================= */
+footer {
   text-align: center;
-}
-
-/* Button Group Helper for Mobile */
-.btn-group {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap; /* Critical for mobile wrapping */
-  margin-top: 32px;
-}
-
-.btn--primary {
-  background: var(--accent-primary);
-  color: var(--bg-dark);
-}
-.btn--primary:hover {
-  background: #0ea5e9;
-  transform: translateY(-2px);
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
-}
-
-.btn--outline {
-  background: transparent;
-  border: 1px solid var(--border-glass);
-  color: var(--text-main);
-}
-.btn--outline:hover {
-  border-color: var(--text-muted);
-  background: rgba(255,255,255,0.05);
-}
-
-.link-arrow {
-  color: var(--accent-primary);
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 16px;
-}
-.link-arrow:hover { gap: 10px; }
-
-/* =================================================
-   SUB-PAGE SPECIFIC
-================================================= */
-.project-header {
-  padding: 140px 0 60px;
-  border-bottom: 1px solid var(--border-glass);
-  margin-bottom: 60px;
-}
-
-.tech-stack {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 24px;
-}
-
-.tech-item {
-  font-size: 0.85rem;
+  padding: 4rem 0;
+  font-size: 0.9rem;
   color: var(--text-muted);
-  background: rgba(255,255,255,0.05);
-  padding: 6px 12px;
-  border-radius: 6px;
-}
-
-@media (max-width: 900px) {
-  .project-header { padding: 100px 0 40px; }
+  border-top: 1px solid var(--border);
 }
