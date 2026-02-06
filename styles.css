@@ -349,50 +349,80 @@ section[id]{
 }
 
 /* ================================
-   TIMELINE
+   EXPERIENCE (STRUCTURED)
 ================================ */
-.timeline{
+.experience{
+  display: grid;
+  gap: 18px;
+}
+
+.exp-card{
   background: var(--white);
   border: 2px solid rgba(255,79,163,.35);
   border-radius: var(--radius-lg);
   padding: 22px;
+  box-shadow: 0 14px 36px rgba(255,79,163,.20);
 }
 
-.tItem{
-  display: grid;
-  grid-template-columns: 18px 1fr;
-  gap: 16px;
-  padding: 16px 0;
-  border-top: 1px solid rgba(255,79,163,.35);
-}
-
-.tItem:first-child{
-  border-top: none;
-}
-
-.tDot{
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--pink);
-  box-shadow: 0 0 0 6px rgba(255,79,163,.35);
-}
-
-.tHead{
+.exp-top{
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
   flex-wrap: wrap;
-  gap: 10px;
 }
 
-.tBody{
+.exp-title{
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.35;
+  color: rgba(0,0,0,.90);
+}
+
+.exp-dates{
   font-size: 13px;
-  color: rgba(0,0,0,.72);
+  font-weight: 900;
+  color: rgba(0,0,0,.78);
+  background: rgba(255,79,163,.14);
+  border: 1px solid rgba(255,79,163,.40);
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.exp-sub{
+  margin-top: 8px;
+  font-size: 13px;
+  color: rgba(0,0,0,.70);
+}
+
+.exp-sep{
+  margin: 0 8px;
+  color: rgba(255,79,163,.95);
+  font-weight: 900;
+}
+
+.exp-bullets{
+  margin: 14px 0 0 18px;
+  padding: 0;
+  color: rgba(0,0,0,.74);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.exp-bullets li{
+  margin: 8px 0;
 }
 
 /* ================================
-   FOOTER
+   LINKS + FOOTER
 ================================ */
+.link{
+  color: var(--pink);
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .footer{
   margin-top: 72px;
   background: var(--white);
