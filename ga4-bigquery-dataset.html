@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GA4 BigQuery Dataset Build | Jenniefer Farhan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Case study: Building a reproducible marketing analytics dataset using Google GA4 BigQuery sample data.">
+
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* Inline thumbnail + modal viewer (safe even if styles.css is unchanged) */
+    .shot-grid{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+      margin-top: 1.25rem;
+    }
+    @media (max-width: 900px){
+      .shot-grid{ grid-template-columns: 1fr; }
+    }
+    .shot-card{
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .shot-btn{
+      display: block;
+      width: 100%;
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: zoom-in;
+    }
+    .shot-img{
+      width: 100%;
+      display: block;
+      height: auto;
+    }
+    .shot-cap{
+      padding: 0.9rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+    .codeblock{
+      margin-top: 1.25rem;
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .codeblock pre{
+      margin: 0;
+      padding: 1.15rem 1.15rem;
+      overflow-x: auto;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    .callout{
+      background-color: #f3f4f6;
+      padding: 1.5rem;
+      border-left: 4px solid var(--accent);
+      border-radius: 6px;
+      margin-top: 1.25rem;
+    }
+
+    /* Modal viewer */
+    .viewer{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.78);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      padding: 24px;
+    }
+    .viewer.is-open{ display: flex; }
+    .viewer__panel{
+      position: relative;
+      max-width: 1200px;
+      width: min(1200px, 96vw);
+      max-height: 92vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 10px;
+    }
+    .viewer__top{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: #fff;
+      font-size: 14px;
+    }
+    .viewer__title{
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      opacity: .95;
+    }
+    .viewer__close{
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .viewer__close:hover{
+      background: rgba(255,255,255,.14);
+    }
+    .viewer__imgwrap{
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .viewer__img{
+      max-width: 100%;
+      max-height: 92vh;
+      height: auto;
+      width: auto;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="nav-wrap">
+    <a href="index.html" class="brand">Jenniefer <span>Farhan.</span></a>
+    <a href="index.html" class="btn-link">← Back to Home</a>
+  </nav>
+
+  <main class="container">
+    <header style="padding: 4rem 0 2.5rem;">
+      <span class="label">Marketing Operations & Analytics</span>
+      <h1 class="h1">GA4 BigQuery Dataset Build<br>for Campaign Analysis</h1>
+      <p class="project-desc" style="max-width: 78ch;">
+        This page documents how I accessed Google’s public GA4 sample ecommerce dataset in BigQuery, validated query access,
+        and prepared analysis-ready outputs for marketing funnel reporting (sessions, purchases, revenue, conversion rate).
+      </p>
+      <div style="margin-top: 1.5rem;">
+        <a class="btn-link" href="digital-campaign-analysis.html">View Campaign Analysis Page →</a>
+      </div>
+    </header>
+
+    <div class="section">
+      <h2 class="h2">Step 1 — Open BigQuery Studio and select a project</h2>
+      <p class="project-desc">
+        I opened BigQuery Studio in Google Cloud Console and confirmed the correct project context was selected.
+        This is required because BigQuery queries always run under a Google Cloud project.
+      </p>
+
+      <div class="shot-grid">
+        <div class="shot-card">
+          <button class="shot-btn" data-full="assets/screens/ga4-01-bigquery-studio.png" data-title="BigQuery Studio with project selected">
+            <img class="shot-img" src="assets/screens/ga4-01-bigquery-studio.png" alt="BigQuery Studio with project selected">
+          </button>
+          <div class="shot-cap">BigQuery Studio open with the correct project selected.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="h2">Step 2 — Pin the public dataset project</h2>
+      <p class="project-desc">
+        To access Google’s public data, I pinned the public dataset project <strong>bigquery-public-data</strong> in the Explorer panel
+        so that GA4 sample datasets become visible and queryable.
+      </p>
+
+      <div class="shot-grid">
+        <div class="shot-card">
+          <button class="shot-btn" data-full="assets/screens/ga4-02-pin-public-project.png" data-title="Pin bigquery-public-data">
+            <img class="shot-img" src="assets/screens/ga4-02-pin-public-project.png" alt="Pin bigquery-public-data">
+          </button>
+          <div class="shot-cap">Pinning <strong>bigquery-public-data</strong> from “Add data”.</div>
+        </div>
+
+        <div class="shot-card">
+          <button class="shot-btn" data-full="assets/screens/ga4-03-dataset-explorer.png" data-title="GA4 dataset visible in Explorer">
+            <img class="shot-img" src="assets/screens/ga4-03-dataset-explorer.png" alt="GA4 dataset visible in Explorer">
+          </button>
+          <div class="shot-cap">Explorer view showing <strong>ga4_obfuscated_sample_ecommerce</strong> and events_* tables.</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <h3 class="h3" style="margin-top:0;">Dataset Location</h3>
+        <p class="project-desc" style="margin:0;">
+          <strong>bigquery-public-data → ga4_obfuscated_sample_ecommerce → events_*</strong>
+        </p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="h2">Step 3 — Validate access with a sanity query</h2>
+      <p class="project-desc">
+        Before building any reporting tables, I ran a lightweight query to confirm access and inspect event distribution by date and event type.
+      </p>
+
+      <div class="codeblock">
+        <pre><code>SELECT
+  event_date,
+  event_name,
+  COUNT(*) AS events
+FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+GROUP BY event_date, event_name
+ORDER BY event_date
+LIMIT 50;</code></pre>
+      </div>
+
+      <div class="shot-grid">
+        <div class="shot-card">
+          <button class="shot-btn" data-full="assets/screens/ga4-04-sanity-query.png" data-title="Sanity query in editor">
+            <img class="shot-img" src="assets/screens/ga4-04-sanity-query.png" alt="Sanity query in editor">
+          </button>
+          <div class="shot-cap">Sanity query pasted into the BigQuery editor.</div>
+        </div>
+
+        <div class="shot-card">
+          <button class="shot-btn" data-full="assets/screens/ga4-05-sanity-results.png" data-title="Sanity query results">
+            <img class="shot-img" src="assets/screens/ga4-05-sanity-results.png" alt="Sanity query results">
+          </button>
+          <div class="shot-cap">Results returned successfully, confirming dataset access.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="h2">Step 4 — Define an analysis-ready marketing schema</h2>
+      <p class="project-desc">
+        GA4 exports are event-based, so campaign reporting requires reshaping the data into a funnel table that supports
+        daily channel performance: sessions, purchases, revenue, and conversion rate.
+      </p>
+
+      <div class="callout">
+        <h3 class="h3" style="margin-top:0;">Target Output (Daily Funnel Table)</h3>
+        <ul style="margin: 0; color: var(--text-muted); list-style: disc; padding-left: 20px;">
+          <li><strong>date</strong> (DATE)</li>
+          <li><strong>channel</strong> (STRING — derived from traffic source/medium)</li>
+          <li><strong>sessions</strong> (INTEGER — reconstructed using ga_session_id)</li>
+          <li><strong>purchases</strong> (INTEGER)</li>
+          <li><strong>revenue</strong> (NUMERIC)</li>
+          <li><strong>conversion_rate</strong> (FLOAT — purchases/sessions)</li>
+        </ul>
+      </div>
+
+      <div class="shot-grid">
+        <div class="shot-card">
+          <button class="shot-btn" data-full="assets/screens/ga4-06-schema-plan.png" data-title="Schema plan">
+            <img class="shot-img" src="assets/screens/ga4-06-schema-plan.png" alt="Schema plan">
+          </button>
+          <div class="shot-cap">Schema plan documenting the reporting table used for campaign analysis.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="h2">Step 5 — Export query outputs as CSV artifacts</h2>
+      <p class="project-desc">
+        After shaping query results into analysis-ready tables, I exported the outputs as CSV so the dataset can be used in
+        Excel/Power BI and linked as downloadable evidence from the portfolio site.
+      </p>
+
+      <div class="shot-grid">
+        <div class="shot-card">
+          <button class="shot-btn" data-full="assets/screens/ga4-07-export-csv.png" data-title="Export to CSV">
+            <img class="shot-img" src="assets/screens/ga4-07-export-csv.png" alt="Export to CSV">
+          </button>
+          <div class="shot-cap">Exporting query results to CSV from the BigQuery results panel.</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <h3 class="h3" style="margin-top:0;">Artifacts Produced</h3>
+        <ul style="margin: 0; color: var(--text-muted); list-style: disc; padding-left: 20px;">
+          <li><strong>ga4_sessions_by_day_channel.csv</strong></li>
+          <li><strong>ga4_purchases_revenue_by_day.csv</strong></li>
+          <li><strong>ga4_funnel_by_day_channel.csv</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; <script>document.write(new Date().getFullYear())</script> Jenniefer Farhan.<br>Designed for clarity and precision.</p>
+    </footer>
+  </main>
+
+  <!-- Modal Viewer -->
+  <div class="viewer" id="viewer" aria-hidden="true">
+    <div class="viewer__panel" role="dialog" aria-modal="true" aria-label="Image viewer">
+      <div class="viewer__top">
+        <div class="viewer__title" id="viewerTitle"></div>
+        <button class="viewer__close" id="viewerClose" aria-label="Close image viewer">×</button>
+      </div>
+      <div class="viewer__imgwrap">
+        <img class="viewer__img" id="viewerImg" alt="">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const viewer = document.getElementById('viewer');
+      const viewerImg = document.getElementById('viewerImg');
+      const viewerTitle = document.getElementById('viewerTitle');
+      const viewerClose = document.getElementById('viewerClose');
+
+      function openViewer(src, title){
+        viewer.classList.add('is-open');
+        viewer.setAttribute('aria-hidden', 'false');
+        viewerImg.src = src;
+        viewerImg.alt = title || 'Screenshot';
+        viewerTitle.textContent = title || '';
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeViewer(){
+        viewer.classList.remove('is-open');
+        viewer.setAttribute('aria-hidden', 'true');
+        viewerImg.src = '';
+        viewerTitle.textContent = '';
+        document.body.style.overflow = '';
+      }
+
+      document.querySelectorAll('.shot-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const src = btn.getAttribute('data-full');
+          const title = btn.getAttribute('data-title');
+          openViewer(src, title);
+        });
+      });
+
+      viewerClose.addEventListener('click', closeViewer);
+
+      viewer.addEventListener('click', (e) => {
+        // Close only if clicking outside the panel
+        if(e.target === viewer) closeViewer();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && viewer.classList.contains('is-open')){
+          closeViewer();
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
