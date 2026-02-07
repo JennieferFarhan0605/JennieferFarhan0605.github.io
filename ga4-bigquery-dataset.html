@@ -8,250 +8,6 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-
-  <style>
-    /* Inline thumbnail + modal viewer (safe even if styles.css is unchanged) */
-    .shot-grid{
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-    @media (max-width: 900px){
-      .shot-grid{ grid-template-columns: 1fr; }
-    }
-    .shot-card{
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      background: #fff;
-      transition: all 0.2s ease;
-    }
-    .shot-card:hover{
-      border-color: var(--accent);
-      box-shadow: 0 4px 12px rgba(157, 23, 77, 0.08);
-    }
-    .shot-btn{
-      display: block;
-      width: 100%;
-      padding: 0;
-      border: none;
-      background: transparent;
-      cursor: zoom-in;
-      transition: opacity 0.2s ease;
-    }
-    .shot-btn:hover{
-      opacity: 0.95;
-    }
-    .shot-img{
-      width: 100%;
-      display: block;
-      height: auto;
-    }
-    .shot-cap{
-      padding: 1rem 1.25rem;
-      color: var(--text-muted);
-      font-size: 0.92rem;
-      line-height: 1.5;
-      border-top: 1px solid var(--border);
-      background: #fafafa;
-    }
-    .codeblock{
-      margin: 2rem 0;
-      background: #0f172a;
-      color: #e2e8f0;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,.1);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-    }
-    .codeblock pre{
-      margin: 0;
-      padding: 1.5rem 1.75rem;
-      overflow-x: auto;
-      font-size: 0.92rem;
-      line-height: 1.65;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      color: #e2e8f0;
-    }
-    .callout{
-      background-color: #ffffff;
-      padding: 2rem 2.25rem;
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--accent);
-      border-radius: 8px;
-      margin: 2.5rem 0;
-    }
-    .callout .h3{
-      margin-top: 0;
-      margin-bottom: 1rem;
-    }
-    .callout .project-desc{
-      margin-bottom: 1rem;
-    }
-    .callout ul{
-      margin: 0;
-      padding-left: 20px;
-      color: var(--text-muted);
-      list-style: disc;
-    }
-    .callout ul li{
-      margin-bottom: 0.35rem;
-      line-height: 1.6;
-    }
-    .callout ul li:last-child{
-      margin-bottom: 0;
-    }
-    .mini{
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      line-height: 1.6;
-      margin-top: 0.75rem;
-      margin-bottom: 0;
-    }
-    .pillrow{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.65rem;
-      margin-top: 1rem;
-    }
-    .pill{
-      display: inline-flex;
-      gap: 0.5rem;
-      align-items: center;
-      border: 1px solid #e5e7eb;
-      background: #fff;
-      padding: 0.5rem 0.85rem;
-      border-radius: 999px;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-    }
-    .pill strong{ 
-      color: var(--text-main); 
-      font-weight: 700; 
-    }
-    .two-col{
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2.5rem;
-      margin-top: 2rem;
-    }
-    .two-col .h3{
-      margin-top: 0;
-    }
-    @media (max-width: 900px){
-      .two-col{ 
-        grid-template-columns: 1fr;
-        gap: 3rem;
-      }
-    }
-
-    /* Dataset download list */
-    .dataset-list{
-      margin: 1.25rem 0 0;
-      padding-left: 20px;
-      color: var(--text-muted);
-      line-height: 1.7;
-      list-style: none;
-    }
-    .dataset-list li{
-      margin-bottom: 1.25rem;
-      position: relative;
-      padding-left: 0;
-    }
-    .dataset-list li:last-child{
-      margin-bottom: 0;
-    }
-    .dataset-list a{
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 1rem;
-      transition: color 0.2s ease;
-    }
-    .dataset-list a:hover{
-      color: var(--text-main);
-      text-decoration: underline;
-    }
-    .dataset-meta{
-      font-size: 0.92rem;
-      color: var(--text-muted);
-      margin-top: 0.4rem;
-      line-height: 1.5;
-    }
-
-    /* Modal viewer */
-    .viewer{
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.85);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 99999;
-      padding: 24px;
-      backdrop-filter: blur(4px);
-    }
-    .viewer.is-open{ 
-      display: flex; 
-    }
-    .viewer__panel{
-      position: relative;
-      max-width: 1200px;
-      width: min(1200px, 96vw);
-      max-height: 92vh;
-      display: grid;
-      grid-template-rows: auto 1fr;
-      gap: 12px;
-    }
-    .viewer__top{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      color: #fff;
-      font-size: 14px;
-    }
-    .viewer__title{
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      opacity: .95;
-      font-weight: 600;
-    }
-    .viewer__close{
-      width: 42px;
-      height: 42px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,.3);
-      background: rgba(255,255,255,.1);
-      color: #fff;
-      font-size: 24px;
-      line-height: 1;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .viewer__close:hover{
-      background: rgba(255,255,255,.2);
-      transform: scale(1.05);
-    }
-    .viewer__imgwrap{
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.2);
-      border-radius: 12px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .viewer__img{
-      max-width: 100%;
-      max-height: 88vh;
-      height: auto;
-      width: auto;
-      display: block;
-    }
-  </style>
 </head>
 
 <body>
@@ -284,7 +40,9 @@
       <div class="shot-grid">
         <div class="shot-card">
           <button class="shot-btn" data-full="assets/screens/ga4-01-bigquery-studio.png" data-title="BigQuery Studio with project selected">
-            <img class="shot-img" src="assets/screens/ga4-01-bigquery-studio.png" alt="BigQuery Studio with project selected">
+            <div class="shot-imgwrap">
+              <img class="shot-img" src="assets/screens/ga4-01-bigquery-studio.png" alt="BigQuery Studio with project selected">
+            </div>
           </button>
           <div class="shot-cap">BigQuery Studio open with the correct project selected.</div>
         </div>
@@ -307,7 +65,9 @@ FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`;</code></pr
       <div class="shot-grid">
         <div class="shot-card">
           <button class="shot-btn" data-full="assets/screens/ga4-02-access-public-dataset.png" data-title="Direct access to the public GA4 dataset">
-            <img class="shot-img" src="assets/screens/ga4-02-access-public-dataset.png" alt="Direct access query for public GA4 dataset">
+            <div class="shot-imgwrap">
+              <img class="shot-img" src="assets/screens/ga4-02-access-public-dataset.png" alt="Direct access query for public GA4 dataset">
+            </div>
           </button>
           <div class="shot-cap">Direct dataset access confirmed via a lightweight row-count query.</div>
         </div>
@@ -332,7 +92,9 @@ ORDER BY events DESC;</code></pre>
       <div class="shot-grid">
         <div class="shot-card">
           <button class="shot-btn" data-full="assets/screens/ga4-03-querying-ga4-dataset.png" data-title="Event distribution query (purchase, page_view, etc.)">
-            <img class="shot-img" src="assets/screens/ga4-03-querying-ga4-dataset.png" alt="Event distribution query results">
+            <div class="shot-imgwrap">
+              <img class="shot-img" src="assets/screens/ga4-03-querying-ga4-dataset.png" alt="Event distribution query results">
+            </div>
           </button>
           <div class="shot-cap">Event distribution confirms the dataset structure (e.g., purchase, page_view, session_start).</div>
         </div>
@@ -359,14 +121,18 @@ LIMIT 50;</code></pre>
       <div class="shot-grid">
         <div class="shot-card">
           <button class="shot-btn" data-full="assets/screens/ga4-04-sanity-query.png" data-title="Sanity query in editor">
-            <img class="shot-img" src="assets/screens/ga4-04-sanity-query.png" alt="Sanity query in editor">
+            <div class="shot-imgwrap">
+              <img class="shot-img" src="assets/screens/ga4-04-sanity-query.png" alt="Sanity query in editor">
+            </div>
           </button>
           <div class="shot-cap">Sanity query pasted into the BigQuery editor.</div>
         </div>
 
         <div class="shot-card">
           <button class="shot-btn" data-full="assets/screens/ga4-05-sanity-results.png" data-title="Sanity query results">
-            <img class="shot-img" src="assets/screens/ga4-05-sanity-results.png" alt="Sanity query results">
+            <div class="shot-imgwrap">
+              <img class="shot-img" src="assets/screens/ga4-05-sanity-results.png" alt="Sanity query results">
+            </div>
           </button>
           <div class="shot-cap">Results returned successfully, confirming dataset access.</div>
         </div>
@@ -398,16 +164,14 @@ LIMIT 50;</code></pre>
         </p>
       </div>
 
-      <div class="two-col">
-        <div>
-          <h3 class="h3">4.1 Reconstruct sessions (GA4 session_key)</h3>
-          <p class="project-desc">
-            GA4 does not store sessions as rows. To count sessions reliably, I rebuilt a session identifier (session_key) from
-            <strong>user_pseudo_id</strong> and the event parameter <strong>ga_session_id</strong>, then aggregated sessions by date and channel.
-          </p>
+      <h3 class="h3" style="margin-top: 2.5rem;">4.1 Reconstruct sessions (GA4 session_key)</h3>
+      <p class="project-desc">
+        GA4 does not store sessions as rows. To count sessions reliably, I rebuilt a session identifier (session_key) from
+        <strong>user_pseudo_id</strong> and the event parameter <strong>ga_session_id</strong>, then aggregated sessions by date and channel.
+      </p>
 
-          <div class="codeblock">
-            <pre><code>WITH base_events AS (
+      <div class="codeblock">
+        <pre><code>WITH base_events AS (
   SELECT
     PARSE_DATE('%Y%m%d', event_date) AS date,
     user_pseudo_id,
@@ -439,17 +203,15 @@ SELECT
 FROM sessions
 GROUP BY date, channel
 ORDER BY date, sessions DESC;</code></pre>
-          </div>
-        </div>
+      </div>
 
-        <div>
-          <h3 class="h3">4.2 Isolate conversions and revenue</h3>
-          <p class="project-desc">
-            Purchases are counted from <strong>purchase</strong> events. Revenue is sourced from <strong>ecommerce.purchase_revenue</strong>.
-          </p>
+      <h3 class="h3" style="margin-top: 2.5rem;">4.2 Isolate conversions and revenue</h3>
+      <p class="project-desc">
+        Purchases are counted from <strong>purchase</strong> events. Revenue is sourced from <strong>ecommerce.purchase_revenue</strong>.
+      </p>
 
-          <div class="codeblock">
-            <pre><code>SELECT
+      <div class="codeblock">
+        <pre><code>SELECT
   PARSE_DATE('%Y%m%d', event_date) AS date,
   COUNT(*) AS purchases,
   SUM(ecommerce.purchase_revenue) AS revenue
@@ -457,8 +219,6 @@ FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
 WHERE event_name = 'purchase'
 GROUP BY date
 ORDER BY date;</code></pre>
-          </div>
-        </div>
       </div>
 
       <h3 class="h3" style="margin-top: 2.5rem;">4.3 Build the final daily funnel table</h3>
@@ -516,14 +276,18 @@ ORDER BY s.date, s.sessions DESC;</code></pre>
       <div class="shot-grid">
         <div class="shot-card">
           <button class="shot-btn" data-full="assets/screens/ga4-06-export-menu.png" data-title="Export menu showing CSV option">
-            <img class="shot-img" src="assets/screens/ga4-06-export-menu.png" alt="Export menu showing CSV option">
+            <div class="shot-imgwrap">
+              <img class="shot-img" src="assets/screens/ga4-06-export-menu.png" alt="Export menu showing CSV option">
+            </div>
           </button>
           <div class="shot-cap">Export menu opened from the BigQuery results panel (CSV option visible).</div>
         </div>
 
         <div class="shot-card">
           <button class="shot-btn" data-full="assets/screens/ga4-07-export-csv.png" data-title="Exported CSV opened for verification">
-            <img class="shot-img" src="assets/screens/ga4-07-export-csv.png" alt="Exported CSV opened for verification">
+            <div class="shot-imgwrap">
+              <img class="shot-img" src="assets/screens/ga4-07-export-csv.png" alt="Exported CSV opened for verification">
+            </div>
           </button>
           <div class="shot-cap">Exported CSV opened to verify columns and output structure.</div>
         </div>
