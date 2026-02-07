@@ -102,6 +102,27 @@
       .two-col{ grid-template-columns: 1fr; }
     }
 
+    /* NEW: Dataset download list */
+    .dataset-list{
+      margin: 0;
+      padding-left: 20px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .dataset-list a{
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .dataset-list a:hover{
+      text-decoration: underline;
+    }
+    .dataset-meta{
+      font-size: .92rem;
+      color: var(--text-muted);
+      margin-top: .35rem;
+    }
+
     /* Modal viewer */
     .viewer{
       position: fixed;
@@ -356,17 +377,12 @@ FROM sessions
 GROUP BY date, channel
 ORDER BY date, sessions DESC;</code></pre>
           </div>
-
-          <p class="mini">
-            Why this matters: counting raw events inflates volume. Sessions provide a cleaner acquisition baseline for funnel KPIs.
-          </p>
         </div>
 
         <div>
           <h3 class="h3">4.2 Isolate conversions and revenue</h3>
           <p class="project-desc">
             Purchases are counted from <strong>purchase</strong> events. Revenue is sourced from <strong>ecommerce.purchase_revenue</strong>.
-            This creates a conversion signal that can be joined back to sessions.
           </p>
 
           <div class="codeblock">
@@ -379,18 +395,10 @@ WHERE event_name = 'purchase'
 GROUP BY date
 ORDER BY date;</code></pre>
           </div>
-
-          <p class="mini">
-            Notes: revenue is only populated for purchase events; non-purchase events do not contribute to revenue.
-          </p>
         </div>
       </div>
 
       <h3 class="h3" style="margin-top: 2rem;">4.3 Build the final daily funnel table</h3>
-      <p class="project-desc">
-        The final output joins daily channel sessions with daily purchase totals to compute a conversion rate. This produces a clean reporting table
-        that can be exported as CSV and used in Excel/Power BI for performance analysis.
-      </p>
 
       <div class="codeblock">
         <pre><code>WITH sessions AS (
@@ -433,15 +441,6 @@ LEFT JOIN purchases p
   ON s.date = p.date
 ORDER BY s.date, s.sessions DESC;</code></pre>
       </div>
-
-      <div class="callout">
-        <h3 class="h3" style="margin-top:0;">What This Enables</h3>
-        <ul style="margin: 0; color: var(--text-muted); list-style: disc; padding-left: 20px;">
-          <li>Channel-level trend analysis across time</li>
-          <li>Comparison of acquisition volume vs conversion efficiency</li>
-          <li>Export-ready dataset for Excel dashboards and stakeholder reporting</li>
-        </ul>
-      </div>
     </div>
 
     <div class="section">
@@ -465,6 +464,27 @@ ORDER BY s.date, s.sessions DESC;</code></pre>
           </button>
           <div class="shot-cap">Exported CSV opened to verify columns and output structure.</div>
         </div>
+      </div>
+
+      <div class="callout">
+        <h3 class="h3" style="margin-top:0;">Download the datasets</h3>
+        <p class="project-desc" style="margin: .25rem 0 1rem;">
+          These CSV files are the analysis-ready outputs exported from BigQuery and used to support the campaign performance reporting.
+        </p>
+        <ul class="dataset-list">
+          <li>
+            <a href="assets/ga4_sessions_by_day_channel.csv" download>ga4_sessions_by_day_channel.csv</a>
+            <div class="dataset-meta">Daily sessions by channel (source/medium) reconstructed from ga_session_id.</div>
+          </li>
+          <li>
+            <a href="assets/ga4_purchases_revenue_by_day.csv" download>ga4_purchases_revenue_by_day.csv</a>
+            <div class="dataset-meta">Daily purchases and revenue totals derived from purchase events.</div>
+          </li>
+          <li>
+            <a href="assets/ga4_funnel_by_day_channel.csv" download>ga4_funnel_by_day_channel.csv</a>
+            <div class="dataset-meta">Final daily funnel table: sessions + purchases + revenue + conversion rate.</div>
+          </li>
+        </ul>
       </div>
 
       <div class="callout">
