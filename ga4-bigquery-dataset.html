@@ -68,6 +68,39 @@
       border-radius: 6px;
       margin-top: 1.25rem;
     }
+    .mini{
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      line-height: 1.6;
+      margin-top: 0.75rem;
+    }
+    .pillrow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.6rem;
+      margin-top:.75rem;
+    }
+    .pill{
+      display:inline-flex;
+      gap:.5rem;
+      align-items:center;
+      border:1px solid #e5e7eb;
+      background:#fff;
+      padding:.45rem .75rem;
+      border-radius:999px;
+      font-size:.9rem;
+      color: var(--text-muted);
+    }
+    .pill strong{ color: var(--text-main); font-weight: 700; }
+    .two-col{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 900px){
+      .two-col{ grid-template-columns: 1fr; }
+    }
 
     /* Modal viewer */
     .viewer{
@@ -257,21 +290,156 @@ LIMIT 50;</code></pre>
     </div>
 
     <div class="section">
-      <h2 class="h2">Step 4 — Define an analysis-ready marketing schema</h2>
+      <h2 class="h2">Step 4 — Build an analysis-ready marketing funnel table</h2>
       <p class="project-desc">
-        GA4 exports are event-based, so campaign reporting requires reshaping the data into a funnel table that supports
-        daily channel performance: sessions, purchases, revenue, and conversion rate.
+        GA4 exports are event-based. To support campaign-style reporting, raw events must be reshaped into a daily funnel table:
+        <strong>date → channel → sessions → purchases → revenue → conversion_rate</strong>.
+        This step documents the logic used to reconstruct sessions, isolate conversions, and compute funnel KPIs in a reproducible way.
       </p>
 
       <div class="callout">
-        <h3 class="h3" style="margin-top:0;">Target Output (Daily Funnel Table)</h3>
+        <h3 class="h3" style="margin-top:0;">Output Schema</h3>
+        <div class="pillrow">
+          <span class="pill"><strong>date</strong> DATE</span>
+          <span class="pill"><strong>channel</strong> STRING</span>
+          <span class="pill"><strong>sessions</strong> INT</span>
+          <span class="pill"><strong>purchases</strong> INT</span>
+          <span class="pill"><strong>revenue</strong> NUMERIC</span>
+          <span class="pill"><strong>conversion_rate</strong> FLOAT</span>
+        </div>
+        <p class="mini" style="margin-bottom:0;">
+          Sessions are reconstructed using <strong>user_pseudo_id</strong> + <strong>ga_session_id</strong>.
+          Channel is derived from <strong>traffic_source.source</strong> and <strong>traffic_source.medium</strong>.
+          Conversions are <strong>purchase</strong> events, and revenue comes from <strong>ecommerce.purchase_revenue</strong>.
+        </p>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <h3 class="h3">4.1 Reconstruct sessions (GA4 session_key)</h3>
+          <p class="project-desc">
+            GA4 does not store sessions as rows. To count sessions reliably, I rebuilt a session identifier (session_key) from
+            <strong>user_pseudo_id</strong> and the event parameter <strong>ga_session_id</strong>, then aggregated sessions by date and channel.
+          </p>
+
+          <div class="codeblock">
+            <pre><code>WITH base_events AS (
+  SELECT
+    PARSE_DATE('%Y%m%d', event_date) AS date,
+    user_pseudo_id,
+    (SELECT value.int_value
+     FROM UNNEST(event_params)
+     WHERE key = 'ga_session_id') AS session_id,
+    traffic_source.source AS source,
+    traffic_source.medium AS medium
+  FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+),
+
+sessions AS (
+  SELECT DISTINCT
+    date,
+    CONCAT(
+      COALESCE(source, 'direct'),
+      ' / ',
+      COALESCE(medium, 'none')
+    ) AS channel,
+    CONCAT(user_pseudo_id, '-', session_id) AS session_key
+  FROM base_events
+  WHERE session_id IS NOT NULL
+)
+
+SELECT
+  date,
+  channel,
+  COUNT(DISTINCT session_key) AS sessions
+FROM sessions
+GROUP BY date, channel
+ORDER BY date, sessions DESC;</code></pre>
+          </div>
+
+          <p class="mini">
+            Why this matters: counting raw events inflates volume. Sessions provide a cleaner acquisition baseline for funnel KPIs.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="h3">4.2 Isolate conversions and revenue</h3>
+          <p class="project-desc">
+            Purchases are counted from <strong>purchase</strong> events. Revenue is sourced from <strong>ecommerce.purchase_revenue</strong>.
+            This creates a conversion signal that can be joined back to sessions.
+          </p>
+
+          <div class="codeblock">
+            <pre><code>SELECT
+  PARSE_DATE('%Y%m%d', event_date) AS date,
+  COUNT(*) AS purchases,
+  SUM(ecommerce.purchase_revenue) AS revenue
+FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+WHERE event_name = 'purchase'
+GROUP BY date
+ORDER BY date;</code></pre>
+          </div>
+
+          <p class="mini">
+            Notes: revenue is only populated for purchase events; non-purchase events do not contribute to revenue.
+          </p>
+        </div>
+      </div>
+
+      <h3 class="h3" style="margin-top: 2rem;">4.3 Build the final daily funnel table</h3>
+      <p class="project-desc">
+        The final output joins daily channel sessions with daily purchase totals to compute a conversion rate. This produces a clean reporting table
+        that can be exported as CSV and used in Excel/Power BI for performance analysis.
+      </p>
+
+      <div class="codeblock">
+        <pre><code>WITH sessions AS (
+  SELECT
+    PARSE_DATE('%Y%m%d', event_date) AS date,
+    CONCAT(
+      COALESCE(traffic_source.source, 'direct'),
+      ' / ',
+      COALESCE(traffic_source.medium, 'none')
+    ) AS channel,
+    COUNT(DISTINCT CONCAT(
+      user_pseudo_id, '-',
+      (SELECT value.int_value
+       FROM UNNEST(event_params)
+       WHERE key = 'ga_session_id')
+    )) AS sessions
+  FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+  GROUP BY date, channel
+),
+
+purchases AS (
+  SELECT
+    PARSE_DATE('%Y%m%d', event_date) AS date,
+    COUNT(*) AS purchases,
+    SUM(ecommerce.purchase_revenue) AS revenue
+  FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+  WHERE event_name = 'purchase'
+  GROUP BY date
+)
+
+SELECT
+  s.date,
+  s.channel,
+  s.sessions,
+  COALESCE(p.purchases, 0) AS purchases,
+  COALESCE(p.revenue, 0) AS revenue,
+  SAFE_DIVIDE(p.purchases, s.sessions) AS conversion_rate
+FROM sessions s
+LEFT JOIN purchases p
+  ON s.date = p.date
+ORDER BY s.date, s.sessions DESC;</code></pre>
+      </div>
+
+      <div class="callout">
+        <h3 class="h3" style="margin-top:0;">What This Enables</h3>
         <ul style="margin: 0; color: var(--text-muted); list-style: disc; padding-left: 20px;">
-          <li><strong>date</strong> (DATE)</li>
-          <li><strong>channel</strong> (STRING — derived from traffic source/medium)</li>
-          <li><strong>sessions</strong> (INTEGER — reconstructed using ga_session_id)</li>
-          <li><strong>purchases</strong> (INTEGER)</li>
-          <li><strong>revenue</strong> (NUMERIC)</li>
-          <li><strong>conversion_rate</strong> (FLOAT — purchases/sessions)</li>
+          <li>Channel-level trend analysis across time</li>
+          <li>Comparison of acquisition volume vs conversion efficiency</li>
+          <li>Export-ready dataset for Excel dashboards and stakeholder reporting</li>
         </ul>
       </div>
 
@@ -364,7 +532,6 @@ LIMIT 50;</code></pre>
       viewerClose.addEventListener('click', closeViewer);
 
       viewer.addEventListener('click', (e) => {
-        // Close only if clicking outside the panel
         if(e.target === viewer) closeViewer();
       });
 
