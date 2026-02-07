@@ -149,8 +149,8 @@
       <span class="label">Marketing Operations & Analytics</span>
       <h1 class="h1">GA4 BigQuery Dataset Build<br>for Campaign Analysis</h1>
       <p class="project-desc" style="max-width: 78ch;">
-        This page documents how I accessed Google’s public GA4 sample ecommerce dataset in BigQuery, validated query access,
-        and prepared analysis-ready outputs for marketing funnel reporting (sessions, purchases, revenue, conversion rate).
+        This page documents how I accessed Google’s public GA4 sample ecommerce dataset in BigQuery using direct table references,
+        validated query access, and prepared analysis-ready outputs for marketing funnel reporting (sessions, purchases, revenue, conversion rate).
       </p>
       <div style="margin-top: 1.5rem;">
         <a class="btn-link" href="digital-campaign-analysis.html">View Campaign Analysis Page →</a>
@@ -175,33 +175,50 @@
     </div>
 
     <div class="section">
-      <h2 class="h2">Step 2 — Pin the public dataset project</h2>
+      <h2 class="h2">Step 2 — Access the public GA4 dataset directly</h2>
       <p class="project-desc">
-        To access Google’s public data, I pinned the public dataset project <strong>bigquery-public-data</strong> in the Explorer panel
-        so that GA4 sample datasets become visible and queryable.
+        BigQuery public datasets can be queried directly using fully-qualified table references. In this case study,
+        I accessed Google’s GA4 sample ecommerce export by querying the public dataset tables directly (no UI pinning required).
       </p>
+
+      <div class="codeblock">
+        <pre><code>SELECT
+  COUNT(*) AS rows_in_dataset
+FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`;</code></pre>
+      </div>
 
       <div class="shot-grid">
         <div class="shot-card">
-          <button class="shot-btn" data-full="assets/screens/ga4-02-pin-public-project.png" data-title="Pin bigquery-public-data">
-            <img class="shot-img" src="assets/screens/ga4-02-pin-public-project.png" alt="Pin bigquery-public-data">
+          <button class="shot-btn" data-full="assets/screens/ga4-02-access-public-dataset.png" data-title="Direct access to the public GA4 dataset">
+            <img class="shot-img" src="assets/screens/ga4-02-access-public-dataset.png" alt="Direct access query for public GA4 dataset">
           </button>
-          <div class="shot-cap">Pinning <strong>bigquery-public-data</strong> from “Add data”.</div>
-        </div>
-
-        <div class="shot-card">
-          <button class="shot-btn" data-full="assets/screens/ga4-03-dataset-explorer.png" data-title="GA4 dataset visible in Explorer">
-            <img class="shot-img" src="assets/screens/ga4-03-dataset-explorer.png" alt="GA4 dataset visible in Explorer">
-          </button>
-          <div class="shot-cap">Explorer view showing <strong>ga4_obfuscated_sample_ecommerce</strong> and events_* tables.</div>
+          <div class="shot-cap">Direct dataset access confirmed via a lightweight row-count query.</div>
         </div>
       </div>
 
       <div class="callout">
-        <h3 class="h3" style="margin-top:0;">Dataset Location</h3>
+        <h3 class="h3" style="margin-top:0;">Dataset Reference</h3>
         <p class="project-desc" style="margin:0;">
-          <strong>bigquery-public-data → ga4_obfuscated_sample_ecommerce → events_*</strong>
+          <strong>`bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`</strong>
         </p>
+      </div>
+
+      <div class="codeblock">
+        <pre><code>SELECT
+  event_name,
+  COUNT(*) AS events
+FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+GROUP BY event_name
+ORDER BY events DESC;</code></pre>
+      </div>
+
+      <div class="shot-grid">
+        <div class="shot-card">
+          <button class="shot-btn" data-full="assets/screens/ga4-03-querying-ga4-dataset.png" data-title="Event distribution query (purchase, page_view, etc.)">
+            <img class="shot-img" src="assets/screens/ga4-03-querying-ga4-dataset.png" alt="Event distribution query results">
+          </button>
+          <div class="shot-cap">Event distribution confirms the dataset structure (e.g., purchase, page_view, session_start).</div>
+        </div>
       </div>
     </div>
 
