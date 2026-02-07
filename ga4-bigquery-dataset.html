@@ -14,17 +14,22 @@
     .shot-grid{
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 1.25rem;
-      margin-top: 1.25rem;
+      gap: 1.5rem;
+      margin-top: 2rem;
     }
     @media (max-width: 900px){
       .shot-grid{ grid-template-columns: 1fr; }
     }
     .shot-card{
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
       overflow: hidden;
       background: #fff;
+      transition: all 0.2s ease;
+    }
+    .shot-card:hover{
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(157, 23, 77, 0.08);
     }
     .shot-btn{
       display: block;
@@ -33,6 +38,10 @@
       border: none;
       background: transparent;
       cursor: zoom-in;
+      transition: opacity 0.2s ease;
+    }
+    .shot-btn:hover{
+      opacity: 0.95;
     }
     .shot-img{
       width: 100%;
@@ -40,101 +49,152 @@
       height: auto;
     }
     .shot-cap{
-      padding: 0.9rem 1rem;
+      padding: 1rem 1.25rem;
       color: var(--text-muted);
-      font-size: 0.95rem;
-      line-height: 1.45;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      border-top: 1px solid var(--border);
+      background: #fafafa;
     }
     .codeblock{
-      margin-top: 1.25rem;
+      margin: 2rem 0;
       background: #0f172a;
       color: #e2e8f0;
-      border-radius: 12px;
+      border-radius: 10px;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.1);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
     }
     .codeblock pre{
       margin: 0;
-      padding: 1.15rem 1.15rem;
+      padding: 1.5rem 1.75rem;
       overflow-x: auto;
-      font-size: 0.95rem;
-      line-height: 1.55;
+      font-size: 0.92rem;
+      line-height: 1.65;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      color: #e2e8f0;
     }
     .callout{
-      background-color: #f3f4f6;
-      padding: 1.5rem;
+      background-color: #ffffff;
+      padding: 2rem 2.25rem;
+      border: 1px solid var(--border);
       border-left: 4px solid var(--accent);
-      border-radius: 6px;
-      margin-top: 1.25rem;
+      border-radius: 8px;
+      margin: 2.5rem 0;
     }
-    .mini{
-      color: var(--text-muted);
-      font-size: 0.98rem;
-      line-height: 1.6;
-      margin-top: 0.75rem;
+    .callout .h3{
+      margin-top: 0;
+      margin-bottom: 1rem;
     }
-    .pillrow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.6rem;
-      margin-top:.75rem;
+    .callout .project-desc{
+      margin-bottom: 1rem;
     }
-    .pill{
-      display:inline-flex;
-      gap:.5rem;
-      align-items:center;
-      border:1px solid #e5e7eb;
-      background:#fff;
-      padding:.45rem .75rem;
-      border-radius:999px;
-      font-size:.9rem;
-      color: var(--text-muted);
-    }
-    .pill strong{ color: var(--text-main); font-weight: 700; }
-    .two-col{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-      margin-top: 1rem;
-    }
-    @media (max-width: 900px){
-      .two-col{ grid-template-columns: 1fr; }
-    }
-
-    /* NEW: Dataset download list */
-    .dataset-list{
+    .callout ul{
       margin: 0;
       padding-left: 20px;
       color: var(--text-muted);
+      list-style: disc;
+    }
+    .callout ul li{
+      margin-bottom: 0.35rem;
+      line-height: 1.6;
+    }
+    .callout ul li:last-child{
+      margin-bottom: 0;
+    }
+    .mini{
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-top: 0.75rem;
+      margin-bottom: 0;
+    }
+    .pillrow{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-top: 1rem;
+    }
+    .pill{
+      display: inline-flex;
+      gap: 0.5rem;
+      align-items: center;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      padding: 0.5rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+    .pill strong{ 
+      color: var(--text-main); 
+      font-weight: 700; 
+    }
+    .two-col{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      margin-top: 2rem;
+    }
+    .two-col .h3{
+      margin-top: 0;
+    }
+    @media (max-width: 900px){
+      .two-col{ 
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+    }
+
+    /* Dataset download list */
+    .dataset-list{
+      margin: 1.25rem 0 0;
+      padding-left: 20px;
+      color: var(--text-muted);
       line-height: 1.7;
+      list-style: none;
+    }
+    .dataset-list li{
+      margin-bottom: 1.25rem;
+      position: relative;
+      padding-left: 0;
+    }
+    .dataset-list li:last-child{
+      margin-bottom: 0;
     }
     .dataset-list a{
       color: var(--accent);
       text-decoration: none;
       font-weight: 700;
+      font-size: 1rem;
+      transition: color 0.2s ease;
     }
     .dataset-list a:hover{
+      color: var(--text-main);
       text-decoration: underline;
     }
     .dataset-meta{
-      font-size: .92rem;
+      font-size: 0.92rem;
       color: var(--text-muted);
-      margin-top: .35rem;
+      margin-top: 0.4rem;
+      line-height: 1.5;
     }
 
     /* Modal viewer */
     .viewer{
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.78);
+      background: rgba(0,0,0,.85);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 99999;
       padding: 24px;
+      backdrop-filter: blur(4px);
     }
-    .viewer.is-open{ display: flex; }
+    .viewer.is-open{ 
+      display: flex; 
+    }
     .viewer__panel{
       position: relative;
       max-width: 1200px;
@@ -142,7 +202,7 @@
       max-height: 92vh;
       display: grid;
       grid-template-rows: auto 1fr;
-      gap: 10px;
+      gap: 12px;
     }
     .viewer__top{
       display: flex;
@@ -157,25 +217,28 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       opacity: .95;
+      font-weight: 600;
     }
     .viewer__close{
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 10px;
-      border: 1px solid rgba(255,255,255,.25);
-      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.3);
+      background: rgba(255,255,255,.1);
       color: #fff;
-      font-size: 22px;
+      font-size: 24px;
       line-height: 1;
       cursor: pointer;
+      transition: all 0.2s ease;
     }
     .viewer__close:hover{
-      background: rgba(255,255,255,.14);
+      background: rgba(255,255,255,.2);
+      transform: scale(1.05);
     }
     .viewer__imgwrap{
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 14px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 12px;
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -183,7 +246,7 @@
     }
     .viewer__img{
       max-width: 100%;
-      max-height: 92vh;
+      max-height: 88vh;
       height: auto;
       width: auto;
       display: block;
@@ -203,7 +266,7 @@
       <span class="label">Marketing Operations & Analytics</span>
       <h1 class="h1">GA4 BigQuery Dataset Build<br>for Campaign Analysis</h1>
       <p class="project-desc" style="max-width: 78ch;">
-        This page documents how I accessed Google’s public GA4 sample ecommerce dataset in BigQuery using direct table references,
+        This page documents how I accessed Google's public GA4 sample ecommerce dataset in BigQuery using direct table references,
         validated query access, and prepared analysis-ready outputs for marketing funnel reporting (sessions, purchases, revenue, conversion rate).
       </p>
       <div style="margin-top: 1.5rem;">
@@ -232,7 +295,7 @@
       <h2 class="h2">Step 2 — Access the public GA4 dataset directly</h2>
       <p class="project-desc">
         BigQuery public datasets can be queried directly using fully-qualified table references. In this case study,
-        I accessed Google’s GA4 sample ecommerce export by querying the public dataset tables directly (no UI pinning required).
+        I accessed Google's GA4 sample ecommerce export by querying the public dataset tables directly (no UI pinning required).
       </p>
 
       <div class="codeblock">
@@ -251,8 +314,8 @@ FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`;</code></pr
       </div>
 
       <div class="callout">
-        <h3 class="h3" style="margin-top:0;">Dataset Reference</h3>
-        <p class="project-desc" style="margin:0;">
+        <h3 class="h3">Dataset Reference</h3>
+        <p class="project-desc">
           <strong>`bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`</strong>
         </p>
       </div>
@@ -319,7 +382,7 @@ LIMIT 50;</code></pre>
       </p>
 
       <div class="callout">
-        <h3 class="h3" style="margin-top:0;">Output Schema</h3>
+        <h3 class="h3">Output Schema</h3>
         <div class="pillrow">
           <span class="pill"><strong>date</strong> DATE</span>
           <span class="pill"><strong>channel</strong> STRING</span>
@@ -328,7 +391,7 @@ LIMIT 50;</code></pre>
           <span class="pill"><strong>revenue</strong> NUMERIC</span>
           <span class="pill"><strong>conversion_rate</strong> FLOAT</span>
         </div>
-        <p class="mini" style="margin-bottom:0;">
+        <p class="mini">
           Sessions are reconstructed using <strong>user_pseudo_id</strong> + <strong>ga_session_id</strong>.
           Channel is derived from <strong>traffic_source.source</strong> and <strong>traffic_source.medium</strong>.
           Conversions are <strong>purchase</strong> events, and revenue comes from <strong>ecommerce.purchase_revenue</strong>.
@@ -398,7 +461,7 @@ ORDER BY date;</code></pre>
         </div>
       </div>
 
-      <h3 class="h3" style="margin-top: 2rem;">4.3 Build the final daily funnel table</h3>
+      <h3 class="h3" style="margin-top: 2.5rem;">4.3 Build the final daily funnel table</h3>
 
       <div class="codeblock">
         <pre><code>WITH sessions AS (
@@ -467,8 +530,8 @@ ORDER BY s.date, s.sessions DESC;</code></pre>
       </div>
 
       <div class="callout">
-        <h3 class="h3" style="margin-top:0;">Download the datasets</h3>
-        <p class="project-desc" style="margin: .25rem 0 1rem;">
+        <h3 class="h3">Download the datasets</h3>
+        <p class="project-desc">
           These CSV files are the analysis-ready outputs exported from BigQuery and used to support the campaign performance reporting.
         </p>
         <ul class="dataset-list">
@@ -484,15 +547,6 @@ ORDER BY s.date, s.sessions DESC;</code></pre>
             <a href="assets/ga4_funnel_by_day_channel.csv" download>ga4_funnel_by_day_channel.csv</a>
             <div class="dataset-meta">Final daily funnel table: sessions + purchases + revenue + conversion rate.</div>
           </li>
-        </ul>
-      </div>
-
-      <div class="callout">
-        <h3 class="h3" style="margin-top:0;">Artifacts Produced</h3>
-        <ul style="margin: 0; color: var(--text-muted); list-style: disc; padding-left: 20px;">
-          <li><strong>ga4_sessions_by_day_channel.csv</strong></li>
-          <li><strong>ga4_purchases_revenue_by_day.csv</strong></li>
-          <li><strong>ga4_funnel_by_day_channel.csv</strong></li>
         </ul>
       </div>
     </div>
