@@ -18,6 +18,11 @@
     <header style="padding: 4rem 0;">
       <span class="label">Marketing Operations & Analytics</span>
       <h1 class="h1">Digital Campaign Planning<br>& Performance Analysis</h1>
+
+      <div style="margin-top: 1.5rem;">
+        <a href="ga4-bigquery-dataset.html" class="btn-link" style="margin-right: 2rem;">View Dataset Build (BigQuery) →</a>
+        <a href="#data" class="btn-link">Jump to Data & Downloads →</a>
+      </div>
     </header>
 
     <div class="section">
@@ -29,8 +34,45 @@
       </p>
       <p class="project-desc">
         The core objective was to design a full-cycle campaign—from audience identification to post-mortem analysis—using
-        simulated datasets to practice data-driven decision making and optimization.
+        structured datasets to practice data-driven decision making and optimization through a full-funnel lens.
       </p>
+
+      <div style="background-color: #f3f4f6; padding: 1.5rem; border-left: 4px solid var(--accent); border-radius: 6px; margin-top: 1.5rem;">
+        <h3 class="h3" style="margin-top: 0;">Evidence-Backed Approach</h3>
+        <p style="margin-bottom: 0; color: var(--text-muted);">
+          Conversion and revenue signals were derived from Google’s public GA4 BigQuery sample ecommerce export, reshaped into
+          daily channel-level reporting outputs. The dataset build process, query validation, and export workflow are documented
+          end-to-end in the companion dataset page.
+        </p>
+      </div>
+    </div>
+
+    <div class="section" id="data">
+      <h2 class="h2">Dataset & Reproducibility</h2>
+      <p class="project-desc">
+        This case study is supported by a reproducible dataset build using Google’s public GA4 sample ecommerce export in BigQuery.
+        The GA4 export is event-based, so it was reshaped into analysis-ready tables suitable for marketing reporting:
+        <strong>sessions</strong>, <strong>purchases</strong>, <strong>revenue</strong>, and derived funnel KPIs.
+      </p>
+
+      <ul style="color: var(--text-muted); margin-bottom: 2rem; list-style: disc; padding-left: 20px;">
+        <li><strong>Dataset build walkthrough:</strong> <a class="btn-link" href="ga4-bigquery-dataset.html">ga4-bigquery-dataset.html</a></li>
+        <li><strong>Export format:</strong> CSV (for Excel/Power BI)</li>
+        <li><strong>Aggregation level:</strong> Daily, channel-level reporting outputs</li>
+      </ul>
+
+      <div style="background-color: #f3f4f6; padding: 1.5rem; border-left: 4px solid var(--accent); border-radius: 6px;">
+        <h3 class="h3" style="margin-top: 0;">Downloads (Add Later)</h3>
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">
+          These links are included to keep the case study complete. Once the CSV files are exported and uploaded to the repo,
+          they will become downloadable evidence for the analysis described below.
+        </p>
+        <ul style="color: var(--text-muted); margin-bottom: 0; list-style: disc; padding-left: 20px;">
+          <li><a class="btn-link" href="data/ga4_sessions_by_day_channel.csv">ga4_sessions_by_day_channel.csv</a></li>
+          <li><a class="btn-link" href="data/ga4_purchases_revenue_by_day.csv">ga4_purchases_revenue_by_day.csv</a></li>
+          <li><a class="btn-link" href="data/ga4_funnel_by_day_channel.csv">ga4_funnel_by_day_channel.csv</a></li>
+        </ul>
+      </div>
     </div>
 
     <div class="section">
@@ -44,8 +86,8 @@
         </p>
         <ul style="color: var(--text-muted); margin-bottom: 2rem; list-style: disc; padding-left: 20px;">
           <li><strong>Demographic Profiling:</strong> Defined core audience segments based on age, location, and professional status to align with product fit.</li>
-          <li><strong>Psychographic Mapping:</strong> Analyzed potential pain points and motivations to tailor messaging that resonates with specific user needs.</li>
-          <li><strong>Channel Strategy:</strong> Mapped specific segments to the most effective acquisition channels, reducing hypothetical wasted ad spend.</li>
+          <li><strong>Psychographic Mapping:</strong> Analyzed pain points and motivations to tailor messaging that resonates with specific user needs.</li>
+          <li><strong>Channel Strategy:</strong> Mapped segments to acquisition channels to reduce wasted spend and improve targeting efficiency.</li>
         </ul>
       </div>
 
@@ -56,7 +98,7 @@
         </p>
         <ul style="color: var(--text-muted); margin-bottom: 2rem; list-style: disc; padding-left: 20px;">
           <li><strong>Frequency Matrix:</strong> Balanced high-frequency "snackable" content with lower-frequency, high-value assets to maintain engagement without saturation.</li>
-          <li><strong>Asset Coordination:</strong> Organized deliverables by format (video, static, carousel) and platform requirements to streamline the hypothetical production workflow.</li>
+          <li><strong>Asset Coordination:</strong> Organized deliverables by format (video, static, carousel) and platform requirements to streamline the production workflow.</li>
         </ul>
       </div>
     </div>
@@ -64,34 +106,45 @@
     <div class="section">
       <h2 class="h2">Data Infrastructure & Analysis</h2>
       <p class="project-desc">
-        The backbone of this project was the development of a robust tracking system.
-        I simulated campaign performance using sample datasets to test my ability to interpret raw metrics.
+        The backbone of this project was a structured reporting model designed to mimic real-world performance tracking.
+        Raw outputs were shaped into channel-level reporting tables to support trend analysis, funnel visibility, and KPI monitoring.
       </p>
 
       <h3 class="h3">Excel Dashboard Architecture</h3>
       <p class="project-desc">
-        I built <strong>Excel trackers</strong> to monitor the health of the campaign through a full-funnel lens.
-        This required advanced spreadsheet modeling to translate raw data rows into actionable intelligence.
+        I built <strong>Excel trackers</strong> to monitor campaign health through a full-funnel lens.
+        This required spreadsheet modeling to translate raw rows into decision-ready KPIs and summaries.
       </p>
+
       <ul style="color: var(--text-muted); margin-bottom: 2rem; list-style: disc; padding-left: 20px;">
-        <li><strong>Top-of-Funnel Metrics (Reach):</strong> Monitored impression volume to assess brand awareness and market penetration.</li>
-        <li><strong>Mid-Funnel Engagement (CTR):</strong> Analyzed <strong>Click-Through Rates</strong> to evaluate creative resonance and ad copy effectiveness. Low CTRs were flagged as indicators of creative fatigue or poor audience alignment.</li>
-        <li><strong>Bottom-of-Funnel (Conversions):</strong> Tracked final conversion events to calculate the hypothetical Cost Per Acquisition (CPA) and overall campaign ROI.</li>
+        <li><strong>Top-of-Funnel (Sessions):</strong> Tracked daily sessions by channel to measure acquisition and awareness.</li>
+        <li><strong>Conversion Signals (Purchases):</strong> Captured purchase events as conversion outcomes.</li>
+        <li><strong>Value Tracking (Revenue):</strong> Used revenue as a quality signal to measure channel contribution beyond volume.</li>
+        <li><strong>Funnel KPI:</strong> Computed a conversion rate per session to identify performance differences across channels.</li>
       </ul>
+
+      <div style="background-color: #f3f4f6; padding: 1.5rem; border-left: 4px solid var(--accent); border-radius: 6px;">
+        <h3 class="h3" style="margin-top: 0;">Analysis Notes</h3>
+        <p style="margin-bottom: 0; color: var(--text-muted);">
+          This version is deliberately structured around GA4-derived funnel signals (sessions → purchases → revenue).
+          In a next iteration, delivery metrics (impressions, clicks, cost) can be added as a paid-media table to compute CTR, CPA, and ROAS.
+        </p>
+      </div>
     </div>
 
     <div class="section">
       <h2 class="h2">Insights & Optimization</h2>
       <p class="project-desc">
-        Data without action is overhead. The project concluded with the production of a
-        <strong>performance report</strong> containing specific insights and <strong>optimization recommendations</strong>.
+        Data without action is overhead. The project concluded with a structured <strong>performance report</strong> containing insights and
+        optimization recommendations based on channel contribution and conversion efficiency.
       </p>
-      <div style="background-color: #f3f4f6; padding: 2rem; border-left: 4px solid var(--accent); border-radius: 4px;">
+
+      <div style="background-color: #f3f4f6; padding: 2rem; border-left: 4px solid var(--accent); border-radius: 6px;">
         <h3 class="h3" style="margin-top: 0;">Key Findings</h3>
         <p style="margin-bottom: 0; color: var(--text-muted);">
-          The analysis highlighted that while broad targeting delivered high Reach, it suffered from low conversion efficiency.
-          By analyzing the data, I determined that <strong>adjusting content types based on early CTR data</strong>—specifically
-          shifting budget toward high-engagement video assets—could significantly improve the overall campaign ROI.
+          The analysis highlighted that high acquisition volume does not necessarily translate to efficient conversion.
+          By comparing daily sessions against purchase outcomes at channel level, I identified performance differences in conversion efficiency
+          and recommended reallocating effort toward the channels and content formats that showed stronger conversion and value contribution.
         </p>
       </div>
     </div>
