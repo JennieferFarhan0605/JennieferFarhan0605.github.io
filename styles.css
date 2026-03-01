@@ -785,7 +785,12 @@ footer p {
   border-radius: 10px;
   margin-bottom: 2rem;
   position: relative;
-  height: 400px;
+}
+
+.chart-container canvas {
+  max-height: 400px;
+  width: 100% !important;
+  height: auto !important;
 }
 
 .chart-title {
@@ -835,12 +840,14 @@ footer p {
   background: #fff;
   border: 1px solid var(--border);
   border-radius: 8px;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: visible;
   margin-bottom: 2rem;
 }
 
 .channel-table table {
   width: 100%;
+  min-width: 800px;
   border-collapse: collapse;
 }
 
@@ -849,6 +856,7 @@ footer p {
   padding: 1rem 1.25rem;
   text-align: left;
   border-bottom: 1px solid var(--border);
+  white-space: nowrap;
 }
 
 .channel-table th {
@@ -858,6 +866,9 @@ footer p {
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--text-main);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .channel-table td {
@@ -890,7 +901,15 @@ footer p {
   }
 
   .chart-container {
-    height: 300px;
+    padding: 1.5rem;
+  }
+
+  .chart-container canvas {
+    max-height: 300px;
+  }
+
+  .kpi-value {
+    font-size: 1.75rem;
   }
 }
 
