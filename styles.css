@@ -773,11 +773,9 @@ footer p {
 /* --- KPI Cards --- */
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Strictly forces 4 equal columns in one row */
+  grid-template-columns: repeat(2, 1fr); /* Creates 2 equal columns, wrapping into 2 rows */
   gap: 1.5rem;
   margin-bottom: 3rem;
-  overflow-x: auto; /* Safety fallback for small screens */
-  padding-bottom: 0.5rem; /* Prevents scrollbar from clipping cards if it appears */
 }
 
 .kpi-card {
