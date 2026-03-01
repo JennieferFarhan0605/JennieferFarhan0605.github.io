@@ -934,6 +934,7 @@ footer p {
   color: var(--text-main);
 }
 
+/* --- Conversion Rate Data Bars --- */
 .conv-bar {
   display: inline-flex;
   align-items: center;
@@ -941,17 +942,19 @@ footer p {
 }
 
 .conv-bar-track {
+  display: block; /* Ensures the track behaves like a solid box */
   width: 60px;
-  height: 6px;
-  background: #f0efed;
-  border-radius: 3px;
+  height: 8px; /* Slightly thicker for better visibility */
+  background: #e7e5e4; /* A slightly deeper grey for better contrast */
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .conv-bar-fill {
+  display: block; /* THIS IS THE FIX! Allows the span to accept height and width */
   height: 100%;
   background: var(--accent);
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
 /* =================================================
