@@ -21,8 +21,9 @@
       <h1 class="h1">Digital Campaign Planning<br>& Performance Analysis</h1>
 
       <div style="margin-top: 1.5rem;">
-        <a href="ga4-bigquery-dataset.html" class="btn-link" style="margin-right: 2rem;">View Dataset Build (BigQuery) →</a>
-        <a href="#data" class="btn-link">Jump to Data & Downloads →</a>
+        <a href="campaign-performance-dashboard.html" class="btn-link" style="margin-right: 2rem; font-size: 1rem; padding-bottom: 4px; border-bottom-width: 3px;">📊 View Interactive Dashboard →</a>
+        <a href="ga4-bigquery-dataset.html" class="btn-link" style="margin-right: 2rem;">Dataset Build (BigQuery) →</a>
+        <a href="#data" class="btn-link">Jump to Downloads →</a>
       </div>
     </header>
 
@@ -48,6 +49,33 @@
       </div>
     </div>
 
+    <div class="section">
+      <h2 class="h2">Interactive Performance Dashboard</h2>
+      <p class="project-desc">
+        The primary deliverable for this project is a <strong>live, interactive dashboard</strong> that visualizes
+        campaign performance using the GA4 dataset. Built with vanilla JavaScript and Chart.js, this client-side
+        application demonstrates:
+      </p>
+      
+      <ul style="color: var(--text-muted); margin-bottom: 2rem; list-style: disc; padding-left: 20px;">
+        <li><strong>Real-time data filtering:</strong> Filter by date range and channel to drill into specific performance segments</li>
+        <li><strong>Multi-metric visualization:</strong> Toggle between sessions, revenue, purchases, and conversion rate views</li>
+        <li><strong>Channel performance analysis:</strong> Compare acquisition channels on volume, conversion efficiency, and revenue contribution</li>
+        <li><strong>Automated insights:</strong> System-generated recommendations based on conversion patterns and revenue efficiency</li>
+      </ul>
+
+      <div style="background-color: #fdfcfc; padding: 2rem 2.25rem; border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 8px; margin-top: 1.5rem;">
+        <h3 class="h3" style="margin-top: 0;">Launch Dashboard</h3>
+        <p style="margin-bottom: 1.25rem; color: var(--text-muted);">
+          The dashboard loads CSV data client-side and runs entirely in the browser—no backend required.
+          This architecture makes it ideal for GitHub Pages hosting and ensures data privacy.
+        </p>
+        <a href="campaign-performance-dashboard.html" class="btn-link" style="font-size: 1rem; padding-bottom: 4px; border-bottom-width: 3px;">
+          Open Interactive Dashboard →
+        </a>
+      </div>
+    </div>
+
     <div class="section" id="data">
       <h2 class="h2">Dataset & Reproducibility</h2>
       <p class="project-desc">
@@ -65,12 +93,13 @@
       <div style="background-color: #f3f4f6; padding: 1.5rem; border-left: 4px solid var(--accent); border-radius: 6px;">
         <h3 class="h3" style="margin-top: 0;">Downloads</h3>
         <p style="color: var(--text-muted); margin-bottom: 1rem;">
-          These links are included to keep the case study complete.
+          All artifacts are available for download and reuse.
         </p>
         <ul style="color: var(--text-muted); margin-bottom: 0; list-style: disc; padding-left: 20px;">
-          <li><a class="btn-link" href="assets/ga4_sessions_by_day_channel.csv">ga4_sessions_by_day_channel.csv</a></li>
-          <li><a class="btn-link" href="assets/ga4_purchases_revenue_by_day.csv">ga4_purchases_revenue_by_day.csv</a></li>
-          <li><a class="btn-link" href="assets/ga4_funnel_by_day_channel.csv">ga4_funnel_by_day_channel.csv</a></li>
+          <li><a class="btn-link" href="campaign-performance-dashboard.html" download>campaign-performance-dashboard.html</a> — Interactive dashboard (standalone file)</li>
+          <li><a class="btn-link" href="assets/ga4_sessions_by_day_channel.csv">ga4_sessions_by_day_channel.csv</a> — Sessions by channel</li>
+          <li><a class="btn-link" href="assets/ga4_purchases_revenue_by_day.csv">ga4_purchases_revenue_by_day.csv</a> — Purchases & revenue</li>
+          <li><a class="btn-link" href="assets/ga4_funnel_by_day_channel.csv">ga4_funnel_by_day_channel.csv</a> — Complete funnel data</li>
         </ul>
       </div>
     </div>
