@@ -727,18 +727,21 @@ footer p {
   display: flex;
   gap: 1.5rem;
   margin-bottom: 2.5rem;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-wrap: nowrap; /* Forces controls to stay on one horizontal line */
+  align-items: flex-end; /* Aligns the bottom of the dropdowns together */
   background: #fff;
   padding: 1.5rem;
   border: 1px solid var(--border);
   border-radius: 8px;
+  overflow-x: auto; /* Allows horizontal scroll on very small screens */
 }
 
 .control-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  flex: 1; /* Allows the inputs to share horizontal space equally */
+  min-width: 150px; /* Prevents them from shrinking too much */
 }
 
 .control-group label {
@@ -751,6 +754,7 @@ footer p {
 
 .control-group select,
 .control-group input {
+  width: 100%; /* Ensures they fill their flex column */
   padding: 0.6rem 1rem;
   border: 1px solid var(--border);
   border-radius: 6px;
@@ -758,7 +762,6 @@ footer p {
   font-size: 0.95rem;
   background: #fff;
   color: var(--text-main);
-  min-width: 180px;
 }
 
 .control-group select:focus,
@@ -770,9 +773,11 @@ footer p {
 /* --- KPI Cards --- */
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(4, 1fr); /* Strictly forces 4 equal columns in one row */
   gap: 1.5rem;
   margin-bottom: 3rem;
+  overflow-x: auto; /* Safety fallback for small screens */
+  padding-bottom: 0.5rem; /* Prevents scrollbar from clipping cards if it appears */
 }
 
 .kpi-card {
@@ -783,6 +788,8 @@ footer p {
   transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
+  min-width: 0; /* Prevents content from forcing the grid to expand */
+  word-wrap: break-word; /* Wraps very long text/numbers safely */
 }
 
 .kpi-card::after {
