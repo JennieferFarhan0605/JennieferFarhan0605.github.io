@@ -12,10 +12,10 @@
 
   <nav class="nav-wrap">
     <a href="index.html" class="brand">Jenniefer <span>Farhan.</span></a>
-    <a href="digital-campaign-analysis.html" class="btn-link">← Back to Case Study</a>
+    <a href="digital-campaign-analysis.html" class="btn-link">&larr; Back to Case Study</a>
   </nav>
 
-  <main class="container dashboard-scope">
+  <main class="container">
     <div class="dashboard-header">
       <span class="label">Interactive Data Dashboard</span>
       <h1 class="h1">Campaign Performance Analytics</h1>
@@ -30,6 +30,7 @@
       </div>
     </div>
 
+    <!-- Controls -->
     <div class="dashboard-controls">
       <div class="control-group">
         <label for="dateRange">Date Range</label>
@@ -57,10 +58,13 @@
       </div>
     </div>
 
+    <!-- Loading -->
     <div id="loadingState" class="loading">Loading campaign data&hellip;</div>
 
+    <!-- Dashboard Content -->
     <div id="dashboardContent" style="display:none;">
 
+      <!-- KPI Cards -->
       <div class="kpi-grid">
         <div class="kpi-card">
           <div class="kpi-label">Total Sessions</div>
@@ -84,57 +88,52 @@
         </div>
       </div>
 
-      <div class="charts-grid">
-        <div class="chart-card chart-card--full">
-          <div class="chart-title">Performance Trend Over Time</div>
-          <div class="chart-subtitle">Daily aggregated view — toggle metric above</div>
-          <div class="chart-canvas-wrap"><canvas id="trendChart"></canvas></div>
-        </div>
+      <!-- Chart 1: Trend (full width) -->
+      <div class="chart-container">
+        <div class="chart-title">Performance Trend Over Time</div>
+        <div class="chart-subtitle">Daily aggregated view &mdash; toggle metric above</div>
+        <canvas id="trendChart"></canvas>
       </div>
 
-      <div class="charts-grid">
-        <div class="chart-card">
+      <!-- Chart 2 + 3: side by side -->
+      <div class="charts-row">
+        <div class="chart-container">
           <div class="chart-title">Channel Performance</div>
-          <div class="chart-subtitle">Sessions vs purchases by acquisition channel</div>
-          <div class="chart-canvas-wrap"><canvas id="channelChart"></canvas></div>
+          <div class="chart-subtitle">Sessions vs purchases by channel</div>
+          <canvas id="channelChart"></canvas>
         </div>
-        <div class="chart-card">
+        <div class="chart-container">
           <div class="chart-title">Revenue Attribution</div>
           <div class="chart-subtitle">Revenue share by channel</div>
-          <div class="chart-canvas-wrap"><canvas id="revenueChart"></canvas></div>
+          <canvas id="revenueChart"></canvas>
         </div>
       </div>
 
-      <div class="charts-grid">
-        <div class="chart-card">
+      <!-- Chart 4 + 5: Daily Revenue + Sessions Distribution (from extra CSVs) -->
+      <div class="charts-row" style="margin-top:1.5rem;">
+        <div class="chart-container">
           <div class="chart-title">Daily Revenue Trend</div>
           <div class="chart-subtitle">Source: ga4_purchases_revenue_by_day.csv</div>
-          <div class="chart-canvas-wrap"><canvas id="dailyRevenueChart"></canvas></div>
+          <canvas id="dailyRevenueChart"></canvas>
         </div>
-        <div class="chart-card">
+        <div class="chart-container">
           <div class="chart-title">Sessions Distribution</div>
-          <div class="chart-subtitle">Source: ga4_sessions_by_day_channel.csv — top channels</div>
-          <div class="chart-canvas-wrap"><canvas id="sessionsStackChart"></canvas></div>
+          <div class="chart-subtitle">Source: ga4_sessions_by_day_channel.csv &mdash; top 5 channels</div>
+          <canvas id="sessionsStackChart"></canvas>
         </div>
       </div>
 
-      <div class="table-card">
-        <div class="table-card-header">
-          <div class="chart-title">Channel Performance Breakdown</div>
-          <div class="chart-subtitle">Aggregated metrics across the selected date range</div>
-        </div>
-        <div class="table-wrap">
-          <table class="channel-table" id="channelTableContainer">
-            <thead><tr><th>Channel</th><th>Sessions</th><th>Purchases</th><th>Revenue</th><th>Conv. Rate</th><th>Rev / Session</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
+      <!-- Channel Table -->
+      <div class="section">
+        <h2 class="h2">Channel Performance Breakdown</h2>
+        <div class="channel-table" id="channelTableContainer"></div>
       </div>
 
+      <!-- ===== KEY INSIGHTS & RECOMMENDATIONS ===== -->
       <div class="insights-section" id="insightsSection">
         <div class="insights-header">
           <h2 class="h2">Key Insights &amp; Recommendations</h2>
-          <p class="project-desc">Auto-generated analysis based on the loaded GA4 dataset, highlighting top performers, efficiency signals, and actionable optimizations.</p>
+          <p class="project-desc">Auto-generated analysis highlighting top performers, efficiency signals, and actionable optimizations.</p>
         </div>
 
         <div class="reco-section-title">Performance Snapshot</div>
@@ -146,21 +145,21 @@
         <div class="summary-callout" id="summaryCallout"></div>
       </div>
 
+      <!-- Data Sources -->
       <div class="data-source-grid">
         <div class="data-source-card">
           <h5>Sessions Dataset</h5>
-          <p><code>ga4_sessions_by_day_channel.csv</code><br>Daily sessions by acquisition channel, reconstructed from GA4 session keys.</p>
+          <p><code>ga4_sessions_by_day_channel.csv</code><br>Daily sessions by acquisition channel.</p>
         </div>
         <div class="data-source-card">
           <h5>Revenue Dataset</h5>
-          <p><code>ga4_purchases_revenue_by_day.csv</code><br>Daily purchase counts and revenue totals from GA4 purchase events.</p>
+          <p><code>ga4_purchases_revenue_by_day.csv</code><br>Daily purchase counts and revenue totals.</p>
         </div>
         <div class="data-source-card">
           <h5>Funnel Dataset</h5>
-          <p><code>ga4_funnel_by_day_channel.csv</code><br>Combined daily funnel: sessions, purchases, revenue, and conversion rate by channel.</p>
+          <p><code>ga4_funnel_by_day_channel.csv</code><br>Combined funnel: sessions, purchases, revenue, conversion by channel.</p>
         </div>
       </div>
-
     </div>
   </main>
 
@@ -174,236 +173,453 @@
   (function() {
     'use strict';
 
-    let funnelData = [], purchasesData = [], sessionsData = [];
-    const charts = {};
+    /* --- State --- */
+    var funnelData = [];
+    var purchasesData = [];
+    var sessionsData = [];
+    var charts = {};
 
-    const PAL = {
-      accent:'#9d174d', accentAlpha:'rgba(157,23,77,0.12)', accentFill:'rgba(157,23,77,0.06)',
-      channels:['#9d174d','#dc2626','#ea580c','#d97706','#65a30d','#059669','#0891b2','#2563eb','#7c3aed','#c026d3'],
-      revenue:'#059669', revenueFill:'rgba(5,150,105,0.10)',
-      purchases:'#2563eb', purchFill:'rgba(37,99,235,0.10)',
+    /* --- Palette --- */
+    var colors = {
+      accent: '#9d174d',
+      accentLight: 'rgba(157, 23, 77, 0.1)',
+      channels: ['#9d174d','#dc2626','#ea580c','#d97706','#65a30d','#059669','#0891b2','#2563eb','#7c3aed','#c026d3'],
+      revenue: '#059669',
+      revenueFill: 'rgba(5, 150, 105, 0.10)',
+      purchases: '#2563eb',
+      purchFill: 'rgba(37, 99, 235, 0.10)'
     };
 
-    function parseCSV(text, delim) {
-      const lines = text.trim().split('\n');
-      const hdrs = lines[0].split(delim).map(h=>h.trim().replace(/\r/g,''));
-      return lines.slice(1).map(ln => {
-        const v = ln.split(delim); const r = {};
-        hdrs.forEach((h,i)=> r[h]=(v[i]||'').trim().replace(/\r/g,''));
-        return r;
-      });
+    /* --- Helpers --- */
+    function parseCSV(text, delimiter) {
+      var lines = text.trim().split('\n');
+      var headers = lines[0].split(delimiter);
+      var data = [];
+      for (var i = 1; i < lines.length; i++) {
+        var values = lines[i].split(delimiter);
+        var row = {};
+        headers.forEach(function(header, index) {
+          row[header.trim().replace(/\r/g, '')] = (values[index] || '').trim().replace(/\r/g, '');
+        });
+        data.push(row);
+      }
+      return data;
     }
 
-    function parseDMY(s){ const [d,m,y]=s.split('/'); return new Date(+y,m-1,+d); }
-    function parseISO(s){ const [y,m,d]=s.split('-'); return new Date(+y,m-1,+d); }
-    function fmt(n){ return n.toLocaleString('en-US'); }
-    function fmtC(n){ return '$'+n.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0}); }
-    function fmtC2(n){ return '$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-    function pct(n){ return n.toFixed(2)+'%'; }
+    function parseDateDMY(dateStr) {
+      var parts = dateStr.split('/');
+      return new Date(parts[2], parts[1] - 1, parts[0]);
+    }
 
+    function parseDateISO(dateStr) {
+      var parts = dateStr.split('-');
+      return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+
+    function fmt(num) { return num.toLocaleString('en-US'); }
+    function fmtC(num) { return '$' + num.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0}); }
+    function fmtC2(num) { return '$' + num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
+    function pct(num) { return num.toFixed(2) + '%'; }
+
+    /* Chart.js global defaults */
     Chart.defaults.font.family = "'Lato', sans-serif";
     Chart.defaults.font.size = 12;
     Chart.defaults.color = '#57534e';
 
+    /* --- Load ALL 3 CSVs --- */
     async function loadData() {
       try {
-        const [fR, pR, sR] = await Promise.all([
+        var responses = await Promise.all([
           fetch('assets/ga4_funnel_by_day_channel.csv'),
           fetch('assets/ga4_purchases_revenue_by_day.csv'),
-          fetch('assets/ga4_sessions_by_day_channel.csv'),
+          fetch('assets/ga4_sessions_by_day_channel.csv')
         ]);
-        const [fT, pT, sT] = await Promise.all([fR.text(), pR.text(), sR.text()]);
+        var texts = await Promise.all([responses[0].text(), responses[1].text(), responses[2].text()]);
 
-        funnelData = parseCSV(fT, ';').map(r=>({
-          date:parseDMY(r.date), dateStr:r.date, channel:r.channel,
-          sessions:parseInt(r.sessions)||0, purchases:parseInt(r.purchases)||0,
-          revenue:parseFloat(r.revenue)||0, conversion_rate:parseFloat(r.conversion_rate)||0,
-        })).sort((a,b)=>a.date-b.date);
+        /* 1) Funnel — semicolon delimited, DD/MM/YYYY */
+        funnelData = parseCSV(texts[0], ';').map(function(r) {
+          return {
+            date: parseDateDMY(r.date), dateStr: r.date, channel: r.channel,
+            sessions: parseInt(r.sessions) || 0, purchases: parseInt(r.purchases) || 0,
+            revenue: parseFloat(r.revenue) || 0, conversion_rate: parseFloat(r.conversion_rate) || 0
+          };
+        }).sort(function(a, b) { return a.date - b.date; });
 
-        purchasesData = parseCSV(pT, ',').map(r=>({
-          date:parseISO(r.date), dateStr:r.date,
-          purchases:parseInt(r.purchases)||0, revenue:parseFloat(r.revenue)||0,
-        })).sort((a,b)=>a.date-b.date);
+        /* 2) Purchases / Revenue — comma delimited, YYYY-MM-DD */
+        purchasesData = parseCSV(texts[1], ',').map(function(r) {
+          return {
+            date: parseDateISO(r.date), dateStr: r.date,
+            purchases: parseInt(r.purchases) || 0, revenue: parseFloat(r.revenue) || 0
+          };
+        }).sort(function(a, b) { return a.date - b.date; });
 
-        sessionsData = parseCSV(sT, ',').map(r=>({
-          date:parseISO(r.date), dateStr:r.date, channel:r.channel,
-          sessions:parseInt(r.sessions)||0,
-        })).sort((a,b)=>a.date-b.date);
+        /* 3) Sessions — comma delimited, YYYY-MM-DD */
+        sessionsData = parseCSV(texts[2], ',').map(function(r) {
+          return {
+            date: parseDateISO(r.date), dateStr: r.date,
+            channel: r.channel, sessions: parseInt(r.sessions) || 0
+          };
+        }).sort(function(a, b) { return a.date - b.date; });
 
-        const chs = [...new Set(funnelData.map(d=>d.channel))].sort();
-        const sel = document.getElementById('channelFilter');
-        chs.forEach(ch=>{ const o=document.createElement('option'); o.value=ch; o.textContent=ch; sel.appendChild(o); });
+        /* Populate channel filter */
+        var channelSet = {};
+        funnelData.forEach(function(d) { channelSet[d.channel] = true; });
+        var channelList = Object.keys(channelSet).sort();
+        var sel = document.getElementById('channelFilter');
+        channelList.forEach(function(ch) {
+          var o = document.createElement('option');
+          o.value = ch; o.textContent = ch; sel.appendChild(o);
+        });
 
-        document.getElementById('loadingState').style.display='none';
-        document.getElementById('dashboardContent').style.display='block';
+        /* Show dashboard */
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('dashboardContent').style.display = 'block';
         updateDashboard();
 
+        /* Event listeners */
         document.getElementById('dateRange').addEventListener('change', updateDashboard);
         document.getElementById('channelFilter').addEventListener('change', updateDashboard);
         document.getElementById('metricView').addEventListener('change', updateDashboard);
-      } catch(e) {
-        console.error(e);
-        document.getElementById('loadingState').textContent='Error loading CSV files. Ensure they are in assets/.';
+
+      } catch (error) {
+        console.error('Error loading data:', error);
+        document.getElementById('loadingState').textContent = 'Error loading CSV files. Please ensure they are in the assets/ folder.';
       }
     }
 
-    function getFiltered() {
-      let f=[...funnelData];
-      const range=document.getElementById('dateRange').value;
-      if(range!=='all'){ const days=parseInt(range); const mx=new Date(Math.max(...f.map(d=>d.date))); const mn=new Date(mx); mn.setDate(mn.getDate()-days); f=f.filter(d=>d.date>=mn); }
-      const ch=document.getElementById('channelFilter').value;
-      if(ch!=='all') f=f.filter(d=>d.channel===ch);
-      return f;
+    /* --- Filtering --- */
+    function getFilteredData() {
+      var filtered = funnelData.slice();
+      var dateRange = document.getElementById('dateRange').value;
+      if (dateRange !== 'all') {
+        var days = parseInt(dateRange);
+        var maxDate = new Date(Math.max.apply(null, filtered.map(function(d) { return d.date; })));
+        var minDate = new Date(maxDate);
+        minDate.setDate(minDate.getDate() - days);
+        filtered = filtered.filter(function(d) { return d.date >= minDate; });
+      }
+      var channelFilter = document.getElementById('channelFilter').value;
+      if (channelFilter !== 'all') {
+        filtered = filtered.filter(function(d) { return d.channel === channelFilter; });
+      }
+      return filtered;
     }
 
     function getDateBounds() {
-      const range=document.getElementById('dateRange').value;
-      if(range==='all') return {min:null,max:null};
-      const mx=new Date(Math.max(...funnelData.map(d=>d.date)));
-      const mn=new Date(mx); mn.setDate(mn.getDate()-parseInt(range));
-      return {min:mn,max:mx};
+      var range = document.getElementById('dateRange').value;
+      if (range === 'all') return { min: null, max: null };
+      var maxDate = new Date(Math.max.apply(null, funnelData.map(function(d) { return d.date; })));
+      var minDate = new Date(maxDate);
+      minDate.setDate(minDate.getDate() - parseInt(range));
+      return { min: minDate, max: maxDate };
     }
 
+    /* --- Update Everything --- */
     function updateDashboard() {
-      const data=getFiltered();
-      updateKPIs(data); updateTrendChart(data); updateChannelChart(data);
-      updateRevenueChart(data); updateDailyRevenueChart(); updateSessionsStackChart();
-      updateChannelTable(data); generateInsights(data);
+      var data = getFilteredData();
+      updateKPIs(data);
+      updateTrendChart(data);
+      updateChannelChart(data);
+      updateRevenueChart(data);
+      updateDailyRevenueChart();
+      updateSessionsStackChart();
+      updateChannelTable(data);
+      generateInsights(data);
     }
 
+    /* --- KPIs --- */
     function updateKPIs(data) {
-      const tS=data.reduce((s,d)=>s+d.sessions,0);
-      const tP=data.reduce((s,d)=>s+d.purchases,0);
-      const tR=data.reduce((s,d)=>s+d.revenue,0);
-      const days=new Set(data.map(d=>d.dateStr)).size;
-      const ac=tS>0?(tP/tS*100):0;
-      document.getElementById('kpi-sessions').textContent=fmt(tS);
-      document.getElementById('kpi-sessions-desc').textContent=days+' days of data';
-      document.getElementById('kpi-purchases').textContent=fmt(tP);
-      document.getElementById('kpi-purchases-desc').textContent=fmt(Math.round(tP/Math.max(days,1)))+' avg / day';
-      document.getElementById('kpi-revenue').textContent=fmtC(tR);
-      document.getElementById('kpi-revenue-desc').textContent=tP>0?fmtC(Math.round(tR/tP))+' avg order value':'—';
-      document.getElementById('kpi-conversion').textContent=ac.toFixed(2)+'%';
-      document.getElementById('kpi-conversion-desc').textContent='purchases per session';
+      var totalS = 0, totalP = 0, totalR = 0;
+      var daySet = {};
+      data.forEach(function(d) {
+        totalS += d.sessions; totalP += d.purchases; totalR += d.revenue;
+        daySet[d.dateStr] = true;
+      });
+      var numDays = Object.keys(daySet).length;
+      var avgConv = totalS > 0 ? (totalP / totalS * 100) : 0;
+
+      document.getElementById('kpi-sessions').textContent = fmt(totalS);
+      document.getElementById('kpi-sessions-desc').textContent = numDays + ' days of data';
+      document.getElementById('kpi-purchases').textContent = fmt(totalP);
+      document.getElementById('kpi-purchases-desc').textContent = fmt(Math.round(totalP / Math.max(numDays, 1))) + ' avg / day';
+      document.getElementById('kpi-revenue').textContent = fmtC(totalR);
+      document.getElementById('kpi-revenue-desc').textContent = totalP > 0 ? fmtC(Math.round(totalR / totalP)) + ' avg order value' : '\u2014';
+      document.getElementById('kpi-conversion').textContent = avgConv.toFixed(2) + '%';
+      document.getElementById('kpi-conversion-desc').textContent = 'purchases per session';
     }
 
+    /* --- Trend Chart (from funnel CSV) --- */
     function updateTrendChart(data) {
-      const metric=document.getElementById('metricView').value;
-      const daily={};
-      data.forEach(d=>{
-        if(!daily[d.dateStr]) daily[d.dateStr]={sessions:0,purchases:0,revenue:0,date:d.date};
-        daily[d.dateStr].sessions+=d.sessions; daily[d.dateStr].purchases+=d.purchases; daily[d.dateStr].revenue+=d.revenue;
+      var metric = document.getElementById('metricView').value;
+      var daily = {};
+      data.forEach(function(d) {
+        if (!daily[d.dateStr]) daily[d.dateStr] = {sessions: 0, purchases: 0, revenue: 0, date: d.date};
+        daily[d.dateStr].sessions += d.sessions;
+        daily[d.dateStr].purchases += d.purchases;
+        daily[d.dateStr].revenue += d.revenue;
       });
-      const dates=Object.keys(daily).sort((a,b)=>parseDMY(a)-parseDMY(b));
-      const vals=dates.map(dt=>metric==='conversion_rate'?(daily[dt].sessions>0?(daily[dt].purchases/daily[dt].sessions*100):0):daily[dt][metric]);
-      const labels=dates.map(dt=>parseDMY(dt).toLocaleDateString('en-US',{month:'short',day:'numeric'}));
+      var dates = Object.keys(daily).sort(function(a, b) { return parseDateDMY(a) - parseDateDMY(b); });
+      var values = dates.map(function(dt) {
+        if (metric === 'conversion_rate') return daily[dt].sessions > 0 ? (daily[dt].purchases / daily[dt].sessions * 100) : 0;
+        return daily[dt][metric];
+      });
+      var labels = dates.map(function(dt) { return parseDateDMY(dt).toLocaleDateString('en-US', {month: 'short', day: 'numeric'}); });
 
-      if(charts.trend) charts.trend.destroy();
-      charts.trend=new Chart(document.getElementById('trendChart'),{
-        type:'line',
-        data:{labels,datasets:[{label:metric.replace('_',' ').replace(/\b\w/g,l=>l.toUpperCase()),data:vals,borderColor:PAL.accent,backgroundColor:PAL.accentFill,fill:true,tension:0.35,pointRadius:2,pointHoverRadius:5,borderWidth:2}]},
-        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:12,maxRotation:0}},y:{beginAtZero:true,ticks:{callback:v=>metric==='revenue'?fmtC(v):metric==='conversion_rate'?v.toFixed(1)+'%':fmt(v)}}}}
+      if (charts.trend) charts.trend.destroy();
+      charts.trend = new Chart(document.getElementById('trendChart').getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: metric.replace('_', ' ').replace(/\b\w/g, function(l) { return l.toUpperCase(); }),
+            data: values,
+            borderColor: colors.accent,
+            backgroundColor: colors.accentLight,
+            fill: true, tension: 0.4, pointRadius: 3, pointHoverRadius: 5
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(v) {
+                  if (metric === 'revenue') return fmtC(v);
+                  if (metric === 'conversion_rate') return v.toFixed(1) + '%';
+                  return fmt(v);
+                }
+              }
+            }
+          }
+        }
       });
     }
 
+    /* --- Channel Bar Chart (from funnel CSV) --- */
     function updateChannelChart(data) {
-      const agg={};
-      data.forEach(d=>{if(!agg[d.channel])agg[d.channel]={sessions:0,purchases:0};agg[d.channel].sessions+=d.sessions;agg[d.channel].purchases+=d.purchases;});
-      const chs=Object.keys(agg).sort((a,b)=>agg[b].sessions-agg[a].sessions).slice(0,8);
-      if(charts.channel) charts.channel.destroy();
-      charts.channel=new Chart(document.getElementById('channelChart'),{
-        type:'bar',
-        data:{labels:chs,datasets:[
-          {label:'Sessions',data:chs.map(c=>agg[c].sessions),backgroundColor:PAL.accentAlpha,borderColor:PAL.accent,borderWidth:1},
-          {label:'Purchases',data:chs.map(c=>agg[c].purchases),backgroundColor:PAL.purchFill,borderColor:PAL.purchases,borderWidth:1},
-        ]},
-        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:12,padding:16}}},scales:{x:{grid:{display:false},ticks:{maxRotation:45,font:{size:10}}},y:{beginAtZero:true}}}
+      var agg = {};
+      data.forEach(function(d) {
+        if (!agg[d.channel]) agg[d.channel] = {sessions: 0, purchases: 0};
+        agg[d.channel].sessions += d.sessions;
+        agg[d.channel].purchases += d.purchases;
+      });
+      var chs = Object.keys(agg).sort(function(a, b) { return agg[b].sessions - agg[a].sessions; }).slice(0, 10);
+
+      if (charts.channel) charts.channel.destroy();
+      charts.channel = new Chart(document.getElementById('channelChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: chs,
+          datasets: [
+            { label: 'Sessions', data: chs.map(function(c) { return agg[c].sessions; }), backgroundColor: colors.accentLight, borderColor: colors.accent, borderWidth: 1 },
+            { label: 'Purchases', data: chs.map(function(c) { return agg[c].purchases; }), backgroundColor: 'rgba(220, 38, 38, 0.1)', borderColor: '#dc2626', borderWidth: 1 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'top' } },
+          scales: { y: { beginAtZero: true } }
+        }
       });
     }
 
+    /* --- Revenue Doughnut (from funnel CSV) --- */
     function updateRevenueChart(data) {
-      const agg={};
-      data.forEach(d=>{agg[d.channel]=(agg[d.channel]||0)+d.revenue;});
-      const chs=Object.keys(agg).sort((a,b)=>agg[b]-agg[a]).slice(0,8);
-      if(charts.revenue) charts.revenue.destroy();
-      charts.revenue=new Chart(document.getElementById('revenueChart'),{
-        type:'doughnut',
-        data:{labels:chs,datasets:[{data:chs.map(c=>agg[c]),backgroundColor:PAL.channels.slice(0,chs.length),borderWidth:2,borderColor:'#fff'}]},
-        options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{boxWidth:10,padding:10,font:{size:11}}},tooltip:{callbacks:{label:ctx=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0);return ctx.label+': '+fmtC(ctx.parsed)+' ('+((ctx.parsed/t)*100).toFixed(1)+'%)';}}}}}
+      var agg = {};
+      data.forEach(function(d) { agg[d.channel] = (agg[d.channel] || 0) + d.revenue; });
+      var chs = Object.keys(agg).sort(function(a, b) { return agg[b] - agg[a]; }).slice(0, 8);
+
+      if (charts.revenue) charts.revenue.destroy();
+      charts.revenue = new Chart(document.getElementById('revenueChart').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: chs,
+          datasets: [{ data: chs.map(function(c) { return agg[c]; }), backgroundColor: colors.channels.slice(0, chs.length), borderWidth: 2, borderColor: '#fff' }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, cutout: '55%',
+          plugins: {
+            legend: { position: 'right', labels: { boxWidth: 10, padding: 10, font: { size: 11 } } },
+            tooltip: { callbacks: {
+              label: function(ctx) {
+                var total = ctx.dataset.data.reduce(function(a, b) { return a + b; }, 0);
+                return ctx.label + ': ' + fmtC(ctx.parsed) + ' (' + ((ctx.parsed / total) * 100).toFixed(1) + '%)';
+              }
+            }}
+          }
+        }
       });
     }
 
+    /* --- Daily Revenue Chart (from purchases CSV) --- */
     function updateDailyRevenueChart() {
-      const b=getDateBounds(); let d=[...purchasesData]; if(b.min) d=d.filter(r=>r.date>=b.min);
-      const labels=d.map(r=>r.date.toLocaleDateString('en-US',{month:'short',day:'numeric'}));
-      if(charts.dailyRevenue) charts.dailyRevenue.destroy();
-      charts.dailyRevenue=new Chart(document.getElementById('dailyRevenueChart'),{
-        type:'bar',
-        data:{labels,datasets:[
-          {label:'Revenue ($)',data:d.map(r=>r.revenue),backgroundColor:PAL.revenueFill,borderColor:PAL.revenue,borderWidth:1,yAxisID:'y',order:2},
-          {label:'Purchases',data:d.map(r=>r.purchases),type:'line',borderColor:PAL.accent,backgroundColor:'transparent',borderWidth:2,pointRadius:1.5,tension:0.3,yAxisID:'y1',order:1},
-        ]},
-        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:12,padding:14}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:10,maxRotation:0,font:{size:10}}},y:{beginAtZero:true,position:'left',ticks:{callback:v=>fmtC(v)}},y1:{beginAtZero:true,position:'right',grid:{drawOnChartArea:false},ticks:{stepSize:10}}}}
+      var bounds = getDateBounds();
+      var d = purchasesData.slice();
+      if (bounds.min) d = d.filter(function(r) { return r.date >= bounds.min; });
+
+      var labels = d.map(function(r) { return r.date.toLocaleDateString('en-US', {month: 'short', day: 'numeric'}); });
+      var revs = d.map(function(r) { return r.revenue; });
+      var purs = d.map(function(r) { return r.purchases; });
+
+      if (charts.dailyRevenue) charts.dailyRevenue.destroy();
+      charts.dailyRevenue = new Chart(document.getElementById('dailyRevenueChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            { label: 'Revenue ($)', data: revs, backgroundColor: colors.revenueFill, borderColor: colors.revenue, borderWidth: 1, yAxisID: 'y', order: 2 },
+            { label: 'Purchases', data: purs, type: 'line', borderColor: colors.accent, backgroundColor: 'transparent', borderWidth: 2, pointRadius: 1.5, tension: 0.3, yAxisID: 'y1', order: 1 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 14 } } },
+          scales: {
+            x: { grid: { display: false }, ticks: { maxTicksLimit: 10, maxRotation: 0, font: { size: 10 } } },
+            y: { beginAtZero: true, position: 'left', ticks: { callback: function(v) { return fmtC(v); } } },
+            y1: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { stepSize: 10 } }
+          }
+        }
       });
     }
 
+    /* --- Sessions Stacked Area (from sessions CSV) --- */
     function updateSessionsStackChart() {
-      const b=getDateBounds(); let d=[...sessionsData]; if(b.min) d=d.filter(r=>r.date>=b.min);
-      const totals={}; d.forEach(r=>totals[r.channel]=(totals[r.channel]||0)+r.sessions);
-      const topChs=Object.keys(totals).sort((a,b)=>totals[b]-totals[a]).slice(0,5);
-      const byDate={}; d.forEach(r=>{const ds=r.dateStr;if(!byDate[ds])byDate[ds]={date:r.date};if(topChs.includes(r.channel))byDate[ds][r.channel]=(byDate[ds][r.channel]||0)+r.sessions;});
-      const sorted=Object.values(byDate).sort((a,b)=>a.date-b.date);
-      const labels=sorted.map(r=>r.date.toLocaleDateString('en-US',{month:'short',day:'numeric'}));
-      const datasets=topChs.map((ch,i)=>({label:ch,data:sorted.map(r=>r[ch]||0),backgroundColor:PAL.channels[i]+'22',borderColor:PAL.channels[i],borderWidth:1.5,fill:true,tension:0.3,pointRadius:0}));
-      if(charts.sessionsStack) charts.sessionsStack.destroy();
-      charts.sessionsStack=new Chart(document.getElementById('sessionsStackChart'),{
-        type:'line',data:{labels,datasets},
-        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,padding:10,font:{size:10}}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:10,maxRotation:0,font:{size:10}}},y:{beginAtZero:true,stacked:true}}}
+      var bounds = getDateBounds();
+      var d = sessionsData.slice();
+      if (bounds.min) d = d.filter(function(r) { return r.date >= bounds.min; });
+
+      var totals = {};
+      d.forEach(function(r) { totals[r.channel] = (totals[r.channel] || 0) + r.sessions; });
+      var topChs = Object.keys(totals).sort(function(a, b) { return totals[b] - totals[a]; }).slice(0, 5);
+
+      var byDate = {};
+      d.forEach(function(r) {
+        if (!byDate[r.dateStr]) byDate[r.dateStr] = { date: r.date };
+        if (topChs.indexOf(r.channel) !== -1) byDate[r.dateStr][r.channel] = (byDate[r.dateStr][r.channel] || 0) + r.sessions;
+      });
+      var sorted = Object.values(byDate).sort(function(a, b) { return a.date - b.date; });
+      var labels = sorted.map(function(r) { return r.date.toLocaleDateString('en-US', {month: 'short', day: 'numeric'}); });
+
+      var datasets = topChs.map(function(ch, i) {
+        return {
+          label: ch,
+          data: sorted.map(function(r) { return r[ch] || 0; }),
+          backgroundColor: colors.channels[i] + '22',
+          borderColor: colors.channels[i],
+          borderWidth: 1.5, fill: true, tension: 0.3, pointRadius: 0
+        };
+      });
+
+      if (charts.sessionsStack) charts.sessionsStack.destroy();
+      charts.sessionsStack = new Chart(document.getElementById('sessionsStackChart').getContext('2d'), {
+        type: 'line',
+        data: { labels: labels, datasets: datasets },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'top', labels: { boxWidth: 10, padding: 10, font: { size: 10 } } } },
+          scales: {
+            x: { grid: { display: false }, ticks: { maxTicksLimit: 10, maxRotation: 0, font: { size: 10 } } },
+            y: { beginAtZero: true, stacked: true }
+          }
+        }
       });
     }
 
+    /* --- Channel Table (from funnel CSV) --- */
     function updateChannelTable(data) {
-      const agg={};
-      data.forEach(d=>{if(!agg[d.channel])agg[d.channel]={sessions:0,purchases:0,revenue:0};agg[d.channel].sessions+=d.sessions;agg[d.channel].purchases+=d.purchases;agg[d.channel].revenue+=d.revenue;});
-      const rows=Object.keys(agg).map(ch=>({channel:ch,sessions:agg[ch].sessions,purchases:agg[ch].purchases,revenue:agg[ch].revenue,convRate:agg[ch].sessions>0?(agg[ch].purchases/agg[ch].sessions*100):0,rps:agg[ch].sessions>0?(agg[ch].revenue/agg[ch].sessions):0})).sort((a,b)=>b.sessions-a.sessions);
-      const maxConv=Math.max(...rows.map(r=>r.convRate),1);
-      document.querySelector('#channelTableContainer tbody').innerHTML=rows.map(r=>'<tr><td class="channel-name">'+r.channel+'</td><td class="metric-value">'+fmt(r.sessions)+'</td><td class="metric-value">'+fmt(r.purchases)+'</td><td class="metric-value">'+fmtC(r.revenue)+'</td><td><span class="conv-bar"><span class="conv-bar-track"><span class="conv-bar-fill" style="width:'+(r.convRate/maxConv*100).toFixed(1)+'%"></span></span><span class="metric-value">'+pct(r.convRate)+'</span></span></td><td class="metric-value">'+fmtC2(r.rps)+'</td></tr>').join('');
+      var agg = {};
+      data.forEach(function(d) {
+        if (!agg[d.channel]) agg[d.channel] = {sessions: 0, purchases: 0, revenue: 0};
+        agg[d.channel].sessions += d.sessions;
+        agg[d.channel].purchases += d.purchases;
+        agg[d.channel].revenue += d.revenue;
+      });
+      var rows = Object.keys(agg).map(function(ch) {
+        return {
+          channel: ch, sessions: agg[ch].sessions, purchases: agg[ch].purchases,
+          revenue: agg[ch].revenue,
+          convRate: agg[ch].sessions > 0 ? (agg[ch].purchases / agg[ch].sessions * 100) : 0,
+          rps: agg[ch].sessions > 0 ? (agg[ch].revenue / agg[ch].sessions) : 0
+        };
+      }).sort(function(a, b) { return b.sessions - a.sessions; });
+
+      var maxConv = Math.max.apply(null, rows.map(function(r) { return r.convRate; }).concat([1]));
+
+      var html = '<table><thead><tr><th>Channel</th><th>Sessions</th><th>Purchases</th><th>Revenue</th><th>Conv. Rate</th><th>Rev / Session</th></tr></thead><tbody>';
+      rows.forEach(function(r) {
+        html += '<tr>'
+          + '<td><strong>' + r.channel + '</strong></td>'
+          + '<td class="metric-value">' + fmt(r.sessions) + '</td>'
+          + '<td class="metric-value">' + fmt(r.purchases) + '</td>'
+          + '<td class="metric-value">' + fmtC(r.revenue) + '</td>'
+          + '<td><span class="conv-bar"><span class="conv-bar-track"><span class="conv-bar-fill" style="width:' + (r.convRate / maxConv * 100).toFixed(1) + '%"></span></span><span class="metric-value">' + pct(r.convRate) + '</span></span></td>'
+          + '<td class="metric-value">' + fmtC2(r.rps) + '</td>'
+          + '</tr>';
+      });
+      html += '</tbody></table>';
+      document.getElementById('channelTableContainer').innerHTML = html;
     }
 
+    /* ===========================================
+       KEY INSIGHTS & RECOMMENDATIONS
+    ============================================ */
     function generateInsights(data) {
-      const agg={};
-      data.forEach(d=>{if(!agg[d.channel])agg[d.channel]={sessions:0,purchases:0,revenue:0};agg[d.channel].sessions+=d.sessions;agg[d.channel].purchases+=d.purchases;agg[d.channel].revenue+=d.revenue;});
-      const channels=Object.keys(agg).map(ch=>({channel:ch,sessions:agg[ch].sessions,purchases:agg[ch].purchases,revenue:agg[ch].revenue,convRate:agg[ch].sessions>0?(agg[ch].purchases/agg[ch].sessions*100):0,rps:agg[ch].sessions>0?(agg[ch].revenue/agg[ch].sessions):0}));
-      const tS=channels.reduce((s,c)=>s+c.sessions,0);
-      const tR=channels.reduce((s,c)=>s+c.revenue,0);
-      const tP=channels.reduce((s,c)=>s+c.purchases,0);
-      const byVol=[...channels].sort((a,b)=>b.sessions-a.sessions)[0];
-      const byConv=[...channels].sort((a,b)=>b.convRate-a.convRate)[0];
-      const byRev=[...channels].sort((a,b)=>b.revenue-a.revenue)[0];
-      const byEff=[...channels].sort((a,b)=>b.rps-a.rps)[0];
+      var agg = {};
+      data.forEach(function(d) {
+        if (!agg[d.channel]) agg[d.channel] = {sessions: 0, purchases: 0, revenue: 0};
+        agg[d.channel].sessions += d.sessions;
+        agg[d.channel].purchases += d.purchases;
+        agg[d.channel].revenue += d.revenue;
+      });
+      var channels = Object.keys(agg).map(function(ch) {
+        return {
+          channel: ch, sessions: agg[ch].sessions, purchases: agg[ch].purchases,
+          revenue: agg[ch].revenue,
+          convRate: agg[ch].sessions > 0 ? (agg[ch].purchases / agg[ch].sessions * 100) : 0,
+          rps: agg[ch].sessions > 0 ? (agg[ch].revenue / agg[ch].sessions) : 0
+        };
+      });
+      var tS = channels.reduce(function(s, c) { return s + c.sessions; }, 0);
+      var tR = channels.reduce(function(s, c) { return s + c.revenue; }, 0);
+      var tP = channels.reduce(function(s, c) { return s + c.purchases; }, 0);
 
-      const bounds=getDateBounds(); let pData=[...purchasesData]; if(bounds.min) pData=pData.filter(r=>r.date>=bounds.min);
-      const avgDR=pData.length>0?(pData.reduce((s,r)=>s+r.revenue,0)/pData.length):0;
-      const peak=pData.length>0?pData.reduce((best,r)=>r.revenue>best.revenue?r:best,pData[0]):null;
+      var byVol  = channels.slice().sort(function(a, b) { return b.sessions - a.sessions; })[0];
+      var byConv = channels.slice().sort(function(a, b) { return b.convRate - a.convRate; })[0];
+      var byRev  = channels.slice().sort(function(a, b) { return b.revenue - a.revenue; })[0];
+      var byEff  = channels.slice().sort(function(a, b) { return b.rps - a.rps; })[0];
 
-      document.getElementById('insightCardsContainer').innerHTML=
-        '<div class="insight-card"><div class="insight-icon insight-icon--accent">&#9650;</div><div class="insight-body"><h4>Highest Volume Channel</h4><div class="insight-metric">'+fmt(byVol.sessions)+' sessions</div><p><strong>'+byVol.channel+'</strong> drives '+((byVol.sessions/tS)*100).toFixed(1)+'% of all traffic but converts at '+pct(byVol.convRate)+'.</p></div></div>'+
-        '<div class="insight-card"><div class="insight-icon insight-icon--success">&#10003;</div><div class="insight-body"><h4>Best Conversion Rate</h4><div class="insight-metric">'+pct(byConv.convRate)+'</div><p><strong>'+byConv.channel+'</strong> converts at the highest rate, generating '+fmt(byConv.purchases)+' purchases from '+fmt(byConv.sessions)+' sessions.</p></div></div>'+
-        '<div class="insight-card"><div class="insight-icon insight-icon--info">&#36;</div><div class="insight-body"><h4>Revenue Leader</h4><div class="insight-metric">'+fmtC(byRev.revenue)+'</div><p><strong>'+byRev.channel+'</strong> contributes '+((byRev.revenue/tR)*100).toFixed(1)+'% of total revenue across the selected period.</p></div></div>'+
-        '<div class="insight-card"><div class="insight-icon insight-icon--purple">&#9733;</div><div class="insight-body"><h4>Most Efficient Channel</h4><div class="insight-metric">'+fmtC2(byEff.rps)+' / session</div><p><strong>'+byEff.channel+'</strong> delivers the highest revenue per session, indicating strong audience-product fit.</p></div></div>'+
-        (peak?'<div class="insight-card"><div class="insight-icon insight-icon--warning">&#9650;</div><div class="insight-body"><h4>Peak Revenue Day</h4><div class="insight-metric">'+fmtC(peak.revenue)+'</div><p>'+peak.date.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})+' recorded the highest single-day revenue with '+fmt(peak.purchases)+' purchases.</p></div></div>':'')+
-        '<div class="insight-card"><div class="insight-icon insight-icon--success">&#8709;</div><div class="insight-body"><h4>Average Daily Revenue</h4><div class="insight-metric">'+fmtC(avgDR)+'</div><p>Across '+fmt(pData.length)+' days of data from the purchases dataset, averaging '+fmt(Math.round(tP/Math.max(pData.length,1)))+' purchases per day.</p></div></div>';
+      /* From purchases CSV */
+      var bounds = getDateBounds();
+      var pData = purchasesData.slice();
+      if (bounds.min) pData = pData.filter(function(r) { return r.date >= bounds.min; });
+      var avgDR = pData.length > 0 ? (pData.reduce(function(s, r) { return s + r.revenue; }, 0) / pData.length) : 0;
+      var peak = pData.length > 0 ? pData.reduce(function(best, r) { return r.revenue > best.revenue ? r : best; }, pData[0]) : null;
 
-      var lowConvHigh=[...channels].filter(function(c){return c.sessions>tS*0.05;}).sort(function(a,b){return a.convRate-b.convRate;})[0];
-      document.getElementById('recoCardsContainer').innerHTML=
-        '<div class="reco-card"><div class="reco-number">1</div><h4>Invest in High-Efficiency Channels</h4><p>Reallocate budget toward <strong>'+byEff.channel+'</strong>, which generates '+fmtC2(byEff.rps)+' per session. Even a modest increase in traffic could yield outsized revenue returns due to strong conversion efficiency.</p></div>'+
-        '<div class="reco-card"><div class="reco-number">2</div><h4>Optimize Conversion on Top Volume</h4><p><strong>'+byVol.channel+'</strong> drives the most sessions but converts at only '+pct(byVol.convRate)+'. A/B testing landing pages and CTAs for this channel could unlock significant incremental revenue.</p></div>'+
-        '<div class="reco-card"><div class="reco-number">3</div><h4>'+(lowConvHigh?'Investigate Underperforming Channels':'Diversify Revenue Sources')+'</h4><p>'+(lowConvHigh?'<strong>'+lowConvHigh.channel+'</strong> brings '+fmt(lowConvHigh.sessions)+' sessions but converts at just '+pct(lowConvHigh.convRate)+'. Consider reviewing targeting parameters and audience segmentation to improve funnel efficiency.':'Revenue is concentrated in the top channels. Experiment with emerging channels and content formats to reduce dependency and build a more resilient acquisition mix.')+'</p></div>';
+      /* --- Insight Cards --- */
+      document.getElementById('insightCardsContainer').innerHTML =
+        '<div class="insight-card"><div class="insight-icon insight-icon--accent">&#9650;</div><div class="insight-body"><h4>Highest Volume Channel</h4><div class="insight-metric">' + fmt(byVol.sessions) + ' sessions</div><p><strong>' + byVol.channel + '</strong> drives ' + ((byVol.sessions / tS) * 100).toFixed(1) + '% of all traffic but converts at ' + pct(byVol.convRate) + '.</p></div></div>' +
+        '<div class="insight-card"><div class="insight-icon insight-icon--success">&#10003;</div><div class="insight-body"><h4>Best Conversion Rate</h4><div class="insight-metric">' + pct(byConv.convRate) + '</div><p><strong>' + byConv.channel + '</strong> converts at the highest rate, generating ' + fmt(byConv.purchases) + ' purchases from ' + fmt(byConv.sessions) + ' sessions.</p></div></div>' +
+        '<div class="insight-card"><div class="insight-icon insight-icon--info">&#36;</div><div class="insight-body"><h4>Revenue Leader</h4><div class="insight-metric">' + fmtC(byRev.revenue) + '</div><p><strong>' + byRev.channel + '</strong> contributes ' + ((byRev.revenue / tR) * 100).toFixed(1) + '% of total revenue across the selected period.</p></div></div>' +
+        '<div class="insight-card"><div class="insight-icon insight-icon--purple">&#9733;</div><div class="insight-body"><h4>Most Efficient Channel</h4><div class="insight-metric">' + fmtC2(byEff.rps) + ' / session</div><p><strong>' + byEff.channel + '</strong> delivers the highest revenue per session, indicating strong audience-product fit.</p></div></div>' +
+        (peak ? '<div class="insight-card"><div class="insight-icon insight-icon--warning">&#9650;</div><div class="insight-body"><h4>Peak Revenue Day</h4><div class="insight-metric">' + fmtC(peak.revenue) + '</div><p>' + peak.date.toLocaleDateString('en-US', {weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'}) + ' recorded the highest single-day revenue with ' + fmt(peak.purchases) + ' purchases.</p></div></div>' : '') +
+        '<div class="insight-card"><div class="insight-icon insight-icon--success">&#8709;</div><div class="insight-body"><h4>Average Daily Revenue</h4><div class="insight-metric">' + fmtC(avgDR) + '</div><p>Across ' + fmt(pData.length) + ' days of data from the purchases dataset, averaging ' + fmt(Math.round(tP / Math.max(pData.length, 1))) + ' purchases per day.</p></div></div>';
 
-      document.getElementById('summaryCallout').innerHTML=
-        '<h4>Analysis Summary</h4><p>Across the selected period, <strong>'+fmt(channels.length)+' channels</strong> generated <strong>'+fmt(tS)+' sessions</strong>, <strong>'+fmt(tP)+' purchases</strong>, and <strong>'+fmtC(tR)+' in revenue</strong>. The highest-volume channel (<strong>'+byVol.channel+'</strong>) accounts for '+((byVol.sessions/tS)*100).toFixed(1)+'% of traffic, while the most efficient channel (<strong>'+byEff.channel+'</strong>) delivers '+fmtC2(byEff.rps)+' per session. Focusing conversion optimization on high-volume, low-conversion channels while scaling investment in high-efficiency channels represents the clearest path to incremental revenue growth.</p>';
+      /* --- Recommendation Cards --- */
+      var lowConvHigh = channels.filter(function(c) { return c.sessions > tS * 0.05; }).sort(function(a, b) { return a.convRate - b.convRate; })[0];
+      document.getElementById('recoCardsContainer').innerHTML =
+        '<div class="reco-card"><div class="reco-number">1</div><h4>Invest in High-Efficiency Channels</h4><p>Reallocate budget toward <strong>' + byEff.channel + '</strong>, which generates ' + fmtC2(byEff.rps) + ' per session. Even a modest increase in traffic could yield outsized revenue returns.</p></div>' +
+        '<div class="reco-card"><div class="reco-number">2</div><h4>Optimize Conversion on Top Volume</h4><p><strong>' + byVol.channel + '</strong> drives the most sessions but converts at only ' + pct(byVol.convRate) + '. A/B testing landing pages and CTAs could unlock significant incremental revenue.</p></div>' +
+        '<div class="reco-card"><div class="reco-number">3</div><h4>' + (lowConvHigh ? 'Investigate Underperforming Channels' : 'Diversify Revenue Sources') + '</h4><p>' + (lowConvHigh ? '<strong>' + lowConvHigh.channel + '</strong> brings ' + fmt(lowConvHigh.sessions) + ' sessions but converts at just ' + pct(lowConvHigh.convRate) + '. Review targeting and audience segmentation to improve funnel efficiency.' : 'Revenue is concentrated in the top channels. Experiment with emerging channels to reduce dependency.') + '</p></div>';
+
+      /* --- Summary Callout --- */
+      document.getElementById('summaryCallout').innerHTML =
+        '<h4>Analysis Summary</h4><p>Across the selected period, <strong>' + fmt(channels.length) + ' channels</strong> generated <strong>' + fmt(tS) + ' sessions</strong>, <strong>' + fmt(tP) + ' purchases</strong>, and <strong>' + fmtC(tR) + ' in revenue</strong>. The highest-volume channel (<strong>' + byVol.channel + '</strong>) accounts for ' + ((byVol.sessions / tS) * 100).toFixed(1) + '% of traffic, while the most efficient channel (<strong>' + byEff.channel + '</strong>) delivers ' + fmtC2(byEff.rps) + ' per session. Focusing conversion optimization on high-volume, low-conversion channels while scaling investment in high-efficiency channels represents the clearest path to incremental revenue growth.</p>';
     }
 
+    /* --- Init --- */
     document.addEventListener('DOMContentLoaded', loadData);
   })();
   </script>
