@@ -830,11 +830,8 @@ footer p {
   color: var(--text-muted);
 }
 
-/* --- Chart Containers ---
-   THE PATTERN THAT WORKS WITH CHART.JS:
-   Fixed height on the container, canvas directly inside,
-   maintainAspectRatio: false in JS options.
-   NO absolute positioning, NO flex wrappers.
+/* --- Chart Containers (FIXED FOR OVERFLOW) --- 
+   Using Flexbox to perfectly contain Chart.js canvas
 ----------------------------------------------- */
 .chart-container {
   background: #fff;
@@ -843,7 +840,16 @@ footer p {
   border-radius: 10px;
   margin-bottom: 2rem;
   position: relative;
-  height: 400px;
+  height: 450px; /* Increased slightly for a bit more breathing room */
+  display: flex; /* Creates a flexbox context */
+  flex-direction: column; /* Stacks the titles and the chart vertically */
+}
+
+/* Forces the canvas to strictly fit inside the remaining space of the flex container */
+.chart-container canvas {
+  flex: 1 1 auto;
+  min-height: 0; 
+  width: 100% !important;
 }
 
 .chart-title {
@@ -870,7 +876,7 @@ footer p {
 
 .charts-row .chart-container {
   margin-bottom: 0;
-  height: 380px;
+  height: 400px;
 }
 
 /* --- Channel Table --- */
