@@ -830,40 +830,40 @@ footer p {
   color: var(--text-muted);
 }
 
-/* --- Chart Containers (FIXED FOR OVERFLOW) --- 
-   Using Flexbox to perfectly contain Chart.js canvas
+/* --- Chart Containers (FIXED FOR HIGH FIDELITY) ---
+   Using absolute titles and padding to prevent canvas distortion.
 ----------------------------------------------- */
 .chart-container {
   background: #fff;
-  padding: 2rem;
+  /* Massive top padding to carve out room for the absolute titles */
+  padding: 6.5rem 2rem 2rem 2rem; 
   border: 1px solid var(--border);
   border-radius: 10px;
   margin-bottom: 2rem;
   position: relative;
-  height: 450px; /* Increased slightly for a bit more breathing room */
-  display: flex; /* Creates a flexbox context */
-  flex-direction: column; /* Stacks the titles and the chart vertically */
-}
-
-/* Forces the canvas to strictly fit inside the remaining space of the flex container */
-.chart-container canvas {
-  flex: 1 1 auto;
-  min-height: 0; 
-  width: 100% !important;
+  height: 450px; 
 }
 
 .chart-title {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  right: 2rem;
   font-family: var(--font-serif);
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-main);
-  margin-bottom: 0.25rem;
+  margin: 0; /* Margins handled by absolute top positioning */
 }
 
 .chart-subtitle {
+  position: absolute;
+  top: 3.85rem; /* Placed exactly below the title */
+  left: 2rem;
+  right: 2rem;
   font-size: 0.82rem;
   color: var(--text-muted);
-  margin-bottom: 1rem;
+  margin: 0;
 }
 
 /* Two-column chart row */
