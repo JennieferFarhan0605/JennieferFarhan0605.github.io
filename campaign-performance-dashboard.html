@@ -7,16 +7,9 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  
-  <style>
-    /* Dashboard-specific styles */
-    .dashboard-header {
-      background: linear-gradient(135deg, #f9f9f7 0%, #f3f4f6 100%);
-      padding: 3rem 0;
-      margin-bottom: 3rem;
-      border-bottom: 1px solid var(--border);
-    }
 
+  <style>
+    /* ── Dashboard layout ──────────────────────────────────────── */
     .dashboard-controls {
       display: flex;
       gap: 1.5rem;
@@ -28,13 +21,11 @@
       border: 1px solid var(--border);
       border-radius: 8px;
     }
-
     .control-group {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
     }
-
     .control-group label {
       font-size: 0.8rem;
       font-weight: 700;
@@ -42,9 +33,7 @@
       letter-spacing: 1px;
       color: var(--text-muted);
     }
-
-    .control-group select,
-    .control-group input {
+    .control-group select {
       padding: 0.6rem 1rem;
       border: 1px solid var(--border);
       border-radius: 6px;
@@ -54,12 +43,7 @@
       color: var(--text-main);
       min-width: 180px;
     }
-
-    .control-group select:focus,
-    .control-group input:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
+    .control-group select:focus { outline: none; border-color: var(--accent); }
 
     .kpi-grid {
       display: grid;
@@ -67,7 +51,6 @@
       gap: 1.5rem;
       margin-bottom: 3rem;
     }
-
     .kpi-card {
       background: #fff;
       padding: 1.75rem;
@@ -75,12 +58,10 @@
       border-radius: 10px;
       transition: all 0.2s ease;
     }
-
     .kpi-card:hover {
       border-color: var(--accent);
       box-shadow: 0 4px 12px rgba(157, 23, 77, 0.08);
     }
-
     .kpi-label {
       font-size: 0.75rem;
       text-transform: uppercase;
@@ -89,7 +70,6 @@
       margin-bottom: 0.5rem;
       font-weight: 700;
     }
-
     .kpi-value {
       font-family: var(--font-serif);
       font-size: 2.25rem;
@@ -98,11 +78,7 @@
       margin-bottom: 0.25rem;
       line-height: 1;
     }
-
-    .kpi-change {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
+    .kpi-change { font-size: 0.85rem; color: var(--text-muted); }
 
     .chart-container {
       background: #fff;
@@ -113,15 +89,18 @@
       position: relative;
       height: 400px;
     }
-
     .chart-title {
       font-family: var(--font-serif);
       font-size: 1.25rem;
       font-weight: 700;
       color: var(--text-main);
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.25rem;
     }
-
+    .chart-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
     .loading {
       text-align: center;
       padding: 3rem;
@@ -129,6 +108,20 @@
       font-style: italic;
     }
 
+    /* ── Channel table ─────────────────────────────────────────── */
+    .channel-table { width: 100%; background: #fff; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 2rem; }
+    .channel-table table { width: 100%; border-collapse: collapse; }
+    .channel-table th, .channel-table td { padding: 1rem 1.25rem; text-align: left; border-bottom: 1px solid var(--border); }
+    .channel-table th { background: #f9f9f7; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-main); }
+    .channel-table td { color: var(--text-muted); }
+    .channel-table tbody tr:hover { background: #fafafa; }
+    .channel-table tbody tr:last-child td { border-bottom: none; }
+    .metric-value { font-weight: 700; color: var(--text-main); }
+    .conv-bar { display: flex; align-items: center; gap: 0.5rem; }
+    .conv-bar-track { flex: 1; height: 6px; background: #f0efed; border-radius: 3px; overflow: hidden; }
+    .conv-bar-fill { height: 100%; background: #9d174d; border-radius: 3px; }
+
+    /* ── Insights section ──────────────────────────────────────── */
     .insights-section {
       background: #fdfcfc;
       padding: 2.5rem;
@@ -137,107 +130,96 @@
       border-radius: 8px;
       margin-top: 3rem;
     }
-
-    .insight-item {
-      margin-bottom: 1.5rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .insight-item:last-child {
-      margin-bottom: 0;
-      padding-bottom: 0;
-      border-bottom: none;
-    }
-
-    .insight-title {
+    .insights-header { margin-bottom: 2rem; }
+    .reco-section-title {
+      font-size: 0.75rem;
       font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #9d174d;
+      margin: 0 0 1rem;
     }
-
-    .channel-table {
-      width: 100%;
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+    .insight-card {
       background: #fff;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 2rem;
+      border-radius: 10px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
     }
-
-    .channel-table table {
-      width: 100%;
-      border-collapse: collapse;
+    .insight-icon {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
     }
+    .insight-icon--accent  { background: rgba(157,23,77,0.10);  color: #9d174d; }
+    .insight-icon--success { background: rgba(5,150,105,0.10);  color: #059669; }
+    .insight-icon--info    { background: rgba(37,99,235,0.10);  color: #2563eb; }
+    .insight-icon--purple  { background: rgba(124,58,237,0.10); color: #7c3aed; }
+    .insight-icon--warning { background: rgba(217,119,6,0.10);  color: #d97706; }
+    .insight-body h4 { font-size: 0.9rem; font-weight: 700; color: #1c1917; margin: 0 0 0.25rem; }
+    .insight-metric { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 700; color: #9d174d; margin-bottom: 0.35rem; }
+    .insight-body p { font-size: 0.85rem; color: #57534e; margin: 0; line-height: 1.5; }
 
-    .channel-table th,
-    .channel-table td {
-      padding: 1rem 1.25rem;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
+    .reco-cards { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+    .reco-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 10px;
+      padding: 1.5rem; display: flex; gap: 1.25rem; align-items: flex-start;
     }
-
-    .channel-table th {
-      background: #f9f9f7;
-      font-weight: 700;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-main);
+    .reco-number {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: #9d174d; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 0.9rem; flex-shrink: 0;
     }
+    .reco-card h4 { font-size: 0.95rem; font-weight: 700; color: #1c1917; margin: 0 0 0.4rem; }
+    .reco-card p { font-size: 0.88rem; color: #57534e; margin: 0; line-height: 1.6; }
 
-    .channel-table td {
-      color: var(--text-muted);
+    .summary-callout {
+      background: linear-gradient(135deg, rgba(157,23,77,0.05), rgba(157,23,77,0.02));
+      border: 1px solid rgba(157,23,77,0.15);
+      border-radius: 10px; padding: 1.75rem;
     }
+    .summary-callout h4 { font-size: 1rem; font-weight: 700; color: #1c1917; margin: 0 0 0.75rem; }
+    .summary-callout p { font-size: 0.92rem; color: #57534e; margin: 0; line-height: 1.7; }
 
-    .channel-table tbody tr:hover {
-      background: #fafafa;
+    /* ── Data source grid ──────────────────────────────────────── */
+    .data-source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2.5rem;
     }
-
-    .channel-table tbody tr:last-child td {
-      border-bottom: none;
+    .data-source-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem;
     }
+    .data-source-card h5 { font-size: 0.85rem; font-weight: 700; color: #1c1917; margin: 0 0 0.5rem; }
+    .data-source-card p { font-size: 0.82rem; color: #57534e; margin: 0; line-height: 1.6; }
+    .data-source-card code { font-size: 0.78rem; background: rgba(157,23,77,0.07); color: #9d174d; padding: 0.1rem 0.3rem; border-radius: 3px; font-family: 'SF Mono', Monaco, Consolas, monospace; }
 
-    .metric-value {
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    @media (max-width: 768px) {
-      .dashboard-controls {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .control-group select,
-      .control-group input {
-        min-width: 100%;
-      }
-
-      .chart-container {
-        height: 300px;
-      }
-    }
-  </style>
-  <style>
     /* ── Multi-select dropdown ─────────────────────────────────── */
     .channel-dropdown-btn {
       display: flex; align-items: center; justify-content: space-between;
       gap: 0.6rem; padding: 0.55rem 0.9rem;
-      border: 1px solid #e7e5e4; border-radius: 6px;
+      border: 1px solid var(--border, #e7e5e4); border-radius: 6px;
       font-family: var(--font-sans, 'Lato', sans-serif); font-size: 0.9rem;
       background: #fff; color: #1c1917; min-width: 220px;
       cursor: pointer; transition: border-color 0.2s; text-align: left;
     }
+    .channel-dropdown-btn:hover { border-color: #9d174d; }
     .channel-dropdown-btn:focus,
-    .channel-dropdown-btn[aria-expanded="true"] {
-      outline: none; border-color: #9d174d;
-      box-shadow: 0 0 0 3px rgba(157,23,77,0.06);
-    }
+    .channel-dropdown-btn[aria-expanded="true"] { outline: none; border-color: #9d174d; box-shadow: 0 0 0 3px rgba(157,23,77,0.06); }
     .channel-dropdown-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
     .channel-dropdown-panel {
-      position: fixed;
-      z-index: 9999;
+      position: fixed; z-index: 9999;
       background: #fff; border: 1px solid #e7e5e4; border-radius: 8px;
       box-shadow: 0 8px 28px rgba(28,25,23,0.14);
       min-width: 260px; max-height: 320px; overflow-y: auto;
@@ -269,7 +251,8 @@
       background: #9d174d; color: #fff; font-size: 0.7rem; font-weight: 900;
       border-radius: 999px; padding: 0.1rem 0.45rem; margin-left: 0.3rem;
     }
-    /* ── Dashboard FAQ ─────────────────────────────────────────── */
+
+    /* ── FAQ ───────────────────────────────────────────────────── */
     .dash-faq-section { margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid #e7e5e4; }
     .dash-faq-list {
       display: flex; flex-direction: column; gap: 0;
@@ -294,25 +277,37 @@
     .dash-faq-a p strong { color: #1c1917; }
     .stat-hl { display: inline-block; background: rgba(157,23,77,0.08); color: #9d174d; font-weight: 700; font-size: 0.88rem; padding: 0.1rem 0.45rem; border-radius: 4px; }
     .mono { font-size: 0.83rem; background: rgba(157,23,77,0.07); color: #9d174d; padding: 0.1rem 0.35rem; border-radius: 3px; font-family: 'SF Mono', Monaco, Consolas, monospace; }
+
+    @media (max-width: 768px) {
+      .dashboard-controls { flex-direction: column; align-items: stretch; }
+      .control-group select, .channel-dropdown-btn { min-width: 100%; }
+      .chart-container { height: 300px; }
+    }
   </style>
 </head>
 <body>
 
   <nav class="nav-wrap">
     <a href="index.html" class="brand">Jenniefer <span>Farhan.</span></a>
-    <a href="digital-campaign-analysis.html" class="btn-link">← Back to Case Study</a>
+    <a href="digital-campaign-analysis.html" class="btn-link">&larr; Back to Case Study</a>
   </nav>
 
-  <main class="container dashboard-scope">
+  <main class="container">
     <div class="dashboard-header">
       <span class="label">Interactive Data Dashboard</span>
       <h1 class="h1">Campaign Performance Analytics</h1>
       <p class="project-desc">
         Real-time visualization of marketing funnel performance using GA4 BigQuery data.
-        This dashboard provides actionable insights into channel efficiency, conversion trends, and revenue attribution.
+        Filter by date range and channel to drill into acquisition, conversion, and revenue trends.
       </p>
+      <div class="data-sources-bar">
+        <span class="data-badge">Sessions by Channel</span>
+        <span class="data-badge">Purchases &amp; Revenue</span>
+        <span class="data-badge">Daily Funnel KPIs</span>
+      </div>
     </div>
 
+    <!-- Controls -->
     <div class="dashboard-controls">
       <div class="control-group">
         <label for="dateRange">Date Range</label>
@@ -324,11 +319,14 @@
         </select>
       </div>
 
+      <!-- Multi-select channel dropdown -->
       <div class="control-group" id="channelControlGroup">
         <label>Channel</label>
         <button id="channelDropdownBtn" class="channel-dropdown-btn" type="button" aria-haspopup="listbox" aria-expanded="false">
           <span id="channelDropdownLabel">All Channels</span>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink:0;transition:transform 0.2s;"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink:0;transition:transform 0.2s;">
+            <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </button>
         <div id="channelDropdown" class="channel-dropdown-panel" style="display:none;">
           <div class="channel-dropdown-actions">
@@ -340,7 +338,7 @@
       </div>
 
       <div class="control-group">
-        <label for="metricView">Primary Metric</label>
+        <label for="metricView">Trend Metric</label>
         <select id="metricView">
           <option value="sessions">Sessions</option>
           <option value="revenue">Revenue</option>
@@ -350,73 +348,107 @@
       </div>
     </div>
 
-    <div id="loadingState" class="loading">
-      Loading campaign data...
-    </div>
+    <!-- Loading -->
+    <div id="loadingState" class="loading">Loading campaign data&hellip;</div>
 
-    <div id="dashboardContent" style="display: none;">
+    <!-- Dashboard Content -->
+    <div id="dashboardContent" style="display:none;">
+
       <!-- KPI Cards -->
       <div class="kpi-grid">
         <div class="kpi-card">
           <div class="kpi-label">Total Sessions</div>
-          <div class="kpi-value" id="kpi-sessions">-</div>
-          <div class="kpi-change" id="kpi-sessions-desc">-</div>
+          <div class="kpi-value" id="kpi-sessions">&ndash;</div>
+          <div class="kpi-change" id="kpi-sessions-desc">&ndash;</div>
         </div>
-
         <div class="kpi-card">
           <div class="kpi-label">Total Purchases</div>
-          <div class="kpi-value" id="kpi-purchases">-</div>
-          <div class="kpi-change" id="kpi-purchases-desc">-</div>
+          <div class="kpi-value" id="kpi-purchases">&ndash;</div>
+          <div class="kpi-change" id="kpi-purchases-desc">&ndash;</div>
         </div>
-
         <div class="kpi-card">
           <div class="kpi-label">Total Revenue</div>
-          <div class="kpi-value" id="kpi-revenue">-</div>
-          <div class="kpi-change" id="kpi-revenue-desc">-</div>
+          <div class="kpi-value" id="kpi-revenue">&ndash;</div>
+          <div class="kpi-change" id="kpi-revenue-desc">&ndash;</div>
         </div>
-
         <div class="kpi-card">
           <div class="kpi-label">Avg Conversion Rate</div>
-          <div class="kpi-value" id="kpi-conversion">-</div>
-          <div class="kpi-change" id="kpi-conversion-desc">-</div>
+          <div class="kpi-value" id="kpi-conversion">&ndash;</div>
+          <div class="kpi-change" id="kpi-conversion-desc">&ndash;</div>
         </div>
       </div>
 
-      <!-- Charts -->
+      <!-- Chart 1: Trend (full width) -->
       <div class="chart-container">
         <div class="chart-title">Performance Trend Over Time</div>
+        <div class="chart-subtitle">Daily aggregated view &mdash; toggle metric above</div>
         <canvas id="trendChart"></canvas>
       </div>
 
+      <!-- Chart 2: Channel Performance -->
       <div class="chart-container">
-        <div class="chart-title">Channel Performance Comparison</div>
+        <div class="chart-title">Channel Performance</div>
+        <div class="chart-subtitle">Sessions vs purchases by channel</div>
         <canvas id="channelChart"></canvas>
       </div>
 
+      <!-- Chart 3: Revenue Attribution -->
       <div class="chart-container">
-        <div class="chart-title">Revenue Attribution by Channel</div>
+        <div class="chart-title">Revenue Attribution</div>
+        <div class="chart-subtitle">Revenue share by channel</div>
         <canvas id="revenueChart"></canvas>
       </div>
 
-      <!-- Channel Performance Table -->
-      <div class="section">
-        <h2 class="h2">Channel Performance Breakdown</h2>
-        <div class="channel-table" id="channelTableContainer">
-          <!-- Table will be inserted here -->
-        </div>
+      <!-- Chart 4: Daily Revenue Trend -->
+      <div class="chart-container">
+        <div class="chart-title">Daily Revenue Trend</div>
+        <div class="chart-subtitle">Source: ga4_purchases_revenue_by_day.csv</div>
+        <canvas id="dailyRevenueChart"></canvas>
       </div>
 
-      <!-- Insights -->
+      <!-- Chart 5: Sessions Distribution -->
+      <div class="chart-container">
+        <div class="chart-title">Sessions Distribution</div>
+        <div class="chart-subtitle">Source: ga4_sessions_by_day_channel.csv &mdash; top 5 channels</div>
+        <canvas id="sessionsStackChart"></canvas>
+      </div>
+
+      <!-- Channel Table -->
+      <div class="section">
+        <h2 class="h2">Channel Performance Breakdown</h2>
+        <div class="channel-table" id="channelTableContainer"></div>
+      </div>
+
+      <!-- ===== KEY INSIGHTS & RECOMMENDATIONS ===== -->
       <div class="insights-section" id="insightsSection">
         <div class="insights-header">
           <h2 class="h2">Key Insights &amp; Recommendations</h2>
           <p class="project-desc">Auto-generated analysis highlighting top performers, efficiency signals, and actionable optimizations.</p>
         </div>
+
         <div class="reco-section-title">Performance Snapshot</div>
         <div class="insights-grid" id="insightCardsContainer"></div>
+
         <div class="reco-section-title">Actionable Recommendations</div>
         <div class="reco-cards" id="recoCardsContainer"></div>
+
         <div class="summary-callout" id="summaryCallout"></div>
+      </div>
+
+      <!-- Data Sources -->
+      <div class="data-source-grid">
+        <div class="data-source-card">
+          <h5>Sessions Dataset</h5>
+          <p><code>ga4_sessions_by_day_channel.csv</code><br>Daily sessions by acquisition channel.</p>
+        </div>
+        <div class="data-source-card">
+          <h5>Revenue Dataset</h5>
+          <p><code>ga4_purchases_revenue_by_day.csv</code><br>Daily purchase counts and revenue totals.</p>
+        </div>
+        <div class="data-source-card">
+          <h5>Funnel Dataset</h5>
+          <p><code>ga4_funnel_by_day_channel.csv</code><br>Combined funnel: sessions, purchases, revenue, conversion by channel.</p>
+        </div>
       </div>
 
       <!-- ===== DASHBOARD FAQ ===== -->
@@ -496,138 +528,79 @@
     <p>&copy; <script>document.write(new Date().getFullYear())</script> Jenniefer Farhan.<br>Designed for clarity and precision.</p>
   </footer>
 
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
   <script>
-    // Global data storage
-    let funnelData = [];
-    let purchasesData = [];
-    let charts = {};
+  (function() {
+    'use strict';
 
-    // Color palette matching the design system
-    const colors = {
+    /* --- State --- */
+    var funnelData = [];
+    var purchasesData = [];
+    var sessionsData = [];
+    var charts = {};
+
+    /* --- Multi-select state --- */
+    var allChannels = [];
+    var selectedChannels = new Set(); // empty = all selected
+
+    /* --- Palette --- */
+    var colors = {
       accent: '#9d174d',
       accentLight: 'rgba(157, 23, 77, 0.1)',
-      text: '#1c1917',
-      muted: '#57534e',
-      channels: [
-        '#9d174d',
-        '#dc2626',
-        '#ea580c',
-        '#d97706',
-        '#65a30d',
-        '#059669',
-        '#0891b2',
-        '#2563eb',
-        '#7c3aed',
-        '#c026d3'
-      ]
+      channels: ['#9d174d','#dc2626','#ea580c','#d97706','#65a30d','#059669','#0891b2','#2563eb','#7c3aed','#c026d3'],
+      revenue: '#059669',
+      revenueFill: 'rgba(5, 150, 105, 0.10)',
+      purchases: '#2563eb',
+      purchFill: 'rgba(37, 99, 235, 0.10)'
     };
 
-    // Parse CSV data
-    function parseCSV(text, delimiter = ';') {
-      const lines = text.trim().split('\n');
-      const headers = lines[0].split(delimiter);
-      const data = [];
-
-      for (let i = 1; i < lines.length; i++) {
-        const values = lines[i].split(delimiter);
-        const row = {};
-        headers.forEach((header, index) => {
-          row[header.trim()] = values[index]?.trim() || '';
+    /* --- Helpers --- */
+    function parseCSV(text, delimiter) {
+      var lines = text.trim().split('\n');
+      var headers = lines[0].split(delimiter);
+      var data = [];
+      for (var i = 1; i < lines.length; i++) {
+        var values = lines[i].split(delimiter);
+        var row = {};
+        headers.forEach(function(header, index) {
+          row[header.trim().replace(/\r/g, '')] = (values[index] || '').trim().replace(/\r/g, '');
         });
         data.push(row);
       }
-
       return data;
     }
 
-    // Parse date from DD/MM/YYYY to Date object
-    function parseDate(dateStr) {
-      const [day, month, year] = dateStr.split('/');
-      return new Date(year, month - 1, day);
+    function parseDateDMY(dateStr) {
+      var parts = dateStr.split('/');
+      return new Date(parts[2], parts[1] - 1, parts[0]);
     }
 
-    // Format number with commas
-    function formatNumber(num) {
-      return num.toLocaleString('en-US');
+    function parseDateISO(dateStr) {
+      var parts = dateStr.split('-');
+      return new Date(parts[0], parts[1] - 1, parts[2]);
     }
 
-    // Format currency
-    function formatCurrency(num) {
-      return '$' + num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-    }
+    function fmt(num)  { return num.toLocaleString('en-US'); }
+    function fmtC(num) { return '$' + num.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0}); }
+    function fmtC2(num){ return '$' + num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
+    function pct(num)  { return num.toFixed(2) + '%'; }
 
-    // Load CSV files
-    async function loadData() {
-      try {
-        const [funnelResp, purchasesResp] = await Promise.all([
-          fetch('assets/ga4_funnel_by_day_channel.csv'),
-          fetch('assets/ga4_purchases_revenue_by_day.csv')
-        ]);
-        const funnelText    = await funnelResp.text();
-        const purchasesText = await purchasesResp.text();
+    /* Chart.js global defaults */
+    Chart.defaults.font.family = "'Lato', sans-serif";
+    Chart.defaults.font.size = 12;
+    Chart.defaults.color = '#57534e';
 
-        funnelData = parseCSV(funnelText);
-
-        // Process funnel data
-        funnelData = funnelData.map(row => ({
-          date: parseDate(row.date),
-          dateStr: row.date,
-          channel: row.channel,
-          sessions: parseInt(row.sessions) || 0,
-          purchases: parseInt(row.purchases) || 0,
-          revenue: parseFloat(row.revenue) || 0,
-          conversion_rate: parseFloat(row.conversion_rate) || 0
-        }));
-
-        // Process purchases/revenue data (comma-delimited, YYYY-MM-DD)
-        purchasesData = parseCSV(purchasesText, ',').map(row => {
-          const [y, m, d] = row.date.split('-');
-          return {
-            date: new Date(y, m - 1, d),
-            purchases: parseInt(row.purchases) || 0,
-            revenue: parseFloat(row.revenue) || 0
-          };
-        }).sort((a, b) => a.date - b.date);
-
-        // Sort by date
-        funnelData.sort((a, b) => a.date - b.date);
-
-        // Populate multi-select channel dropdown
-        const channels = [...new Set(funnelData.map(d => d.channel))].sort();
-        buildChannelDropdown(channels);
-
-        // Hide loading, show dashboard
-        document.getElementById('loadingState').style.display = 'none';
-        document.getElementById('dashboardContent').style.display = 'block';
-
-        // Initialize dashboard
-        updateDashboard();
-
-        // Add event listeners
-        document.getElementById('dateRange').addEventListener('change', updateDashboard);
-        document.getElementById('metricView').addEventListener('change', updateDashboard);
-
-      } catch (error) {
-        console.error('Error loading data:', error);
-        document.getElementById('loadingState').textContent = 'Error loading data. Please ensure CSV files are in the assets/ folder.';
-      }
-    }
-
-    // ── Multi-select state ──────────────────────────────────────────────────
-    let allChannels = [];
-    let selectedChannels = new Set(); // empty = all selected
-
+    /* --- Multi-select dropdown --- */
     function buildChannelDropdown(list) {
       allChannels = list;
-      const el = document.getElementById('channelCheckboxList');
+      var el = document.getElementById('channelCheckboxList');
       el.innerHTML = '';
-      list.forEach(ch => {
-        const lbl = document.createElement('label');
+      list.forEach(function(ch) {
+        var lbl = document.createElement('label');
         lbl.className = 'channel-checkbox-item';
-        lbl.innerHTML = `<input type="checkbox" value="${ch.replace(/</g,'&lt;').replace(/>/g,'&gt;')}" checked> <span>${ch.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</span>`;
+        var safe = ch.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        lbl.innerHTML = '<input type="checkbox" value="' + safe + '" checked> <span>' + safe + '</span>';
         lbl.querySelector('input').addEventListener('change', onChannelChange);
         el.appendChild(lbl);
       });
@@ -636,188 +609,241 @@
     }
 
     function onChannelChange() {
-      const checked = [];
-      document.querySelectorAll('#channelCheckboxList input[type="checkbox"]').forEach(cb => { if (cb.checked) checked.push(cb.value); });
+      var checked = [];
+      document.querySelectorAll('#channelCheckboxList input[type="checkbox"]').forEach(function(cb) {
+        if (cb.checked) checked.push(cb.value);
+      });
       selectedChannels = (checked.length === allChannels.length) ? new Set() : new Set(checked);
       updateDropdownLabel();
       updateDashboard();
     }
 
     function updateDropdownLabel() {
-      const lbl = document.getElementById('channelDropdownLabel');
-      if (selectedChannels.size === 0) lbl.innerHTML = 'All Channels';
-      else if (selectedChannels.size === 1) lbl.textContent = [...selectedChannels][0];
-      else lbl.innerHTML = `Channels <span class="channel-count-badge">${selectedChannels.size}</span>`;
+      var lbl = document.getElementById('channelDropdownLabel');
+      if (selectedChannels.size === 0) {
+        lbl.innerHTML = 'All Channels';
+      } else if (selectedChannels.size === 1) {
+        lbl.textContent = Array.from(selectedChannels)[0];
+      } else {
+        lbl.innerHTML = 'Channels <span class="channel-count-badge">' + selectedChannels.size + '</span>';
+      }
     }
 
     document.getElementById('channelDropdownBtn').addEventListener('click', function(e) {
       e.stopPropagation();
-      const panel = document.getElementById('channelDropdown');
-      const isOpen = panel.style.display !== 'none';
+      var panel = document.getElementById('channelDropdown');
+      var isOpen = panel.style.display !== 'none';
       if (isOpen) {
         panel.style.display = 'none';
         this.setAttribute('aria-expanded', 'false');
         return;
       }
-      // Portal: move to body if not already there
-      if (panel.parentElement !== document.body) {
-        document.body.appendChild(panel);
-      }
-      // Position below the button
-      const rect = this.getBoundingClientRect();
+      if (panel.parentElement !== document.body) document.body.appendChild(panel);
+      var rect = this.getBoundingClientRect();
       panel.style.top  = (rect.bottom + window.scrollY + 6) + 'px';
       panel.style.left = rect.left + 'px';
       panel.style.minWidth = Math.max(rect.width, 260) + 'px';
       panel.style.display = 'block';
       this.setAttribute('aria-expanded', 'true');
     });
-    document.addEventListener('click', e => {
-      const panel = document.getElementById('channelDropdown');
-      const btn = document.getElementById('channelDropdownBtn');
+
+    document.addEventListener('click', function(e) {
+      var panel = document.getElementById('channelDropdown');
+      var btn   = document.getElementById('channelDropdownBtn');
       if (!panel.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
         panel.style.display = 'none';
         btn.setAttribute('aria-expanded', 'false');
       }
     });
 
-    // Reposition panel on scroll or resize
     function repositionDropdown() {
-      const panel = document.getElementById('channelDropdown');
-      const btn = document.getElementById('channelDropdownBtn');
+      var panel = document.getElementById('channelDropdown');
+      var btn   = document.getElementById('channelDropdownBtn');
       if (panel.style.display !== 'none') {
-        const rect = btn.getBoundingClientRect();
+        var rect = btn.getBoundingClientRect();
         panel.style.top  = (rect.bottom + window.scrollY + 6) + 'px';
         panel.style.left = rect.left + 'px';
       }
     }
     window.addEventListener('scroll', repositionDropdown, true);
     window.addEventListener('resize', repositionDropdown);
-    document.getElementById('selectAllChannels').addEventListener('click', () => {
-      document.querySelectorAll('#channelCheckboxList input').forEach(cb => cb.checked = true);
-      selectedChannels = new Set(); updateDropdownLabel(); updateDashboard();
+
+    document.getElementById('selectAllChannels').addEventListener('click', function() {
+      document.querySelectorAll('#channelCheckboxList input').forEach(function(cb) { cb.checked = true; });
+      selectedChannels = new Set();
+      updateDropdownLabel();
+      updateDashboard();
     });
-    document.getElementById('clearAllChannels').addEventListener('click', () => {
-      document.querySelectorAll('#channelCheckboxList input').forEach(cb => cb.checked = false);
+
+    document.getElementById('clearAllChannels').addEventListener('click', function() {
+      document.querySelectorAll('#channelCheckboxList input').forEach(function(cb) { cb.checked = false; });
       selectedChannels = new Set(['__none__']);
       document.getElementById('channelDropdownLabel').textContent = 'No channels';
       updateDashboard();
     });
 
-    // Filter data based on controls
-    function getFilteredData() {
-      let filtered = [...funnelData];
+    /* --- Load ALL 3 CSVs --- */
+    async function loadData() {
+      try {
+        var responses = await Promise.all([
+          fetch('assets/ga4_funnel_by_day_channel.csv'),
+          fetch('assets/ga4_purchases_revenue_by_day.csv'),
+          fetch('assets/ga4_sessions_by_day_channel.csv')
+        ]);
+        var texts = await Promise.all([responses[0].text(), responses[1].text(), responses[2].text()]);
 
-      // Date range filter
-      const dateRange = document.getElementById('dateRange').value;
+        /* 1) Funnel — semicolon delimited, DD/MM/YYYY */
+        funnelData = parseCSV(texts[0], ';').map(function(r) {
+          return {
+            date: parseDateDMY(r.date), dateStr: r.date, channel: r.channel,
+            sessions: parseInt(r.sessions) || 0, purchases: parseInt(r.purchases) || 0,
+            revenue: parseFloat(r.revenue) || 0, conversion_rate: parseFloat(r.conversion_rate) || 0
+          };
+        }).sort(function(a, b) { return a.date - b.date; });
+
+        /* 2) Purchases / Revenue — comma delimited, YYYY-MM-DD */
+        purchasesData = parseCSV(texts[1], ',').map(function(r) {
+          return {
+            date: parseDateISO(r.date), dateStr: r.date,
+            purchases: parseInt(r.purchases) || 0, revenue: parseFloat(r.revenue) || 0
+          };
+        }).sort(function(a, b) { return a.date - b.date; });
+
+        /* 3) Sessions — comma delimited, YYYY-MM-DD */
+        sessionsData = parseCSV(texts[2], ',').map(function(r) {
+          return {
+            date: parseDateISO(r.date), dateStr: r.date,
+            channel: r.channel, sessions: parseInt(r.sessions) || 0
+          };
+        }).sort(function(a, b) { return a.date - b.date; });
+
+        /* Build multi-select channel list from funnel data */
+        var channelSet = {};
+        funnelData.forEach(function(d) { channelSet[d.channel] = true; });
+        var channelList = Object.keys(channelSet).sort();
+        buildChannelDropdown(channelList);
+
+        /* Show dashboard */
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('dashboardContent').style.display = 'block';
+        updateDashboard();
+
+        /* Event listeners */
+        document.getElementById('dateRange').addEventListener('change', updateDashboard);
+        document.getElementById('metricView').addEventListener('change', updateDashboard);
+
+      } catch (error) {
+        console.error('Error loading data:', error);
+        document.getElementById('loadingState').textContent = 'Error loading CSV files. Please ensure they are in the assets/ folder.';
+      }
+    }
+
+    /* --- Filtering --- */
+    function getFilteredData() {
+      var filtered = funnelData.slice();
+
+      /* Date range */
+      var dateRange = document.getElementById('dateRange').value;
       if (dateRange !== 'all') {
-        const days = parseInt(dateRange);
-        const maxDate = new Date(Math.max(...filtered.map(d => d.date)));
-        const minDate = new Date(maxDate);
+        var days = parseInt(dateRange);
+        var maxDate = new Date(Math.max.apply(null, filtered.map(function(d) { return d.date; })));
+        var minDate = new Date(maxDate);
         minDate.setDate(minDate.getDate() - days);
-        filtered = filtered.filter(d => d.date >= minDate);
+        filtered = filtered.filter(function(d) { return d.date >= minDate; });
       }
 
-      // Multi-select channel filter
+      /* Multi-select channel */
       if (selectedChannels.size > 0) {
-        filtered = filtered.filter(d => selectedChannels.has(d.channel));
+        filtered = filtered.filter(function(d) { return selectedChannels.has(d.channel); });
       }
 
       return filtered;
     }
 
-    // Update dashboard
+    function getDateBounds() {
+      var range = document.getElementById('dateRange').value;
+      if (range === 'all') return { min: null, max: null };
+      var maxDate = new Date(Math.max.apply(null, funnelData.map(function(d) { return d.date; })));
+      var minDate = new Date(maxDate);
+      minDate.setDate(minDate.getDate() - parseInt(range));
+      return { min: minDate, max: maxDate };
+    }
+
+    /* --- Update Everything --- */
     function updateDashboard() {
-      const data = getFilteredData();
+      var data = getFilteredData();
       updateKPIs(data);
       updateTrendChart(data);
       updateChannelChart(data);
       updateRevenueChart(data);
+      updateDailyRevenueChart();
+      updateSessionsStackChart();
       updateChannelTable(data);
       generateInsights(data);
     }
 
-    // Update KPI cards
+    /* --- KPIs --- */
     function updateKPIs(data) {
-      const totalSessions = data.reduce((sum, d) => sum + d.sessions, 0);
-      const totalPurchases = data.reduce((sum, d) => sum + d.purchases, 0);
-      const totalRevenue = data.reduce((sum, d) => sum + d.revenue, 0);
-      const avgConversion = totalSessions > 0 ? (totalPurchases / totalSessions * 100) : 0;
+      var totalS = 0, totalP = 0, totalR = 0;
+      var daySet = {};
+      data.forEach(function(d) {
+        totalS += d.sessions; totalP += d.purchases; totalR += d.revenue;
+        daySet[d.dateStr] = true;
+      });
+      var numDays = Object.keys(daySet).length;
+      var avgConv = totalS > 0 ? (totalP / totalS * 100) : 0;
 
-      document.getElementById('kpi-sessions').textContent = formatNumber(totalSessions);
-      document.getElementById('kpi-sessions-desc').textContent = data.length + ' days of data';
-
-      document.getElementById('kpi-purchases').textContent = formatNumber(totalPurchases);
-      document.getElementById('kpi-purchases-desc').textContent = formatNumber(Math.round(totalPurchases / data.length)) + ' avg/day';
-
-      document.getElementById('kpi-revenue').textContent = formatCurrency(totalRevenue);
-      document.getElementById('kpi-revenue-desc').textContent = formatCurrency(Math.round(totalRevenue / totalPurchases)) + ' avg order value';
-
-      document.getElementById('kpi-conversion').textContent = avgConversion.toFixed(2) + '%';
+      document.getElementById('kpi-sessions').textContent = fmt(totalS);
+      document.getElementById('kpi-sessions-desc').textContent = numDays + ' days of data';
+      document.getElementById('kpi-purchases').textContent = fmt(totalP);
+      document.getElementById('kpi-purchases-desc').textContent = fmt(Math.round(totalP / Math.max(numDays, 1))) + ' avg / day';
+      document.getElementById('kpi-revenue').textContent = fmtC(totalR);
+      document.getElementById('kpi-revenue-desc').textContent = totalP > 0 ? fmtC(Math.round(totalR / totalP)) + ' avg order value' : '\u2014';
+      document.getElementById('kpi-conversion').textContent = avgConv.toFixed(2) + '%';
       document.getElementById('kpi-conversion-desc').textContent = 'purchases per session';
     }
 
-    // Update trend chart
+    /* --- Trend Chart --- */
     function updateTrendChart(data) {
-      const metric = document.getElementById('metricView').value;
-      
-      // Aggregate by date
-      const dailyData = {};
-      data.forEach(d => {
-        if (!dailyData[d.dateStr]) {
-          dailyData[d.dateStr] = { sessions: 0, purchases: 0, revenue: 0, date: d.date };
-        }
-        dailyData[d.dateStr].sessions += d.sessions;
-        dailyData[d.dateStr].purchases += d.purchases;
-        dailyData[d.dateStr].revenue += d.revenue;
+      var metric = document.getElementById('metricView').value;
+      var daily = {};
+      data.forEach(function(d) {
+        if (!daily[d.dateStr]) daily[d.dateStr] = {sessions: 0, purchases: 0, revenue: 0, date: d.date};
+        daily[d.dateStr].sessions += d.sessions;
+        daily[d.dateStr].purchases += d.purchases;
+        daily[d.dateStr].revenue += d.revenue;
       });
-
-      const dates = Object.keys(dailyData).sort((a, b) => parseDate(a) - parseDate(b));
-      const values = dates.map(date => {
-        if (metric === 'conversion_rate') {
-          return dailyData[date].sessions > 0 ? (dailyData[date].purchases / dailyData[date].sessions * 100) : 0;
-        }
-        return dailyData[date][metric];
+      var dates = Object.keys(daily).sort(function(a, b) { return parseDateDMY(a) - parseDateDMY(b); });
+      var values = dates.map(function(dt) {
+        if (metric === 'conversion_rate') return daily[dt].sessions > 0 ? (daily[dt].purchases / daily[dt].sessions * 100) : 0;
+        return daily[dt][metric];
       });
-
-      const labels = dates.map(date => {
-        const d = parseDate(date);
-        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      });
+      var labels = dates.map(function(dt) { return parseDateDMY(dt).toLocaleDateString('en-US', {month: 'short', day: 'numeric'}); });
 
       if (charts.trend) charts.trend.destroy();
-
-      const ctx = document.getElementById('trendChart').getContext('2d');
-      charts.trend = new Chart(ctx, {
+      charts.trend = new Chart(document.getElementById('trendChart').getContext('2d'), {
         type: 'line',
         data: {
           labels: labels,
           datasets: [{
-            label: metric.replace('_', ' ').toUpperCase(),
+            label: metric.replace('_', ' ').replace(/\b\w/g, function(l) { return l.toUpperCase(); }),
             data: values,
             borderColor: colors.accent,
             backgroundColor: colors.accentLight,
-            fill: true,
-            tension: 0.4,
-            pointRadius: 3,
-            pointHoverRadius: 5
+            fill: true, tension: 0.4, pointRadius: 3, pointHoverRadius: 5
           }]
         },
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
           scales: {
             y: {
               beginAtZero: true,
               ticks: {
-                callback: function(value) {
-                  if (metric === 'revenue') return formatCurrency(value);
-                  if (metric === 'conversion_rate') return value.toFixed(1) + '%';
-                  return formatNumber(value);
+                callback: function(v) {
+                  if (metric === 'revenue') return fmtC(v);
+                  if (metric === 'conversion_rate') return v.toFixed(1) + '%';
+                  return fmt(v);
                 }
               }
             }
@@ -826,315 +852,240 @@
       });
     }
 
-    // Update channel chart
+    /* --- Channel Bar Chart --- */
     function updateChannelChart(data) {
-      // Aggregate by channel
-      const channelData = {};
-      data.forEach(d => {
-        if (!channelData[d.channel]) {
-          channelData[d.channel] = { sessions: 0, purchases: 0, revenue: 0 };
-        }
-        channelData[d.channel].sessions += d.sessions;
-        channelData[d.channel].purchases += d.purchases;
-        channelData[d.channel].revenue += d.revenue;
+      var agg = {};
+      data.forEach(function(d) {
+        if (!agg[d.channel]) agg[d.channel] = {sessions: 0, purchases: 0};
+        agg[d.channel].sessions += d.sessions;
+        agg[d.channel].purchases += d.purchases;
       });
-
-      // Sort by sessions and take top 10
-      const channels = Object.keys(channelData)
-        .sort((a, b) => channelData[b].sessions - channelData[a].sessions)
-        .slice(0, 10);
-
-      const sessions = channels.map(ch => channelData[ch].sessions);
-      const purchases = channels.map(ch => channelData[ch].purchases);
+      var chs = Object.keys(agg).sort(function(a, b) { return agg[b].sessions - agg[a].sessions; }).slice(0, 10);
 
       if (charts.channel) charts.channel.destroy();
-
-      const ctx = document.getElementById('channelChart').getContext('2d');
-      charts.channel = new Chart(ctx, {
+      charts.channel = new Chart(document.getElementById('channelChart').getContext('2d'), {
         type: 'bar',
         data: {
-          labels: channels,
+          labels: chs,
           datasets: [
-            {
-              label: 'Sessions',
-              data: sessions,
-              backgroundColor: colors.accentLight,
-              borderColor: colors.accent,
-              borderWidth: 1
-            },
-            {
-              label: 'Purchases',
-              data: purchases,
-              backgroundColor: 'rgba(220, 38, 38, 0.1)',
-              borderColor: '#dc2626',
-              borderWidth: 1
-            }
+            { label: 'Sessions',  data: chs.map(function(c) { return agg[c].sessions;  }), backgroundColor: colors.accentLight, borderColor: colors.accent, borderWidth: 1 },
+            { label: 'Purchases', data: chs.map(function(c) { return agg[c].purchases; }), backgroundColor: 'rgba(220, 38, 38, 0.1)', borderColor: '#dc2626', borderWidth: 1 }
           ]
         },
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'top'
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'top' } },
+          scales: { y: { beginAtZero: true } }
         }
       });
     }
 
-    // Update revenue chart
+    /* --- Revenue Doughnut --- */
     function updateRevenueChart(data) {
-      // Aggregate by channel
-      const channelData = {};
-      data.forEach(d => {
-        if (!channelData[d.channel]) {
-          channelData[d.channel] = 0;
-        }
-        channelData[d.channel] += d.revenue;
-      });
-
-      // Sort by revenue and take top 8
-      const channels = Object.keys(channelData)
-        .sort((a, b) => channelData[b] - channelData[a])
-        .slice(0, 8);
-
-      const revenues = channels.map(ch => channelData[ch]);
+      var agg = {};
+      data.forEach(function(d) { agg[d.channel] = (agg[d.channel] || 0) + d.revenue; });
+      var chs = Object.keys(agg).sort(function(a, b) { return agg[b] - agg[a]; }).slice(0, 8);
 
       if (charts.revenue) charts.revenue.destroy();
-
-      const ctx = document.getElementById('revenueChart').getContext('2d');
-      charts.revenue = new Chart(ctx, {
+      charts.revenue = new Chart(document.getElementById('revenueChart').getContext('2d'), {
         type: 'doughnut',
         data: {
-          labels: channels,
-          datasets: [{
-            data: revenues,
-            backgroundColor: colors.channels,
-            borderWidth: 2,
-            borderColor: '#fff'
-          }]
+          labels: chs,
+          datasets: [{ data: chs.map(function(c) { return agg[c]; }), backgroundColor: colors.channels.slice(0, chs.length), borderWidth: 2, borderColor: '#fff' }]
         },
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
+          responsive: true, maintainAspectRatio: false, cutout: '55%',
           plugins: {
-            legend: {
-              position: 'right'
-            },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  const label = context.label || '';
-                  const value = formatCurrency(context.parsed);
-                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                  const percentage = ((context.parsed / total) * 100).toFixed(1);
-                  return label + ': ' + value + ' (' + percentage + '%)';
-                }
+            legend: { position: 'right', labels: { boxWidth: 10, padding: 10, font: { size: 11 } } },
+            tooltip: { callbacks: {
+              label: function(ctx) {
+                var total = ctx.dataset.data.reduce(function(a, b) { return a + b; }, 0);
+                return ctx.label + ': ' + fmtC(ctx.parsed) + ' (' + ((ctx.parsed / total) * 100).toFixed(1) + '%)';
               }
-            }
+            }}
           }
         }
       });
     }
 
-    // Update channel table
-    function updateChannelTable(data) {
-      // Aggregate by channel
-      const channelData = {};
-      data.forEach(d => {
-        if (!channelData[d.channel]) {
-          channelData[d.channel] = { sessions: 0, purchases: 0, revenue: 0 };
+    /* --- Daily Revenue Chart (from purchases CSV) --- */
+    function updateDailyRevenueChart() {
+      var bounds = getDateBounds();
+      var d = purchasesData.slice();
+      if (bounds.min) d = d.filter(function(r) { return r.date >= bounds.min; });
+
+      var labels = d.map(function(r) { return r.date.toLocaleDateString('en-US', {month: 'short', day: 'numeric'}); });
+      var revs = d.map(function(r) { return r.revenue; });
+      var purs = d.map(function(r) { return r.purchases; });
+
+      if (charts.dailyRevenue) charts.dailyRevenue.destroy();
+      charts.dailyRevenue = new Chart(document.getElementById('dailyRevenueChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            { label: 'Revenue ($)', data: revs, backgroundColor: colors.revenueFill, borderColor: colors.revenue, borderWidth: 1, yAxisID: 'y', order: 2 },
+            { label: 'Purchases',   data: purs, type: 'line', borderColor: colors.accent, backgroundColor: 'transparent', borderWidth: 2, pointRadius: 1.5, tension: 0.3, yAxisID: 'y1', order: 1 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 14 } } },
+          scales: {
+            x: { grid: { display: false }, ticks: { maxTicksLimit: 10, maxRotation: 0, font: { size: 10 } } },
+            y:  { beginAtZero: true, position: 'left',  ticks: { callback: function(v) { return fmtC(v); } } },
+            y1: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { stepSize: 10 } }
+          }
         }
-        channelData[d.channel].sessions += d.sessions;
-        channelData[d.channel].purchases += d.purchases;
-        channelData[d.channel].revenue += d.revenue;
       });
-
-      // Calculate conversion rates
-      const channels = Object.keys(channelData).map(ch => ({
-        channel: ch,
-        sessions: channelData[ch].sessions,
-        purchases: channelData[ch].purchases,
-        revenue: channelData[ch].revenue,
-        conversionRate: channelData[ch].sessions > 0 ? (channelData[ch].purchases / channelData[ch].sessions * 100) : 0,
-        revenuePerSession: channelData[ch].sessions > 0 ? (channelData[ch].revenue / channelData[ch].sessions) : 0
-      }));
-
-      // Sort by sessions
-      channels.sort((a, b) => b.sessions - a.sessions);
-
-      // Build table
-      let html = `
-        <table>
-          <thead>
-            <tr>
-              <th>Channel</th>
-              <th>Sessions</th>
-              <th>Purchases</th>
-              <th>Revenue</th>
-              <th>Conv. Rate</th>
-              <th>Rev/Session</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-
-      channels.forEach(ch => {
-        html += `
-          <tr>
-            <td><strong>${ch.channel}</strong></td>
-            <td class="metric-value">${formatNumber(ch.sessions)}</td>
-            <td class="metric-value">${formatNumber(ch.purchases)}</td>
-            <td class="metric-value">${formatCurrency(ch.revenue)}</td>
-            <td class="metric-value">${ch.conversionRate.toFixed(2)}%</td>
-            <td class="metric-value">${formatCurrency(ch.revenuePerSession)}</td>
-          </tr>
-        `;
-      });
-
-      html += `
-          </tbody>
-        </table>
-      `;
-
-      document.getElementById('channelTableContainer').innerHTML = html;
     }
 
-    // Generate insights
-    function generateInsights(data) {
-      const agg = {};
-      data.forEach(d => {
-        if (!agg[d.channel]) agg[d.channel] = { sessions: 0, purchases: 0, revenue: 0 };
+    /* --- Sessions Stacked Area (from sessions CSV) --- */
+    function updateSessionsStackChart() {
+      var bounds = getDateBounds();
+      var d = sessionsData.slice();
+      if (bounds.min) d = d.filter(function(r) { return r.date >= bounds.min; });
+
+      var totals = {};
+      d.forEach(function(r) { totals[r.channel] = (totals[r.channel] || 0) + r.sessions; });
+      var topChs = Object.keys(totals).sort(function(a, b) { return totals[b] - totals[a]; }).slice(0, 5);
+
+      var byDate = {};
+      d.forEach(function(r) {
+        if (!byDate[r.dateStr]) byDate[r.dateStr] = { date: r.date };
+        if (topChs.indexOf(r.channel) !== -1) byDate[r.dateStr][r.channel] = (byDate[r.dateStr][r.channel] || 0) + r.sessions;
+      });
+      var sorted = Object.values(byDate).sort(function(a, b) { return a.date - b.date; });
+      var labels = sorted.map(function(r) { return r.date.toLocaleDateString('en-US', {month: 'short', day: 'numeric'}); });
+
+      var datasets = topChs.map(function(ch, i) {
+        return {
+          label: ch,
+          data: sorted.map(function(r) { return r[ch] || 0; }),
+          backgroundColor: colors.channels[i] + '22',
+          borderColor: colors.channels[i],
+          borderWidth: 1.5, fill: true, tension: 0.3, pointRadius: 0
+        };
+      });
+
+      if (charts.sessionsStack) charts.sessionsStack.destroy();
+      charts.sessionsStack = new Chart(document.getElementById('sessionsStackChart').getContext('2d'), {
+        type: 'line',
+        data: { labels: labels, datasets: datasets },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'top', labels: { boxWidth: 10, padding: 10, font: { size: 10 } } } },
+          scales: {
+            x: { grid: { display: false }, ticks: { maxTicksLimit: 10, maxRotation: 0, font: { size: 10 } } },
+            y: { beginAtZero: true, stacked: true }
+          }
+        }
+      });
+    }
+
+    /* --- Channel Table --- */
+    function updateChannelTable(data) {
+      var agg = {};
+      data.forEach(function(d) {
+        if (!agg[d.channel]) agg[d.channel] = {sessions: 0, purchases: 0, revenue: 0};
         agg[d.channel].sessions  += d.sessions;
         agg[d.channel].purchases += d.purchases;
         agg[d.channel].revenue   += d.revenue;
       });
+      var rows = Object.keys(agg).map(function(ch) {
+        return {
+          channel: ch, sessions: agg[ch].sessions, purchases: agg[ch].purchases,
+          revenue: agg[ch].revenue,
+          convRate: agg[ch].sessions > 0 ? (agg[ch].purchases / agg[ch].sessions * 100) : 0,
+          rps: agg[ch].sessions > 0 ? (agg[ch].revenue / agg[ch].sessions) : 0
+        };
+      }).sort(function(a, b) { return b.sessions - a.sessions; });
 
-      const channels = Object.keys(agg).map(ch => ({
-        channel: ch,
-        sessions: agg[ch].sessions, purchases: agg[ch].purchases, revenue: agg[ch].revenue,
-        convRate: agg[ch].sessions > 0 ? (agg[ch].purchases / agg[ch].sessions * 100) : 0,
-        rps:      agg[ch].sessions > 0 ? (agg[ch].revenue   / agg[ch].sessions)       : 0
-      }));
+      var maxConv = Math.max.apply(null, rows.map(function(r) { return r.convRate; }).concat([1]));
 
-      if (!channels.length) return;
-
-      const tS = channels.reduce((s, c) => s + c.sessions,  0);
-      const tR = channels.reduce((s, c) => s + c.revenue,   0);
-      const tP = channels.reduce((s, c) => s + c.purchases, 0);
-
-      const byVol  = [...channels].sort((a, b) => b.sessions  - a.sessions)[0];
-      const byConv = [...channels].sort((a, b) => b.convRate  - a.convRate)[0];
-      const byRev  = [...channels].sort((a, b) => b.revenue   - a.revenue)[0];
-      const byEff  = [...channels].sort((a, b) => b.rps       - a.rps)[0];
-
-      // Peak day from purchases CSV
-      const dateRange = document.getElementById('dateRange').value;
-      let pData = [...purchasesData];
-      if (dateRange !== 'all') {
-        const days = parseInt(dateRange);
-        const maxDate = new Date(Math.max(...funnelData.map(d => d.date)));
-        const minDate = new Date(maxDate); minDate.setDate(minDate.getDate() - days);
-        pData = pData.filter(r => r.date >= minDate);
-      }
-      const avgDR = pData.length > 0 ? pData.reduce((s, r) => s + r.revenue, 0) / pData.length : 0;
-      const peak  = pData.length > 0 ? pData.reduce((best, r) => r.revenue > best.revenue ? r : best, pData[0]) : null;
-
-      // ── Insight Cards ──────────────────────────────────────────────────────
-      document.getElementById('insightCardsContainer').innerHTML =
-        `<div class="insight-card">
-          <div class="insight-icon insight-icon--accent">&#9650;</div>
-          <div class="insight-body">
-            <h4>Highest Volume Channel</h4>
-            <div class="insight-metric">${formatNumber(byVol.sessions)} sessions</div>
-            <p><strong>${byVol.channel}</strong> drives ${((byVol.sessions / tS) * 100).toFixed(1)}% of all traffic but converts at ${byVol.convRate.toFixed(2)}%.</p>
-          </div>
-        </div>
-        <div class="insight-card">
-          <div class="insight-icon insight-icon--success">&#10003;</div>
-          <div class="insight-body">
-            <h4>Best Conversion Rate</h4>
-            <div class="insight-metric">${byConv.convRate.toFixed(2)}%</div>
-            <p><strong>${byConv.channel}</strong> converts at the highest rate, generating ${formatNumber(byConv.purchases)} purchases from ${formatNumber(byConv.sessions)} sessions.</p>
-          </div>
-        </div>
-        <div class="insight-card">
-          <div class="insight-icon insight-icon--info">&#36;</div>
-          <div class="insight-body">
-            <h4>Revenue Leader</h4>
-            <div class="insight-metric">${formatCurrency(byRev.revenue)}</div>
-            <p><strong>${byRev.channel}</strong> contributes ${((byRev.revenue / tR) * 100).toFixed(1)}% of total revenue across the selected period.</p>
-          </div>
-        </div>
-        <div class="insight-card">
-          <div class="insight-icon insight-icon--purple">&#9733;</div>
-          <div class="insight-body">
-            <h4>Most Efficient Channel</h4>
-            <div class="insight-metric">$${byEff.rps.toFixed(2)} / session</div>
-            <p><strong>${byEff.channel}</strong> delivers the highest revenue per session, indicating strong audience-product fit.</p>
-          </div>
-        </div>
-        ${peak ? `<div class="insight-card">
-          <div class="insight-icon insight-icon--warning">&#9650;</div>
-          <div class="insight-body">
-            <h4>Peak Revenue Day</h4>
-            <div class="insight-metric">${formatCurrency(peak.revenue)}</div>
-            <p>${peak.date.toLocaleDateString('en-US', {weekday:'long',month:'long',day:'numeric',year:'numeric'})} recorded the highest single-day revenue with ${formatNumber(peak.purchases)} purchases.</p>
-          </div>
-        </div>` : ''}
-        <div class="insight-card">
-          <div class="insight-icon insight-icon--success">&#8709;</div>
-          <div class="insight-body">
-            <h4>Average Daily Revenue</h4>
-            <div class="insight-metric">${formatCurrency(avgDR)}</div>
-            <p>Across ${formatNumber(pData.length)} days of data from the purchases dataset, averaging ${formatNumber(Math.round(tP / Math.max(pData.length, 1)))} purchases per day.</p>
-          </div>
-        </div>`;
-
-      // ── Recommendation Cards ───────────────────────────────────────────────
-      const lowConvHigh = channels.filter(c => c.sessions > tS * 0.05).sort((a, b) => a.convRate - b.convRate)[0];
-      document.getElementById('recoCardsContainer').innerHTML =
-        `<div class="reco-card">
-          <div class="reco-number">1</div>
-          <h4>Invest in High-Efficiency Channels</h4>
-          <p>Reallocate budget toward <strong>${byEff.channel}</strong>, which generates $${byEff.rps.toFixed(2)} per session. Even a modest increase in traffic could yield outsized revenue returns.</p>
-        </div>
-        <div class="reco-card">
-          <div class="reco-number">2</div>
-          <h4>Optimize Conversion on Top Volume</h4>
-          <p><strong>${byVol.channel}</strong> drives the most sessions but converts at only ${byVol.convRate.toFixed(2)}%. A/B testing landing pages and CTAs could unlock significant incremental revenue.</p>
-        </div>
-        <div class="reco-card">
-          <div class="reco-number">3</div>
-          <h4>${lowConvHigh ? 'Investigate Underperforming Channels' : 'Diversify Revenue Sources'}</h4>
-          <p>${lowConvHigh ? `<strong>${lowConvHigh.channel}</strong> brings ${formatNumber(lowConvHigh.sessions)} sessions but converts at just ${lowConvHigh.convRate.toFixed(2)}%. Review targeting and audience segmentation to improve funnel efficiency.` : 'Revenue is concentrated in the top channels. Experiment with emerging channels to reduce dependency.'}</p>
-        </div>`;
-
-      // ── Summary Callout ────────────────────────────────────────────────────
-      document.getElementById('summaryCallout').innerHTML =
-        `<h4>Analysis Summary</h4>
-        <p>Across the selected period, <strong>${formatNumber(channels.length)} channels</strong> generated <strong>${formatNumber(tS)} sessions</strong>, <strong>${formatNumber(tP)} purchases</strong>, and <strong>${formatCurrency(tR)} in revenue</strong>. The highest-volume channel (<strong>${byVol.channel}</strong>) accounts for ${((byVol.sessions / tS) * 100).toFixed(1)}% of traffic, while the most efficient channel (<strong>${byEff.channel}</strong>) delivers $${byEff.rps.toFixed(2)} per session. Focusing conversion optimization on high-volume, low-conversion channels while scaling investment in high-efficiency channels represents the clearest path to incremental revenue growth.</p>`;
+      var html = '<table><thead><tr><th>Channel</th><th>Sessions</th><th>Purchases</th><th>Revenue</th><th>Conv. Rate</th><th>Rev / Session</th></tr></thead><tbody>';
+      rows.forEach(function(r) {
+        html += '<tr>'
+          + '<td><strong>' + r.channel + '</strong></td>'
+          + '<td class="metric-value">' + fmt(r.sessions) + '</td>'
+          + '<td class="metric-value">' + fmt(r.purchases) + '</td>'
+          + '<td class="metric-value">' + fmtC(r.revenue) + '</td>'
+          + '<td><span class="conv-bar"><span class="conv-bar-track"><span class="conv-bar-fill" style="width:' + (r.convRate / maxConv * 100).toFixed(1) + '%"></span></span><span class="metric-value">' + pct(r.convRate) + '</span></span></td>'
+          + '<td class="metric-value">' + fmtC2(r.rps) + '</td>'
+          + '</tr>';
+      });
+      html += '</tbody></table>';
+      document.getElementById('channelTableContainer').innerHTML = html;
     }
 
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', loadData);
+    /* --- Key Insights & Recommendations --- */
+    function generateInsights(data) {
+      var agg = {};
+      data.forEach(function(d) {
+        if (!agg[d.channel]) agg[d.channel] = {sessions: 0, purchases: 0, revenue: 0};
+        agg[d.channel].sessions  += d.sessions;
+        agg[d.channel].purchases += d.purchases;
+        agg[d.channel].revenue   += d.revenue;
+      });
+      var channels = Object.keys(agg).map(function(ch) {
+        return {
+          channel: ch, sessions: agg[ch].sessions, purchases: agg[ch].purchases,
+          revenue: agg[ch].revenue,
+          convRate: agg[ch].sessions > 0 ? (agg[ch].purchases / agg[ch].sessions * 100) : 0,
+          rps: agg[ch].sessions > 0 ? (agg[ch].revenue / agg[ch].sessions) : 0
+        };
+      });
+      var tS = channels.reduce(function(s, c) { return s + c.sessions;  }, 0);
+      var tR = channels.reduce(function(s, c) { return s + c.revenue;   }, 0);
+      var tP = channels.reduce(function(s, c) { return s + c.purchases; }, 0);
 
-    // FAQ accordion
-    document.querySelectorAll('.dash-faq-q').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const item = btn.closest('.dash-faq-item');
-        const isOpen = item.classList.contains('is-open');
-        document.querySelectorAll('.dash-faq-item.is-open').forEach(el => el.classList.remove('is-open'));
+      var byVol  = channels.slice().sort(function(a, b) { return b.sessions  - a.sessions;  })[0];
+      var byConv = channels.slice().sort(function(a, b) { return b.convRate  - a.convRate;  })[0];
+      var byRev  = channels.slice().sort(function(a, b) { return b.revenue   - a.revenue;   })[0];
+      var byEff  = channels.slice().sort(function(a, b) { return b.rps       - a.rps;       })[0];
+
+      /* From purchases CSV */
+      var bounds = getDateBounds();
+      var pData = purchasesData.slice();
+      if (bounds.min) pData = pData.filter(function(r) { return r.date >= bounds.min; });
+      var avgDR = pData.length > 0 ? (pData.reduce(function(s, r) { return s + r.revenue; }, 0) / pData.length) : 0;
+      var peak  = pData.length > 0 ? pData.reduce(function(best, r) { return r.revenue > best.revenue ? r : best; }, pData[0]) : null;
+
+      /* Insight Cards */
+      document.getElementById('insightCardsContainer').innerHTML =
+        '<div class="insight-card"><div class="insight-icon insight-icon--accent">&#9650;</div><div class="insight-body"><h4>Highest Volume Channel</h4><div class="insight-metric">' + fmt(byVol.sessions) + ' sessions</div><p><strong>' + byVol.channel + '</strong> drives ' + ((byVol.sessions / tS) * 100).toFixed(1) + '% of all traffic but converts at ' + pct(byVol.convRate) + '.</p></div></div>' +
+        '<div class="insight-card"><div class="insight-icon insight-icon--success">&#10003;</div><div class="insight-body"><h4>Best Conversion Rate</h4><div class="insight-metric">' + pct(byConv.convRate) + '</div><p><strong>' + byConv.channel + '</strong> converts at the highest rate, generating ' + fmt(byConv.purchases) + ' purchases from ' + fmt(byConv.sessions) + ' sessions.</p></div></div>' +
+        '<div class="insight-card"><div class="insight-icon insight-icon--info">&#36;</div><div class="insight-body"><h4>Revenue Leader</h4><div class="insight-metric">' + fmtC(byRev.revenue) + '</div><p><strong>' + byRev.channel + '</strong> contributes ' + ((byRev.revenue / tR) * 100).toFixed(1) + '% of total revenue across the selected period.</p></div></div>' +
+        '<div class="insight-card"><div class="insight-icon insight-icon--purple">&#9733;</div><div class="insight-body"><h4>Most Efficient Channel</h4><div class="insight-metric">' + fmtC2(byEff.rps) + ' / session</div><p><strong>' + byEff.channel + '</strong> delivers the highest revenue per session, indicating strong audience-product fit.</p></div></div>' +
+        (peak ? '<div class="insight-card"><div class="insight-icon insight-icon--warning">&#9650;</div><div class="insight-body"><h4>Peak Revenue Day</h4><div class="insight-metric">' + fmtC(peak.revenue) + '</div><p>' + peak.date.toLocaleDateString('en-US', {weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'}) + ' recorded the highest single-day revenue with ' + fmt(peak.purchases) + ' purchases.</p></div></div>' : '') +
+        '<div class="insight-card"><div class="insight-icon insight-icon--success">&#8709;</div><div class="insight-body"><h4>Average Daily Revenue</h4><div class="insight-metric">' + fmtC(avgDR) + '</div><p>Across ' + fmt(pData.length) + ' days of data from the purchases dataset, averaging ' + fmt(Math.round(tP / Math.max(pData.length, 1))) + ' purchases per day.</p></div></div>';
+
+      /* Recommendation Cards */
+      var lowConvHigh = channels.filter(function(c) { return c.sessions > tS * 0.05; }).sort(function(a, b) { return a.convRate - b.convRate; })[0];
+      document.getElementById('recoCardsContainer').innerHTML =
+        '<div class="reco-card"><div class="reco-number">1</div><div><h4>Invest in High-Efficiency Channels</h4><p>Reallocate budget toward <strong>' + byEff.channel + '</strong>, which generates ' + fmtC2(byEff.rps) + ' per session. Even a modest increase in traffic could yield outsized revenue returns.</p></div></div>' +
+        '<div class="reco-card"><div class="reco-number">2</div><div><h4>Optimize Conversion on Top Volume</h4><p><strong>' + byVol.channel + '</strong> drives the most sessions but converts at only ' + pct(byVol.convRate) + '. A/B testing landing pages and CTAs could unlock significant incremental revenue.</p></div></div>' +
+        '<div class="reco-card"><div class="reco-number">3</div><div><h4>' + (lowConvHigh ? 'Investigate Underperforming Channels' : 'Diversify Revenue Sources') + '</h4><p>' + (lowConvHigh ? '<strong>' + lowConvHigh.channel + '</strong> brings ' + fmt(lowConvHigh.sessions) + ' sessions but converts at just ' + pct(lowConvHigh.convRate) + '. Review targeting and audience segmentation to improve funnel efficiency.' : 'Revenue is concentrated in the top channels. Experiment with emerging channels to reduce dependency.') + '</p></div></div>';
+
+      /* Summary Callout */
+      document.getElementById('summaryCallout').innerHTML =
+        '<h4>Analysis Summary</h4><p>Across the selected period, <strong>' + fmt(channels.length) + ' channels</strong> generated <strong>' + fmt(tS) + ' sessions</strong>, <strong>' + fmt(tP) + ' purchases</strong>, and <strong>' + fmtC(tR) + ' in revenue</strong>. The highest-volume channel (<strong>' + byVol.channel + '</strong>) accounts for ' + ((byVol.sessions / tS) * 100).toFixed(1) + '% of traffic, while the most efficient channel (<strong>' + byEff.channel + '</strong>) delivers ' + fmtC2(byEff.rps) + ' per session. Focusing conversion optimization on high-volume, low-conversion channels while scaling investment in high-efficiency channels represents the clearest path to incremental revenue growth.</p>';
+    }
+
+    /* --- FAQ accordion --- */
+    document.querySelectorAll('.dash-faq-q').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var item   = btn.closest('.dash-faq-item');
+        var isOpen = item.classList.contains('is-open');
+        document.querySelectorAll('.dash-faq-item.is-open').forEach(function(el) { el.classList.remove('is-open'); });
         if (!isOpen) item.classList.add('is-open');
         btn.setAttribute('aria-expanded', String(!isOpen));
       });
     });
+
+    /* --- Init --- */
+    document.addEventListener('DOMContentLoaded', loadData);
+  })();
   </script>
 
 </body>
