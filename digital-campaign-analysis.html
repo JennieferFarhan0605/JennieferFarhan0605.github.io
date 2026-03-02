@@ -96,6 +96,7 @@
           All artifacts are available for download and reuse.
         </p>
         <ul style="color: var(--text-muted); margin-bottom: 0; list-style: disc; padding-left: 20px;">
+          <li><a class="btn-link" href="campaign-performance-dashboard.html" download>campaign-performance-dashboard.html</a> — Interactive dashboard (standalone file)</li>
           <li><a class="btn-link" href="assets/ga4_sessions_by_day_channel.csv">ga4_sessions_by_day_channel.csv</a> — Sessions by channel</li>
           <li><a class="btn-link" href="assets/ga4_purchases_revenue_by_day.csv">ga4_purchases_revenue_by_day.csv</a> — Purchases & revenue</li>
           <li><a class="btn-link" href="assets/ga4_funnel_by_day_channel.csv">ga4_funnel_by_day_channel.csv</a> — Complete funnel data</li>
@@ -262,6 +263,259 @@
       </div>
     </div>
 
+    <div class="section" id="faq">
+      <h2 class="h2">Frequently Asked Questions</h2>
+      <p class="project-desc">
+        A detailed breakdown of the methodology, tools, data, and decisions behind this project.
+      </p>
+
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>What was the overall goal of this project?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>The project was an <strong>8-week self-guided simulation</strong> designed to replicate the full operational cycle of a live digital marketing campaign — from audience identification and content planning through to data infrastructure, performance tracking, and post-mortem analysis. The core intent was not just to plan a campaign but to build the <strong>analytical infrastructure</strong> required to measure one: structured datasets, funnel reporting tables, a working interactive dashboard, and a reproducible data pipeline. The goal was to demonstrate that marketing effectiveness is an engineering problem as much as a creative one.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>Where does the data come from, and is it real?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>Yes — the dataset is real. It is sourced from <strong>Google's publicly available GA4 BigQuery sample ecommerce export</strong>, which contains obfuscated but genuine event-level data from the Google Merchandise Store. The dataset is hosted at <code>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</code> and covers November 2020 through January 2021. Because GA4 exports are event-based rather than session-based, the raw data had to be reshaped — sessions were reconstructed using <code>user_pseudo_id</code> and <code>ga_session_id</code>, and conversion signals were isolated from <code>purchase</code> events. The full query logic and export process is documented step-by-step on the <a href="ga4-bigquery-dataset.html" class="btn-link">dataset build page</a>.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>Why BigQuery instead of the GA4 interface directly?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>The GA4 UI surfaces aggregated, pre-processed metrics that are not granular enough for custom funnel modelling. BigQuery gives access to the <strong>raw event-level export</strong> — every session start, page view, and purchase event as an individual row. This makes it possible to reconstruct sessions from scratch, define custom channel groupings, compute exact conversion rates per channel per day, and join tables in ways the GA4 interface does not support. It also produces portable CSV outputs that can feed any downstream tool — Excel, Power BI, or a custom JavaScript dashboard — without being locked into Google's reporting layer.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>How were the four acquisition channels identified and prioritised?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>Channel prioritisation was driven entirely by the data. After aggregating the GA4 export by <code>traffic_source.source</code> and <code>traffic_source.medium</code>, four channels accounted for the vast majority of attributable traffic across the 13-week period: <strong>Google / Organic</strong> (112,918 sessions — the volume leader), <strong>Direct</strong> (83,677 sessions), <strong>Other / Referral</strong> (34,740 sessions), and <strong>Google / CPC</strong> (15,650 sessions). CPC had a disproportionately high conversion rate of 1.28% despite low volume, which justified treating it as a precision conversion channel rather than a volume driver. The content calendar, frequency matrix, and Excel tracker are all structured around these four channels.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>What does the 13-week content calendar actually contain?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>The <a href="content-calendar.html" class="btn-link">content calendar</a> covers the full simulation period from November 1, 2020 to January 31, 2021, divided into three campaign phases: <strong>Ramp-Up</strong> (W1–W3), <strong>Peak — Black Friday &amp; Holiday</strong> (W4–W7), and <strong>Cool-Down &amp; Re-Engagement</strong> (W8–W13). Each of the 13 weeks contains a planned set of content pieces per channel — blog posts and SEO work for Organic, ad copy and remarketing setup for Paid Search, email sequences for Direct, and partner briefs and co-branded assets for Referral. The intensity bar on each week block is drawn directly from the weekly purchase count in the GA4 dataset, so content load visually reflects actual conversion demand. The calendar is filterable by channel.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>What is the frequency matrix and how does it differ from the content calendar?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>The calendar answers <em>what</em> gets published each week. The <a href="frequency-matrix.html" class="btn-link">frequency matrix</a> answers <em>how often</em> each content format should be produced per channel, and <em>why</em>. It is a format × channel × phase table — for example, Organic Search gets blog posts at 2× per week during Ramp-Up, scaling to 3× during Peak, then dropping to 1× in Cool-Down. Paid Search ad copy peaks at 2× per week during Phase 2 and drops to near-zero in Phase 3 because the purchase data drops from 833 weekly conversions to 170. The matrix also includes an asset specification table with production lead times, technical requirements (word counts, ad character limits, UTM parameters), and a channel priority rating derived from session volume and conversion rate.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>How was the audience segmentation model built?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>The segmentation model has two layers. The first is <strong>demographic profiling</strong> — defining core audience segments across age brackets, geographic focus areas, and professional status indicators, then mapping each segment against product-fit criteria to determine where value alignment was strongest. The second layer is <strong>psychographic mapping</strong> — analysing motivations and pain points to inform the messaging hierarchy. Rather than leading with product features, the framework leads with the outcome the user wants, which produces more relevant messaging and higher engagement signals. Each segment was then matched to the channel most likely to intercept them at the right intent moment — this channel-to-segment mapping is what gives the frequency decisions their strategic rationale rather than making them arbitrary.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>What does the interactive dashboard show and how does it work technically?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>The <a href="campaign-performance-dashboard.html" class="btn-link">interactive dashboard</a> is a standalone HTML file built with <strong>vanilla JavaScript and Chart.js</strong> that loads the GA4 CSV files client-side — no backend or server required, making it fully compatible with GitHub Pages. It visualises four core metrics (sessions, purchases, revenue, and conversion rate) across channels and date ranges, with real-time filtering that lets you drill into specific segments. A channel performance table compares acquisition channels on volume, conversion efficiency, and revenue contribution. The dashboard also generates automated insight cards — pattern recognition logic that surfaces findings such as which channel has the highest revenue-per-session or where conversion rate diverges most from session share.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>What is in the Excel tracker and how is it structured?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>The <a href="assets/ga4_campaign_tracker.xlsx" download class="btn-link">Excel workbook</a> has five sheets. The <strong>Dashboard</strong> sheet presents the four headline KPIs (total sessions, purchases, revenue, overall conversion rate) as formatted cards, followed by a channel performance summary table and campaign phase reference. <strong>Raw Data</strong> contains all rows from the funnel CSV with auto-filter enabled. <strong>Sessions by Channel</strong> is a weekly pivot table of session volume per focus channel with week-on-week delta percentages. <strong>Purchases &amp; Revenue</strong> shows the daily conversion data with phase classification colour-coded in the phase column and an average order value column. <strong>Funnel Analysis</strong> ranks all channels by session volume and computes session share, conversion rate, revenue-per-session, and a performance tier label — with conditional formatting on the conversion rate column.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>Why are there three campaign phases, and how were the date boundaries set?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>The phase boundaries were derived from the purchase volume data, not set arbitrarily. <strong>Phase 1 — Ramp-Up</strong> (Nov 1–21) covers the period of building awareness and priming audiences before the commercial peak. <strong>Phase 2 — Peak</strong> (Nov 22 – Dec 18) aligns precisely with the highest purchase weeks in the dataset: Black Friday falls in Week 4, and the holiday shopping peak runs through to Dec 18 — the last week before purchase volume drops sharply as the gift delivery window closes. <strong>Phase 3 — Cool-Down</strong> (Dec 19 – Jan 31) reflects the post-holiday period where purchase volume falls (20 purchases on Dec 20 versus 160 on Dec 11) before a gradual January recovery. The phases inform content intensity, paid spend levels, email frequency, and partner engagement cadence across every deliverable.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>How was conversion rate calculated, and why is it different from a standard GA4 metric?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>The conversion rate in this project is defined as <strong>purchase events ÷ reconstructed sessions per channel</strong>. This is not a native GA4 metric — the GA4 interface computes conversion rate differently (typically against user counts or key events, not raw session reconstructions). Because this project works from the BigQuery event-level export, sessions are rebuilt using the <code>CONCAT(user_pseudo_id, '-', ga_session_id)</code> key to count distinct sessions per channel. The resulting conversion rate is a custom funnel KPI that enables direct channel-to-channel comparison on conversion efficiency. This is explicitly documented as a reconstruction in the analysis notes, and is one of the reasons the dataset build page exists — to show the SQL logic transparently rather than treating the numbers as given.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>What were the key findings from the performance analysis?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>Three findings stand out. First, <strong>high session volume does not predict conversion efficiency</strong> — Google / Organic drove the most traffic by a wide margin but had a lower conversion rate than Google / CPC, which had roughly one-seventh the volume but more than three times the conversion rate. Second, <strong>the Black Friday and holiday peak was sharper and shorter than expected</strong>, with purchase volume rising from 273 conversions in Week 1 to 833 in Week 6 then collapsing to 257 in Week 8 — a window of less than four weeks at full intensity. Third, <strong>the post-holiday January recovery is gradual</strong>, reaching only 373 purchases by Week 12, which suggests re-engagement content needs to start earlier in December to maintain list warmth through the cool-down period.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>What tools and technologies were used across the project?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>The project used a deliberate stack across four layers. <strong>Data extraction:</strong> Google BigQuery with SQL for accessing and reshaping the GA4 event export. <strong>Reporting infrastructure:</strong> Microsoft Excel for the five-sheet campaign tracker (using openpyxl-compatible formatting standards), and CSV exports for portability. <strong>Visualisation:</strong> Vanilla JavaScript with Chart.js for the interactive performance dashboard, built as a single self-contained HTML file. <strong>Planning documents:</strong> HTML, CSS, and JavaScript for the content calendar and frequency matrix — built to be hosted on GitHub Pages alongside the rest of the portfolio without any build process or server dependency. The deliberate avoidance of frameworks (no React, no backend) keeps every deliverable portable and reproducible.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>What are the limitations of this analysis, and what would a next iteration include?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>The current model is intentionally scoped to GA4-derived <strong>demand-side signals</strong> only — sessions, purchases, and revenue. It does not include <strong>delivery-side metrics</strong> (impressions, clicks, ad spend) because the GA4 dataset does not contain paid media cost data. The practical consequence is that it is not possible to compute CTR, CPA, or ROAS from this dataset alone. A next iteration would join a paid media export (from Google Ads or a similar platform) against the session and conversion data to complete the full performance loop: spend → impression → click → session → purchase → revenue. This would enable budget efficiency analysis and channel-level ROAS, which is the metric most relevant to justifying paid spend reallocation decisions.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            <span>How does this project demonstrate readiness for a professional marketing or analytics role?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            <p>The project was specifically structured to demonstrate competency across the full stack of a marketing operations role — not just one layer of it. <strong>Strategic thinking</strong> is evidenced in the audience segmentation model, channel prioritisation rationale, and phase-based campaign structure. <strong>Technical execution</strong> is evidenced in the BigQuery SQL pipeline, the reproducible dataset build, and the JavaScript dashboard. <strong>Analytical rigour</strong> is evidenced in the funnel KPI construction, the data-driven frequency decisions, and the honest documentation of what the current model cannot yet measure. <strong>Communication</strong> is evidenced in the structured case study format itself — translating a complex data project into a clear, navigable portfolio deliverable. Together, these demonstrate the ability to move from a brief to a measurable outcome with documented methodology.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </main>
-</body>
-</html>
+
+  <style>
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+    .faq-q {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.15rem 1.5rem;
+      background: #fff;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s ease;
+      font-family: var(--font-sans);
+    }
+    .faq-q:hover {
+      background: var(--bg-paper);
+    }
+    .faq-item.is-open .faq-q {
+      background: var(--bg-paper);
+    }
+    .faq-q span:first-child {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.4;
+    }
+    .faq-icon {
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var(--accent);
+      flex-shrink: 0;
+      line-height: 1;
+      transition: transform 0.2s ease;
+      width: 20px;
+      text-align: center;
+    }
+    .faq-item.is-open .faq-icon {
+      transform: rotate(45deg);
+    }
+    .faq-a {
+      display: none;
+      padding: 0 1.5rem 1.25rem 1.5rem;
+      background: var(--bg-paper);
+      border-top: 1px solid var(--border);
+    }
+    .faq-item.is-open .faq-a {
+      display: block;
+    }
+    .faq-a p {
+      font-size: 0.97rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin: 1rem 0 0;
+    }
+    .faq-a p:first-child {
+      margin-top: 1rem;
+    }
+    .faq-a code {
+      font-size: 0.85rem;
+      background: rgba(157, 23, 77, 0.07);
+      color: var(--accent);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-family: 'SF Mono', Monaco, Consolas, monospace;
+    }
+  </style>
+
+  <script>
+    document.querySelectorAll('.faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('is-open');
+        document.querySelectorAll('.faq-item.is-open').forEach(el => el.classList.remove('is-open'));
+        if (!isOpen) item.classList.add('is-open');
+        btn.setAttribute('aria-expanded', !isOpen);
+      });
+    });
+  </script>
