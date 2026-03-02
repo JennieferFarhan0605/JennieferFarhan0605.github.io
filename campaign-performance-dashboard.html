@@ -303,7 +303,7 @@
     <a href="digital-campaign-analysis.html" class="btn-link">← Back to Case Study</a>
   </nav>
 
-  <main class="container">
+  <main class="container dashboard-scope">
     <div class="dashboard-header">
       <span class="label">Interactive Data Dashboard</span>
       <h1 class="h1">Campaign Performance Analytics</h1>
@@ -407,11 +407,16 @@
       </div>
 
       <!-- Insights -->
-      <div class="insights-section">
-        <h3 class="h3" style="margin-top: 0;">Key Insights &amp; Recommendations</h3>
-        <div id="insightsContainer">
-          <!-- Insights will be generated dynamically -->
+      <div class="insights-section" id="insightsSection">
+        <div class="insights-header">
+          <h2 class="h2">Key Insights &amp; Recommendations</h2>
+          <p class="project-desc">Auto-generated analysis highlighting top performers, efficiency signals, and actionable optimizations.</p>
         </div>
+        <div class="reco-section-title">Performance Snapshot</div>
+        <div class="insights-grid" id="insightCardsContainer"></div>
+        <div class="reco-section-title">Actionable Recommendations</div>
+        <div class="reco-cards" id="recoCardsContainer"></div>
+        <div class="summary-callout" id="summaryCallout"></div>
       </div>
 
       <!-- ===== DASHBOARD FAQ ===== -->
@@ -497,6 +502,7 @@
   <script>
     // Global data storage
     let funnelData = [];
+    let purchasesData = [];
     let charts = {};
 
     // Color palette matching the design system
@@ -556,11 +562,16 @@
     // Load CSV files
     async function loadData() {
       try {
-        const response = await fetch('assets/ga4_funnel_by_day_channel.csv');
-        const text = await response.text();
-        funnelData = parseCSV(text);
+        const [funnelResp, purchasesResp] = await Promise.all([
+          fetch('assets/ga4_funnel_by_day_channel.csv'),
+          fetch('assets/ga4_purchases_revenue_by_day.csv')
+        ]);
+        const funnelText    = await funnelResp.text();
+        const purchasesText = await purchasesResp.text();
 
-        // Process data
+        funnelData = parseCSV(funnelText);
+
+        // Process funnel data
         funnelData = funnelData.map(row => ({
           date: parseDate(row.date),
           dateStr: row.date,
@@ -570,6 +581,16 @@
           revenue: parseFloat(row.revenue) || 0,
           conversion_rate: parseFloat(row.conversion_rate) || 0
         }));
+
+        // Process purchases/revenue data (comma-delimited, YYYY-MM-DD)
+        purchasesData = parseCSV(purchasesText, ',').map(row => {
+          const [y, m, d] = row.date.split('-');
+          return {
+            date: new Date(y, m - 1, d),
+            purchases: parseInt(row.purchases) || 0,
+            revenue: parseFloat(row.revenue) || 0
+          };
+        }).sort((a, b) => a.date - b.date);
 
         // Sort by date
         funnelData.sort((a, b) => a.date - b.date);
@@ -987,66 +1008,118 @@
 
     // Generate insights
     function generateInsights(data) {
-      const channelData = {};
+      const agg = {};
       data.forEach(d => {
-        if (!channelData[d.channel]) {
-          channelData[d.channel] = { sessions: 0, purchases: 0, revenue: 0 };
-        }
-        channelData[d.channel].sessions += d.sessions;
-        channelData[d.channel].purchases += d.purchases;
-        channelData[d.channel].revenue += d.revenue;
+        if (!agg[d.channel]) agg[d.channel] = { sessions: 0, purchases: 0, revenue: 0 };
+        agg[d.channel].sessions  += d.sessions;
+        agg[d.channel].purchases += d.purchases;
+        agg[d.channel].revenue   += d.revenue;
       });
 
-      const channels = Object.keys(channelData).map(ch => ({
+      const channels = Object.keys(agg).map(ch => ({
         channel: ch,
-        sessions: channelData[ch].sessions,
-        purchases: channelData[ch].purchases,
-        revenue: channelData[ch].revenue,
-        conversionRate: channelData[ch].sessions > 0 ? (channelData[ch].purchases / channelData[ch].sessions * 100) : 0,
-        revenuePerSession: channelData[ch].sessions > 0 ? (channelData[ch].revenue / channelData[ch].sessions) : 0
+        sessions: agg[ch].sessions, purchases: agg[ch].purchases, revenue: agg[ch].revenue,
+        convRate: agg[ch].sessions > 0 ? (agg[ch].purchases / agg[ch].sessions * 100) : 0,
+        rps:      agg[ch].sessions > 0 ? (agg[ch].revenue   / agg[ch].sessions)       : 0
       }));
 
-      // Find insights
-      const topByVolume = channels.sort((a, b) => b.sessions - a.sessions)[0];
-      const topByConversion = channels.sort((a, b) => b.conversionRate - a.conversionRate)[0];
-      const topByRevenue = channels.sort((a, b) => b.revenue - a.revenue)[0];
-      const topByEfficiency = channels.sort((a, b) => b.revenuePerSession - a.revenuePerSession)[0];
+      if (!channels.length) return;
 
-      let html = `
-        <div class="insight-item">
-          <div class="insight-title">Highest Volume Channel</div>
-          <p style="color: var(--text-muted); margin: 0;">
-            <strong>${topByVolume.channel}</strong> drives the most traffic with ${formatNumber(topByVolume.sessions)} sessions,
-            but has a conversion rate of ${topByVolume.conversionRate.toFixed(2)}%.
-          </p>
+      const tS = channels.reduce((s, c) => s + c.sessions,  0);
+      const tR = channels.reduce((s, c) => s + c.revenue,   0);
+      const tP = channels.reduce((s, c) => s + c.purchases, 0);
+
+      const byVol  = [...channels].sort((a, b) => b.sessions  - a.sessions)[0];
+      const byConv = [...channels].sort((a, b) => b.convRate  - a.convRate)[0];
+      const byRev  = [...channels].sort((a, b) => b.revenue   - a.revenue)[0];
+      const byEff  = [...channels].sort((a, b) => b.rps       - a.rps)[0];
+
+      // Peak day from purchases CSV
+      const dateRange = document.getElementById('dateRange').value;
+      let pData = [...purchasesData];
+      if (dateRange !== 'all') {
+        const days = parseInt(dateRange);
+        const maxDate = new Date(Math.max(...funnelData.map(d => d.date)));
+        const minDate = new Date(maxDate); minDate.setDate(minDate.getDate() - days);
+        pData = pData.filter(r => r.date >= minDate);
+      }
+      const avgDR = pData.length > 0 ? pData.reduce((s, r) => s + r.revenue, 0) / pData.length : 0;
+      const peak  = pData.length > 0 ? pData.reduce((best, r) => r.revenue > best.revenue ? r : best, pData[0]) : null;
+
+      // ── Insight Cards ──────────────────────────────────────────────────────
+      document.getElementById('insightCardsContainer').innerHTML =
+        `<div class="insight-card">
+          <div class="insight-icon insight-icon--accent">&#9650;</div>
+          <div class="insight-body">
+            <h4>Highest Volume Channel</h4>
+            <div class="insight-metric">${formatNumber(byVol.sessions)} sessions</div>
+            <p><strong>${byVol.channel}</strong> drives ${((byVol.sessions / tS) * 100).toFixed(1)}% of all traffic but converts at ${byVol.convRate.toFixed(2)}%.</p>
+          </div>
         </div>
-
-        <div class="insight-item">
-          <div class="insight-title">Highest Conversion Rate</div>
-          <p style="color: var(--text-muted); margin: 0;">
-            <strong>${topByConversion.channel}</strong> has the strongest conversion performance at ${topByConversion.conversionRate.toFixed(2)}%,
-            generating ${formatNumber(topByConversion.purchases)} purchases from ${formatNumber(topByConversion.sessions)} sessions.
-          </p>
+        <div class="insight-card">
+          <div class="insight-icon insight-icon--success">&#10003;</div>
+          <div class="insight-body">
+            <h4>Best Conversion Rate</h4>
+            <div class="insight-metric">${byConv.convRate.toFixed(2)}%</div>
+            <p><strong>${byConv.channel}</strong> converts at the highest rate, generating ${formatNumber(byConv.purchases)} purchases from ${formatNumber(byConv.sessions)} sessions.</p>
+          </div>
         </div>
-
-        <div class="insight-item">
-          <div class="insight-title">Revenue Leader</div>
-          <p style="color: var(--text-muted); margin: 0;">
-            <strong>${topByRevenue.channel}</strong> contributes the most revenue at ${formatCurrency(topByRevenue.revenue)},
-            representing ${((topByRevenue.revenue / channels.reduce((sum, ch) => sum + ch.revenue, 0)) * 100).toFixed(1)}% of total revenue.
-          </p>
+        <div class="insight-card">
+          <div class="insight-icon insight-icon--info">&#36;</div>
+          <div class="insight-body">
+            <h4>Revenue Leader</h4>
+            <div class="insight-metric">${formatCurrency(byRev.revenue)}</div>
+            <p><strong>${byRev.channel}</strong> contributes ${((byRev.revenue / tR) * 100).toFixed(1)}% of total revenue across the selected period.</p>
+          </div>
         </div>
-
-        <div class="insight-item">
-          <div class="insight-title">Optimization Recommendation</div>
-          <p style="color: var(--text-muted); margin: 0;">
-            Consider reallocating budget toward <strong>${topByEfficiency.channel}</strong>, which shows the highest revenue per session
-            at ${formatCurrency(topByEfficiency.revenuePerSession)}. This suggests strong audience-product fit and efficient conversion.
-          </p>
+        <div class="insight-card">
+          <div class="insight-icon insight-icon--purple">&#9733;</div>
+          <div class="insight-body">
+            <h4>Most Efficient Channel</h4>
+            <div class="insight-metric">$${byEff.rps.toFixed(2)} / session</div>
+            <p><strong>${byEff.channel}</strong> delivers the highest revenue per session, indicating strong audience-product fit.</p>
+          </div>
         </div>
-      `;
+        ${peak ? `<div class="insight-card">
+          <div class="insight-icon insight-icon--warning">&#9650;</div>
+          <div class="insight-body">
+            <h4>Peak Revenue Day</h4>
+            <div class="insight-metric">${formatCurrency(peak.revenue)}</div>
+            <p>${peak.date.toLocaleDateString('en-US', {weekday:'long',month:'long',day:'numeric',year:'numeric'})} recorded the highest single-day revenue with ${formatNumber(peak.purchases)} purchases.</p>
+          </div>
+        </div>` : ''}
+        <div class="insight-card">
+          <div class="insight-icon insight-icon--success">&#8709;</div>
+          <div class="insight-body">
+            <h4>Average Daily Revenue</h4>
+            <div class="insight-metric">${formatCurrency(avgDR)}</div>
+            <p>Across ${formatNumber(pData.length)} days of data from the purchases dataset, averaging ${formatNumber(Math.round(tP / Math.max(pData.length, 1)))} purchases per day.</p>
+          </div>
+        </div>`;
 
-      document.getElementById('insightsContainer').innerHTML = html;
+      // ── Recommendation Cards ───────────────────────────────────────────────
+      const lowConvHigh = channels.filter(c => c.sessions > tS * 0.05).sort((a, b) => a.convRate - b.convRate)[0];
+      document.getElementById('recoCardsContainer').innerHTML =
+        `<div class="reco-card">
+          <div class="reco-number">1</div>
+          <h4>Invest in High-Efficiency Channels</h4>
+          <p>Reallocate budget toward <strong>${byEff.channel}</strong>, which generates $${byEff.rps.toFixed(2)} per session. Even a modest increase in traffic could yield outsized revenue returns.</p>
+        </div>
+        <div class="reco-card">
+          <div class="reco-number">2</div>
+          <h4>Optimize Conversion on Top Volume</h4>
+          <p><strong>${byVol.channel}</strong> drives the most sessions but converts at only ${byVol.convRate.toFixed(2)}%. A/B testing landing pages and CTAs could unlock significant incremental revenue.</p>
+        </div>
+        <div class="reco-card">
+          <div class="reco-number">3</div>
+          <h4>${lowConvHigh ? 'Investigate Underperforming Channels' : 'Diversify Revenue Sources'}</h4>
+          <p>${lowConvHigh ? `<strong>${lowConvHigh.channel}</strong> brings ${formatNumber(lowConvHigh.sessions)} sessions but converts at just ${lowConvHigh.convRate.toFixed(2)}%. Review targeting and audience segmentation to improve funnel efficiency.` : 'Revenue is concentrated in the top channels. Experiment with emerging channels to reduce dependency.'}</p>
+        </div>`;
+
+      // ── Summary Callout ────────────────────────────────────────────────────
+      document.getElementById('summaryCallout').innerHTML =
+        `<h4>Analysis Summary</h4>
+        <p>Across the selected period, <strong>${formatNumber(channels.length)} channels</strong> generated <strong>${formatNumber(tS)} sessions</strong>, <strong>${formatNumber(tP)} purchases</strong>, and <strong>${formatCurrency(tR)} in revenue</strong>. The highest-volume channel (<strong>${byVol.channel}</strong>) accounts for ${((byVol.sessions / tS) * 100).toFixed(1)}% of traffic, while the most efficient channel (<strong>${byEff.channel}</strong>) delivers $${byEff.rps.toFixed(2)} per session. Focusing conversion optimization on high-volume, low-conversion channels while scaling investment in high-efficiency channels represents the clearest path to incremental revenue growth.</p>`;
     }
 
     // Initialize on page load
