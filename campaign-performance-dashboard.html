@@ -9,250 +9,7 @@
   <link rel="stylesheet" href="styles.css">
 
   <style>
-    /* ── Dashboard layout ──────────────────────────────────────── */
-    .dashboard-controls {
-      display: flex;
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
-      flex-wrap: wrap;
-      align-items: center;
-      background: #fff;
-      padding: 1.5rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-    }
-    .control-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    .control-group label {
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-    }
-    .control-group select {
-      padding: 0.6rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-family: var(--font-sans);
-      font-size: 0.95rem;
-      background: #fff;
-      color: var(--text-main);
-      min-width: 180px;
-    }
-    .control-group select:focus { outline: none; border-color: var(--accent); }
-
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 3rem;
-    }
-    .kpi-card {
-      background: #fff;
-      padding: 1.75rem;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      transition: all 0.2s ease;
-    }
-    .kpi-card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 4px 12px rgba(157, 23, 77, 0.08);
-    }
-    .kpi-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--text-muted);
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-    }
-    .kpi-value {
-      font-family: var(--font-serif);
-      font-size: 2.25rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 0.25rem;
-      line-height: 1;
-    }
-    .kpi-change { font-size: 0.85rem; color: var(--text-muted); }
-
-    .chart-container {
-      background: #fff;
-      padding: 2rem;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      margin-bottom: 2rem;
-      position: relative;
-      height: 400px;
-    }
-    .chart-title {
-      font-family: var(--font-serif);
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 0.25rem;
-    }
-    .chart-subtitle {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      margin-bottom: 1.25rem;
-    }
-    .loading {
-      text-align: center;
-      padding: 3rem;
-      color: var(--text-muted);
-      font-style: italic;
-    }
-
-    /* ── Channel table ─────────────────────────────────────────── */
-    .channel-table { width: 100%; background: #fff; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 2rem; }
-    .channel-table table { width: 100%; border-collapse: collapse; }
-    .channel-table th, .channel-table td { padding: 1rem 1.25rem; text-align: left; border-bottom: 1px solid var(--border); }
-    .channel-table th { background: #f9f9f7; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-main); }
-    .channel-table td { color: var(--text-muted); }
-    .channel-table tbody tr:hover { background: #fafafa; }
-    .channel-table tbody tr:last-child td { border-bottom: none; }
-    .metric-value { font-weight: 700; color: var(--text-main); }
-    .conv-bar { display: flex; align-items: center; gap: 0.5rem; }
-    .conv-bar-track { flex: 1; height: 6px; background: #f0efed; border-radius: 3px; overflow: hidden; }
-    .conv-bar-fill { height: 100%; background: #9d174d; border-radius: 3px; }
-
-    /* ── Insights section ──────────────────────────────────────── */
-    .insights-section {
-      background: #fdfcfc;
-      padding: 2.5rem;
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--accent);
-      border-radius: 8px;
-      margin-top: 3rem;
-    }
-    .insights-header { margin-bottom: 2rem; }
-    .reco-section-title {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: #9d174d;
-      margin: 0 0 1rem;
-    }
-    .insights-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.25rem;
-      margin-bottom: 2.5rem;
-    }
-    .insight-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.5rem;
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-    }
-    .insight-icon {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; flex-shrink: 0;
-    }
-    .insight-icon--accent  { background: rgba(157,23,77,0.10);  color: #9d174d; }
-    .insight-icon--success { background: rgba(5,150,105,0.10);  color: #059669; }
-    .insight-icon--info    { background: rgba(37,99,235,0.10);  color: #2563eb; }
-    .insight-icon--purple  { background: rgba(124,58,237,0.10); color: #7c3aed; }
-    .insight-icon--warning { background: rgba(217,119,6,0.10);  color: #d97706; }
-    .insight-body h4 { font-size: 0.9rem; font-weight: 700; color: #1c1917; margin: 0 0 0.25rem; }
-    .insight-metric { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 700; color: #9d174d; margin-bottom: 0.35rem; }
-    .insight-body p { font-size: 0.85rem; color: #57534e; margin: 0; line-height: 1.5; }
-
-    .reco-cards { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
-    .reco-card {
-      background: #fff; border: 1px solid var(--border); border-radius: 10px;
-      padding: 1.5rem; display: flex; gap: 1.25rem; align-items: flex-start;
-    }
-    .reco-number {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: #9d174d; color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 900; font-size: 0.9rem; flex-shrink: 0;
-    }
-    .reco-card h4 { font-size: 0.95rem; font-weight: 700; color: #1c1917; margin: 0 0 0.4rem; }
-    .reco-card p { font-size: 0.88rem; color: #57534e; margin: 0; line-height: 1.6; }
-
-    .summary-callout {
-      background: linear-gradient(135deg, rgba(157,23,77,0.05), rgba(157,23,77,0.02));
-      border: 1px solid rgba(157,23,77,0.15);
-      border-radius: 10px; padding: 1.75rem;
-    }
-    .summary-callout h4 { font-size: 1rem; font-weight: 700; color: #1c1917; margin: 0 0 0.75rem; }
-    .summary-callout p { font-size: 0.92rem; color: #57534e; margin: 0; line-height: 1.7; }
-
-    /* ── Data source grid ──────────────────────────────────────── */
-    .data-source-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.25rem;
-      margin-top: 2.5rem;
-    }
-    .data-source-card {
-      background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem;
-    }
-    .data-source-card h5 { font-size: 0.85rem; font-weight: 700; color: #1c1917; margin: 0 0 0.5rem; }
-    .data-source-card p { font-size: 0.82rem; color: #57534e; margin: 0; line-height: 1.6; }
-    .data-source-card code { font-size: 0.78rem; background: rgba(157,23,77,0.07); color: #9d174d; padding: 0.1rem 0.3rem; border-radius: 3px; font-family: 'SF Mono', Monaco, Consolas, monospace; }
-
-    /* ── Multi-select dropdown ─────────────────────────────────── */
-    .channel-dropdown-btn {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 0.6rem; padding: 0.55rem 0.9rem;
-      border: 1px solid var(--border, #e7e5e4); border-radius: 6px;
-      font-family: var(--font-sans, 'Lato', sans-serif); font-size: 0.9rem;
-      background: #fff; color: #1c1917; min-width: 220px;
-      cursor: pointer; transition: border-color 0.2s; text-align: left;
-    }
-    .channel-dropdown-btn:hover { border-color: #9d174d; }
-    .channel-dropdown-btn:focus,
-    .channel-dropdown-btn[aria-expanded="true"] { outline: none; border-color: #9d174d; box-shadow: 0 0 0 3px rgba(157,23,77,0.06); }
-    .channel-dropdown-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
-    .channel-dropdown-panel {
-      position: fixed; z-index: 9999;
-      background: #fff; border: 1px solid #e7e5e4; border-radius: 8px;
-      box-shadow: 0 8px 28px rgba(28,25,23,0.14);
-      min-width: 260px; max-height: 320px; overflow-y: auto;
-    }
-    .channel-dropdown-actions {
-      display: flex; gap: 0.5rem; padding: 0.65rem 0.85rem 0.5rem;
-      border-bottom: 1px solid #f0efed;
-    }
-    .channel-dropdown-actions button {
-      font-size: 0.75rem; font-weight: 700; color: #9d174d;
-      font-family: var(--font-sans, 'Lato', sans-serif);
-      background: none; border: none; cursor: pointer; padding: 0;
-      letter-spacing: 0.03em; text-transform: uppercase;
-    }
-    .channel-dropdown-actions button:hover { text-decoration: underline; }
-    .channel-checkbox-item {
-      display: flex; align-items: center; gap: 0.65rem;
-      padding: 0.55rem 0.85rem; cursor: pointer;
-      transition: background 0.12s; font-size: 0.88rem; color: #1c1917;
-      font-family: var(--font-sans, 'Lato', sans-serif);
-    }
-    .channel-checkbox-item:hover { background: #fdfcfc; }
-    .channel-checkbox-item input[type="checkbox"] {
-      accent-color: #9d174d; width: 15px; height: 15px;
-      cursor: pointer; flex-shrink: 0;
-    }
-    .channel-count-badge {
-      display: inline-flex; align-items: center; justify-content: center;
-      background: #9d174d; color: #fff; font-size: 0.7rem; font-weight: 900;
-      border-radius: 999px; padding: 0.1rem 0.45rem; margin-left: 0.3rem;
-    }
-
-    /* ── FAQ ───────────────────────────────────────────────────── */
+    /* ── Dashboard FAQ ─────────────────────────────────────────── */
     .dash-faq-section { margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid #e7e5e4; }
     .dash-faq-list {
       display: flex; flex-direction: column; gap: 0;
@@ -277,12 +34,6 @@
     .dash-faq-a p strong { color: #1c1917; }
     .stat-hl { display: inline-block; background: rgba(157,23,77,0.08); color: #9d174d; font-weight: 700; font-size: 0.88rem; padding: 0.1rem 0.45rem; border-radius: 4px; }
     .mono { font-size: 0.83rem; background: rgba(157,23,77,0.07); color: #9d174d; padding: 0.1rem 0.35rem; border-radius: 3px; font-family: 'SF Mono', Monaco, Consolas, monospace; }
-
-    @media (max-width: 768px) {
-      .dashboard-controls { flex-direction: column; align-items: stretch; }
-      .control-group select, .channel-dropdown-btn { min-width: 100%; }
-      .chart-container { height: 300px; }
-    }
   </style>
 </head>
 <body>
@@ -318,25 +69,12 @@
           <option value="90">Last 90 Days</option>
         </select>
       </div>
-
-      <!-- Multi-select channel dropdown -->
-      <div class="control-group" id="channelControlGroup">
-        <label>Channel</label>
-        <button id="channelDropdownBtn" class="channel-dropdown-btn" type="button" aria-haspopup="listbox" aria-expanded="false">
-          <span id="channelDropdownLabel">All Channels</span>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink:0;transition:transform 0.2s;">
-            <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-        <div id="channelDropdown" class="channel-dropdown-panel" style="display:none;">
-          <div class="channel-dropdown-actions">
-            <button type="button" id="selectAllChannels">Select all</button>
-            <button type="button" id="clearAllChannels">Clear</button>
-          </div>
-          <div id="channelCheckboxList"></div>
-        </div>
+      <div class="control-group">
+        <label for="channelFilter">Channel</label>
+        <select id="channelFilter">
+          <option value="all">All Channels</option>
+        </select>
       </div>
-
       <div class="control-group">
         <label for="metricView">Trend Metric</label>
         <select id="metricView">
@@ -435,22 +173,6 @@
         <div class="summary-callout" id="summaryCallout"></div>
       </div>
 
-      <!-- Data Sources -->
-      <div class="data-source-grid">
-        <div class="data-source-card">
-          <h5>Sessions Dataset</h5>
-          <p><code>ga4_sessions_by_day_channel.csv</code><br>Daily sessions by acquisition channel.</p>
-        </div>
-        <div class="data-source-card">
-          <h5>Revenue Dataset</h5>
-          <p><code>ga4_purchases_revenue_by_day.csv</code><br>Daily purchase counts and revenue totals.</p>
-        </div>
-        <div class="data-source-card">
-          <h5>Funnel Dataset</h5>
-          <p><code>ga4_funnel_by_day_channel.csv</code><br>Combined funnel: sessions, purchases, revenue, conversion by channel.</p>
-        </div>
-      </div>
-
       <!-- ===== DASHBOARD FAQ ===== -->
       <div class="dash-faq-section">
         <span class="label">Dashboard Explainer</span>
@@ -521,7 +243,22 @@
         </div>
       </div>
 
-    </div><!-- /dashboardContent -->
+      <!-- Data Sources -->
+      <div class="data-source-grid">
+        <div class="data-source-card">
+          <h5>Sessions Dataset</h5>
+          <p><code>ga4_sessions_by_day_channel.csv</code><br>Daily sessions by acquisition channel.</p>
+        </div>
+        <div class="data-source-card">
+          <h5>Revenue Dataset</h5>
+          <p><code>ga4_purchases_revenue_by_day.csv</code><br>Daily purchase counts and revenue totals.</p>
+        </div>
+        <div class="data-source-card">
+          <h5>Funnel Dataset</h5>
+          <p><code>ga4_funnel_by_day_channel.csv</code><br>Combined funnel: sessions, purchases, revenue, conversion by channel.</p>
+        </div>
+      </div>
+    </div>
   </main>
 
   <footer>
@@ -539,10 +276,6 @@
     var purchasesData = [];
     var sessionsData = [];
     var charts = {};
-
-    /* --- Multi-select state --- */
-    var allChannels = [];
-    var selectedChannels = new Set(); // empty = all selected
 
     /* --- Palette --- */
     var colors = {
@@ -581,106 +314,15 @@
       return new Date(parts[0], parts[1] - 1, parts[2]);
     }
 
-    function fmt(num)  { return num.toLocaleString('en-US'); }
+    function fmt(num) { return num.toLocaleString('en-US'); }
     function fmtC(num) { return '$' + num.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0}); }
-    function fmtC2(num){ return '$' + num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
-    function pct(num)  { return num.toFixed(2) + '%'; }
+    function fmtC2(num) { return '$' + num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
+    function pct(num) { return num.toFixed(2) + '%'; }
 
     /* Chart.js global defaults */
     Chart.defaults.font.family = "'Lato', sans-serif";
     Chart.defaults.font.size = 12;
     Chart.defaults.color = '#57534e';
-
-    /* --- Multi-select dropdown --- */
-    function buildChannelDropdown(list) {
-      allChannels = list;
-      var el = document.getElementById('channelCheckboxList');
-      el.innerHTML = '';
-      list.forEach(function(ch) {
-        var lbl = document.createElement('label');
-        lbl.className = 'channel-checkbox-item';
-        var safe = ch.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-        lbl.innerHTML = '<input type="checkbox" value="' + safe + '" checked> <span>' + safe + '</span>';
-        lbl.querySelector('input').addEventListener('change', onChannelChange);
-        el.appendChild(lbl);
-      });
-      selectedChannels = new Set();
-      updateDropdownLabel();
-    }
-
-    function onChannelChange() {
-      var checked = [];
-      document.querySelectorAll('#channelCheckboxList input[type="checkbox"]').forEach(function(cb) {
-        if (cb.checked) checked.push(cb.value);
-      });
-      selectedChannels = (checked.length === allChannels.length) ? new Set() : new Set(checked);
-      updateDropdownLabel();
-      updateDashboard();
-    }
-
-    function updateDropdownLabel() {
-      var lbl = document.getElementById('channelDropdownLabel');
-      if (selectedChannels.size === 0) {
-        lbl.innerHTML = 'All Channels';
-      } else if (selectedChannels.size === 1) {
-        lbl.textContent = Array.from(selectedChannels)[0];
-      } else {
-        lbl.innerHTML = 'Channels <span class="channel-count-badge">' + selectedChannels.size + '</span>';
-      }
-    }
-
-    document.getElementById('channelDropdownBtn').addEventListener('click', function(e) {
-      e.stopPropagation();
-      var panel = document.getElementById('channelDropdown');
-      var isOpen = panel.style.display !== 'none';
-      if (isOpen) {
-        panel.style.display = 'none';
-        this.setAttribute('aria-expanded', 'false');
-        return;
-      }
-      if (panel.parentElement !== document.body) document.body.appendChild(panel);
-      var rect = this.getBoundingClientRect();
-      panel.style.top  = (rect.bottom + window.scrollY + 6) + 'px';
-      panel.style.left = rect.left + 'px';
-      panel.style.minWidth = Math.max(rect.width, 260) + 'px';
-      panel.style.display = 'block';
-      this.setAttribute('aria-expanded', 'true');
-    });
-
-    document.addEventListener('click', function(e) {
-      var panel = document.getElementById('channelDropdown');
-      var btn   = document.getElementById('channelDropdownBtn');
-      if (!panel.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
-        panel.style.display = 'none';
-        btn.setAttribute('aria-expanded', 'false');
-      }
-    });
-
-    function repositionDropdown() {
-      var panel = document.getElementById('channelDropdown');
-      var btn   = document.getElementById('channelDropdownBtn');
-      if (panel.style.display !== 'none') {
-        var rect = btn.getBoundingClientRect();
-        panel.style.top  = (rect.bottom + window.scrollY + 6) + 'px';
-        panel.style.left = rect.left + 'px';
-      }
-    }
-    window.addEventListener('scroll', repositionDropdown, true);
-    window.addEventListener('resize', repositionDropdown);
-
-    document.getElementById('selectAllChannels').addEventListener('click', function() {
-      document.querySelectorAll('#channelCheckboxList input').forEach(function(cb) { cb.checked = true; });
-      selectedChannels = new Set();
-      updateDropdownLabel();
-      updateDashboard();
-    });
-
-    document.getElementById('clearAllChannels').addEventListener('click', function() {
-      document.querySelectorAll('#channelCheckboxList input').forEach(function(cb) { cb.checked = false; });
-      selectedChannels = new Set(['__none__']);
-      document.getElementById('channelDropdownLabel').textContent = 'No channels';
-      updateDashboard();
-    });
 
     /* --- Load ALL 3 CSVs --- */
     async function loadData() {
@@ -717,11 +359,15 @@
           };
         }).sort(function(a, b) { return a.date - b.date; });
 
-        /* Build multi-select channel list from funnel data */
+        /* Populate channel filter */
         var channelSet = {};
         funnelData.forEach(function(d) { channelSet[d.channel] = true; });
         var channelList = Object.keys(channelSet).sort();
-        buildChannelDropdown(channelList);
+        var sel = document.getElementById('channelFilter');
+        channelList.forEach(function(ch) {
+          var o = document.createElement('option');
+          o.value = ch; o.textContent = ch; sel.appendChild(o);
+        });
 
         /* Show dashboard */
         document.getElementById('loadingState').style.display = 'none';
@@ -730,6 +376,7 @@
 
         /* Event listeners */
         document.getElementById('dateRange').addEventListener('change', updateDashboard);
+        document.getElementById('channelFilter').addEventListener('change', updateDashboard);
         document.getElementById('metricView').addEventListener('change', updateDashboard);
 
       } catch (error) {
@@ -741,8 +388,6 @@
     /* --- Filtering --- */
     function getFilteredData() {
       var filtered = funnelData.slice();
-
-      /* Date range */
       var dateRange = document.getElementById('dateRange').value;
       if (dateRange !== 'all') {
         var days = parseInt(dateRange);
@@ -751,12 +396,10 @@
         minDate.setDate(minDate.getDate() - days);
         filtered = filtered.filter(function(d) { return d.date >= minDate; });
       }
-
-      /* Multi-select channel */
-      if (selectedChannels.size > 0) {
-        filtered = filtered.filter(function(d) { return selectedChannels.has(d.channel); });
+      var channelFilter = document.getElementById('channelFilter').value;
+      if (channelFilter !== 'all') {
+        filtered = filtered.filter(function(d) { return d.channel === channelFilter; });
       }
-
       return filtered;
     }
 
@@ -803,7 +446,7 @@
       document.getElementById('kpi-conversion-desc').textContent = 'purchases per session';
     }
 
-    /* --- Trend Chart --- */
+    /* --- Trend Chart (from funnel CSV) --- */
     function updateTrendChart(data) {
       var metric = document.getElementById('metricView').value;
       var daily = {};
@@ -852,7 +495,7 @@
       });
     }
 
-    /* --- Channel Bar Chart --- */
+    /* --- Channel Bar Chart (from funnel CSV) --- */
     function updateChannelChart(data) {
       var agg = {};
       data.forEach(function(d) {
@@ -868,7 +511,7 @@
         data: {
           labels: chs,
           datasets: [
-            { label: 'Sessions',  data: chs.map(function(c) { return agg[c].sessions;  }), backgroundColor: colors.accentLight, borderColor: colors.accent, borderWidth: 1 },
+            { label: 'Sessions', data: chs.map(function(c) { return agg[c].sessions; }), backgroundColor: colors.accentLight, borderColor: colors.accent, borderWidth: 1 },
             { label: 'Purchases', data: chs.map(function(c) { return agg[c].purchases; }), backgroundColor: 'rgba(220, 38, 38, 0.1)', borderColor: '#dc2626', borderWidth: 1 }
           ]
         },
@@ -880,7 +523,7 @@
       });
     }
 
-    /* --- Revenue Doughnut --- */
+    /* --- Revenue Doughnut (from funnel CSV) --- */
     function updateRevenueChart(data) {
       var agg = {};
       data.forEach(function(d) { agg[d.channel] = (agg[d.channel] || 0) + d.revenue; });
@@ -925,7 +568,7 @@
           labels: labels,
           datasets: [
             { label: 'Revenue ($)', data: revs, backgroundColor: colors.revenueFill, borderColor: colors.revenue, borderWidth: 1, yAxisID: 'y', order: 2 },
-            { label: 'Purchases',   data: purs, type: 'line', borderColor: colors.accent, backgroundColor: 'transparent', borderWidth: 2, pointRadius: 1.5, tension: 0.3, yAxisID: 'y1', order: 1 }
+            { label: 'Purchases', data: purs, type: 'line', borderColor: colors.accent, backgroundColor: 'transparent', borderWidth: 2, pointRadius: 1.5, tension: 0.3, yAxisID: 'y1', order: 1 }
           ]
         },
         options: {
@@ -933,7 +576,7 @@
           plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 14 } } },
           scales: {
             x: { grid: { display: false }, ticks: { maxTicksLimit: 10, maxRotation: 0, font: { size: 10 } } },
-            y:  { beginAtZero: true, position: 'left',  ticks: { callback: function(v) { return fmtC(v); } } },
+            y: { beginAtZero: true, position: 'left', ticks: { callback: function(v) { return fmtC(v); } } },
             y1: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { stepSize: 10 } }
           }
         }
@@ -983,14 +626,14 @@
       });
     }
 
-    /* --- Channel Table --- */
+    /* --- Channel Table (from funnel CSV) --- */
     function updateChannelTable(data) {
       var agg = {};
       data.forEach(function(d) {
         if (!agg[d.channel]) agg[d.channel] = {sessions: 0, purchases: 0, revenue: 0};
-        agg[d.channel].sessions  += d.sessions;
+        agg[d.channel].sessions += d.sessions;
         agg[d.channel].purchases += d.purchases;
-        agg[d.channel].revenue   += d.revenue;
+        agg[d.channel].revenue += d.revenue;
       });
       var rows = Object.keys(agg).map(function(ch) {
         return {
@@ -1018,14 +661,16 @@
       document.getElementById('channelTableContainer').innerHTML = html;
     }
 
-    /* --- Key Insights & Recommendations --- */
+    /* ===========================================
+       KEY INSIGHTS & RECOMMENDATIONS
+    ============================================ */
     function generateInsights(data) {
       var agg = {};
       data.forEach(function(d) {
         if (!agg[d.channel]) agg[d.channel] = {sessions: 0, purchases: 0, revenue: 0};
-        agg[d.channel].sessions  += d.sessions;
+        agg[d.channel].sessions += d.sessions;
         agg[d.channel].purchases += d.purchases;
-        agg[d.channel].revenue   += d.revenue;
+        agg[d.channel].revenue += d.revenue;
       });
       var channels = Object.keys(agg).map(function(ch) {
         return {
@@ -1035,23 +680,23 @@
           rps: agg[ch].sessions > 0 ? (agg[ch].revenue / agg[ch].sessions) : 0
         };
       });
-      var tS = channels.reduce(function(s, c) { return s + c.sessions;  }, 0);
-      var tR = channels.reduce(function(s, c) { return s + c.revenue;   }, 0);
+      var tS = channels.reduce(function(s, c) { return s + c.sessions; }, 0);
+      var tR = channels.reduce(function(s, c) { return s + c.revenue; }, 0);
       var tP = channels.reduce(function(s, c) { return s + c.purchases; }, 0);
 
-      var byVol  = channels.slice().sort(function(a, b) { return b.sessions  - a.sessions;  })[0];
-      var byConv = channels.slice().sort(function(a, b) { return b.convRate  - a.convRate;  })[0];
-      var byRev  = channels.slice().sort(function(a, b) { return b.revenue   - a.revenue;   })[0];
-      var byEff  = channels.slice().sort(function(a, b) { return b.rps       - a.rps;       })[0];
+      var byVol  = channels.slice().sort(function(a, b) { return b.sessions - a.sessions; })[0];
+      var byConv = channels.slice().sort(function(a, b) { return b.convRate - a.convRate; })[0];
+      var byRev  = channels.slice().sort(function(a, b) { return b.revenue - a.revenue; })[0];
+      var byEff  = channels.slice().sort(function(a, b) { return b.rps - a.rps; })[0];
 
       /* From purchases CSV */
       var bounds = getDateBounds();
       var pData = purchasesData.slice();
       if (bounds.min) pData = pData.filter(function(r) { return r.date >= bounds.min; });
       var avgDR = pData.length > 0 ? (pData.reduce(function(s, r) { return s + r.revenue; }, 0) / pData.length) : 0;
-      var peak  = pData.length > 0 ? pData.reduce(function(best, r) { return r.revenue > best.revenue ? r : best; }, pData[0]) : null;
+      var peak = pData.length > 0 ? pData.reduce(function(best, r) { return r.revenue > best.revenue ? r : best; }, pData[0]) : null;
 
-      /* Insight Cards */
+      /* --- Insight Cards --- */
       document.getElementById('insightCardsContainer').innerHTML =
         '<div class="insight-card"><div class="insight-icon insight-icon--accent">&#9650;</div><div class="insight-body"><h4>Highest Volume Channel</h4><div class="insight-metric">' + fmt(byVol.sessions) + ' sessions</div><p><strong>' + byVol.channel + '</strong> drives ' + ((byVol.sessions / tS) * 100).toFixed(1) + '% of all traffic but converts at ' + pct(byVol.convRate) + '.</p></div></div>' +
         '<div class="insight-card"><div class="insight-icon insight-icon--success">&#10003;</div><div class="insight-body"><h4>Best Conversion Rate</h4><div class="insight-metric">' + pct(byConv.convRate) + '</div><p><strong>' + byConv.channel + '</strong> converts at the highest rate, generating ' + fmt(byConv.purchases) + ' purchases from ' + fmt(byConv.sessions) + ' sessions.</p></div></div>' +
@@ -1060,32 +705,34 @@
         (peak ? '<div class="insight-card"><div class="insight-icon insight-icon--warning">&#9650;</div><div class="insight-body"><h4>Peak Revenue Day</h4><div class="insight-metric">' + fmtC(peak.revenue) + '</div><p>' + peak.date.toLocaleDateString('en-US', {weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'}) + ' recorded the highest single-day revenue with ' + fmt(peak.purchases) + ' purchases.</p></div></div>' : '') +
         '<div class="insight-card"><div class="insight-icon insight-icon--success">&#8709;</div><div class="insight-body"><h4>Average Daily Revenue</h4><div class="insight-metric">' + fmtC(avgDR) + '</div><p>Across ' + fmt(pData.length) + ' days of data from the purchases dataset, averaging ' + fmt(Math.round(tP / Math.max(pData.length, 1))) + ' purchases per day.</p></div></div>';
 
-      /* Recommendation Cards */
+      /* --- Recommendation Cards --- */
       var lowConvHigh = channels.filter(function(c) { return c.sessions > tS * 0.05; }).sort(function(a, b) { return a.convRate - b.convRate; })[0];
       document.getElementById('recoCardsContainer').innerHTML =
-        '<div class="reco-card"><div class="reco-number">1</div><div><h4>Invest in High-Efficiency Channels</h4><p>Reallocate budget toward <strong>' + byEff.channel + '</strong>, which generates ' + fmtC2(byEff.rps) + ' per session. Even a modest increase in traffic could yield outsized revenue returns.</p></div></div>' +
-        '<div class="reco-card"><div class="reco-number">2</div><div><h4>Optimize Conversion on Top Volume</h4><p><strong>' + byVol.channel + '</strong> drives the most sessions but converts at only ' + pct(byVol.convRate) + '. A/B testing landing pages and CTAs could unlock significant incremental revenue.</p></div></div>' +
-        '<div class="reco-card"><div class="reco-number">3</div><div><h4>' + (lowConvHigh ? 'Investigate Underperforming Channels' : 'Diversify Revenue Sources') + '</h4><p>' + (lowConvHigh ? '<strong>' + lowConvHigh.channel + '</strong> brings ' + fmt(lowConvHigh.sessions) + ' sessions but converts at just ' + pct(lowConvHigh.convRate) + '. Review targeting and audience segmentation to improve funnel efficiency.' : 'Revenue is concentrated in the top channels. Experiment with emerging channels to reduce dependency.') + '</p></div></div>';
+        '<div class="reco-card"><div class="reco-number">1</div><h4>Invest in High-Efficiency Channels</h4><p>Reallocate budget toward <strong>' + byEff.channel + '</strong>, which generates ' + fmtC2(byEff.rps) + ' per session. Even a modest increase in traffic could yield outsized revenue returns.</p></div>' +
+        '<div class="reco-card"><div class="reco-number">2</div><h4>Optimize Conversion on Top Volume</h4><p><strong>' + byVol.channel + '</strong> drives the most sessions but converts at only ' + pct(byVol.convRate) + '. A/B testing landing pages and CTAs could unlock significant incremental revenue.</p></div>' +
+        '<div class="reco-card"><div class="reco-number">3</div><h4>' + (lowConvHigh ? 'Investigate Underperforming Channels' : 'Diversify Revenue Sources') + '</h4><p>' + (lowConvHigh ? '<strong>' + lowConvHigh.channel + '</strong> brings ' + fmt(lowConvHigh.sessions) + ' sessions but converts at just ' + pct(lowConvHigh.convRate) + '. Review targeting and audience segmentation to improve funnel efficiency.' : 'Revenue is concentrated in the top channels. Experiment with emerging channels to reduce dependency.') + '</p></div>';
 
-      /* Summary Callout */
+      /* --- Summary Callout --- */
       document.getElementById('summaryCallout').innerHTML =
         '<h4>Analysis Summary</h4><p>Across the selected period, <strong>' + fmt(channels.length) + ' channels</strong> generated <strong>' + fmt(tS) + ' sessions</strong>, <strong>' + fmt(tP) + ' purchases</strong>, and <strong>' + fmtC(tR) + ' in revenue</strong>. The highest-volume channel (<strong>' + byVol.channel + '</strong>) accounts for ' + ((byVol.sessions / tS) * 100).toFixed(1) + '% of traffic, while the most efficient channel (<strong>' + byEff.channel + '</strong>) delivers ' + fmtC2(byEff.rps) + ' per session. Focusing conversion optimization on high-volume, low-conversion channels while scaling investment in high-efficiency channels represents the clearest path to incremental revenue growth.</p>';
     }
 
-    /* --- FAQ accordion --- */
+    /* --- Init --- */
+    document.addEventListener('DOMContentLoaded', loadData);
+  })();
+  </script>
+
+  <script>
+    // FAQ accordion
     document.querySelectorAll('.dash-faq-q').forEach(function(btn) {
       btn.addEventListener('click', function() {
-        var item   = btn.closest('.dash-faq-item');
+        var item = btn.closest('.dash-faq-item');
         var isOpen = item.classList.contains('is-open');
         document.querySelectorAll('.dash-faq-item.is-open').forEach(function(el) { el.classList.remove('is-open'); });
         if (!isOpen) item.classList.add('is-open');
         btn.setAttribute('aria-expanded', String(!isOpen));
       });
     });
-
-    /* --- Init --- */
-    document.addEventListener('DOMContentLoaded', loadData);
-  })();
   </script>
 
 </body>
