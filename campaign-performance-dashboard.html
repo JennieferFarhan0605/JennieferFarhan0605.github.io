@@ -236,10 +236,11 @@
     }
     .channel-dropdown-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
     .channel-dropdown-panel {
-      position: absolute; top: calc(100% + 6px); left: 0; z-index: 200;
+      position: fixed;
+      z-index: 9999;
       background: #fff; border: 1px solid #e7e5e4; border-radius: 8px;
-      box-shadow: 0 8px 28px rgba(28,25,23,0.12);
-      min-width: 260px; max-height: 340px; overflow-y: auto;
+      box-shadow: 0 8px 28px rgba(28,25,23,0.14);
+      min-width: 260px; max-height: 320px; overflow-y: auto;
     }
     .channel-dropdown-actions {
       display: flex; gap: 0.5rem; padding: 0.65rem 0.85rem 0.5rem;
@@ -323,7 +324,7 @@
         </select>
       </div>
 
-      <div class="control-group" style="position:relative;">
+      <div class="control-group" id="channelControlGroup">
         <label>Channel</label>
         <button id="channelDropdownBtn" class="channel-dropdown-btn" type="button" aria-haspopup="listbox" aria-expanded="false">
           <span id="channelDropdownLabel">All Channels</span>
@@ -632,16 +633,44 @@
       e.stopPropagation();
       const panel = document.getElementById('channelDropdown');
       const isOpen = panel.style.display !== 'none';
-      panel.style.display = isOpen ? 'none' : 'block';
-      this.setAttribute('aria-expanded', String(!isOpen));
+      if (isOpen) {
+        panel.style.display = 'none';
+        this.setAttribute('aria-expanded', 'false');
+        return;
+      }
+      // Portal: move to body if not already there
+      if (panel.parentElement !== document.body) {
+        document.body.appendChild(panel);
+      }
+      // Position below the button
+      const rect = this.getBoundingClientRect();
+      panel.style.top  = (rect.bottom + window.scrollY + 6) + 'px';
+      panel.style.left = rect.left + 'px';
+      panel.style.minWidth = Math.max(rect.width, 260) + 'px';
+      panel.style.display = 'block';
+      this.setAttribute('aria-expanded', 'true');
     });
     document.addEventListener('click', e => {
       const panel = document.getElementById('channelDropdown');
-      if (!panel.contains(e.target) && e.target !== document.getElementById('channelDropdownBtn')) {
+      const btn = document.getElementById('channelDropdownBtn');
+      if (!panel.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
         panel.style.display = 'none';
-        document.getElementById('channelDropdownBtn').setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-expanded', 'false');
       }
     });
+
+    // Reposition panel on scroll or resize
+    function repositionDropdown() {
+      const panel = document.getElementById('channelDropdown');
+      const btn = document.getElementById('channelDropdownBtn');
+      if (panel.style.display !== 'none') {
+        const rect = btn.getBoundingClientRect();
+        panel.style.top  = (rect.bottom + window.scrollY + 6) + 'px';
+        panel.style.left = rect.left + 'px';
+      }
+    }
+    window.addEventListener('scroll', repositionDropdown, true);
+    window.addEventListener('resize', repositionDropdown);
     document.getElementById('selectAllChannels').addEventListener('click', () => {
       document.querySelectorAll('#channelCheckboxList input').forEach(cb => cb.checked = true);
       selectedChannels = new Set(); updateDropdownLabel(); updateDashboard();
