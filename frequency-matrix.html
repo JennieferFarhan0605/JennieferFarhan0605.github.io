@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Frequency Matrix | Jenniefer Farhan</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ── Matrix-specific styles ── */
+
+    /* Section intro note */
+    .data-note {
+      background: #fdfcfc;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2.5rem;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .data-note strong { color: var(--text-main); }
+
+    /* ── Channel summary cards ── */
+    .channel-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    .channel-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .channel-card-top {
+      padding: 1rem 1.1rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .channel-card-name {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.15rem;
+    }
+    .channel-card-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .channel-card-stats {
+      padding: 0.85rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+    .stat-row .stat-label { color: var(--text-muted); }
+    .stat-row .stat-val {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .channel-bar-track {
+      height: 4px;
+      background: #f0efed;
+      border-radius: 2px;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+    .channel-bar-fill { height: 100%; border-radius: 2px; }
+
+    /* ── Frequency matrix table ── */
+    .matrix-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 3rem;
+    }
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+    .matrix-table th {
+      background: #faf9f8;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .matrix-table th.ch-head {
+      text-align: center;
+      width: 120px;
+    }
+    .matrix-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #f3f4f0;
+      vertical-align: middle;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+    .matrix-table tr:last-child td { border-bottom: none; }
+    .matrix-table tbody tr:hover td { background: #fdfcfc; }
+
+    .format-name {
+      font-weight: 700;
+      color: var(--text-main);
+      font-size: 0.9rem;
+    }
+    .format-tier {
+      display: inline-block;
+      margin-top: 0.2rem;
+      padding: 0.1rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* Frequency cell */
+    .freq-cell {
+      text-align: center;
+      position: relative;
+    }
+    .freq-pill {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.15rem;
+      min-width: 72px;
+    }
+    .freq-num {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .freq-unit {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      line-height: 1;
+    }
+    .freq-dots {
+      display: flex;
+      gap: 3px;
+      margin-top: 2px;
+    }
+    .freq-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #e5e7eb;
+    }
+    .freq-dot.filled { background: var(--accent); }
+
+    /* Phase columns */
+    .phase-header-row th {
+      background: transparent;
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .phase-label-cell {
+      text-align: center;
+      padding: 0.5rem 0.5rem 0 !important;
+    }
+    .phase-label {
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    /* No content cell */
+    .no-content {
+      color: #d1d5db;
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    /* ── Asset matrix (format × platform requirements) ── */
+    .asset-matrix-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 3rem;
+    }
+    .asset-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+    .asset-table th {
+      background: #faf9f8;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .asset-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid #f3f4f0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      vertical-align: top;
+    }
+    .asset-table tr:last-child td { border-bottom: none; }
+    .asset-table tbody tr:hover td { background: #fdfcfc; }
+
+    .tag-list { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .spec-tag {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: var(--text-muted);
+    }
+    .priority-high   { color: #9d174d; font-weight: 700; }
+    .priority-medium { color: #d97706; font-weight: 700; }
+    .priority-low    { color: #6b7280; }
+
+    /* ── Rationale cards ── */
+    .rationale-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .rationale-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.35rem;
+    }
+    .rationale-card h4 {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 0 0 0.5rem;
+    }
+    .rationale-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      .channel-cards { grid-template-columns: repeat(2, 1fr); }
+      .rationale-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .channel-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav-wrap">
+    <a href="index.html" class="brand">Jenniefer <span>Farhan.</span></a>
+    <a href="digital-campaign-analysis.html" class="btn-link">← Back to Campaign Analysis</a>
+  </nav>
+
+  <main class="container">
+
+    <header style="padding: 4rem 0 2rem;">
+      <span class="label">Marketing Operations & Analytics</span>
+      <h1 class="h1">Content Frequency Matrix</h1>
+      <p class="project-desc" style="max-width: 72ch;">
+        A structured breakdown of content format, publication cadence, and production requirements
+        per acquisition channel — across three campaign phases derived from the GA4 dataset.
+        Frequency decisions are grounded in session volume share and conversion efficiency per channel.
+      </p>
+      <div style="margin-top: 1.5rem; display: flex; gap: 2rem; flex-wrap: wrap;">
+        <a href="content-calendar.html" class="btn-link">View Content Calendar →</a>
+        <a href="campaign-performance-dashboard.html" class="btn-link">View Performance Dashboard →</a>
+      </div>
+    </header>
+
+    <!-- ── Section 1: Channel performance summary ── -->
+    <div class="section">
+      <h2 class="h2">Channel Performance Basis</h2>
+      <p class="project-desc">
+        Cadence decisions were not arbitrary — each channel's content frequency is proportional to its
+        measured contribution in the GA4 dataset. The four channels below account for the vast majority
+        of attributable session volume across the simulation period.
+      </p>
+
+      <div class="data-note">
+        <strong>Data source:</strong> ga4_sessions_by_day_channel.csv &amp; ga4_funnel_by_day_channel.csv (Nov 2020 – Jan 2021).
+        Session share and conversion rate figures are aggregated across the full 13-week period.
+        <strong>Conversion rate</strong> = purchase events ÷ sessions per channel.
+      </div>
+
+      <div class="channel-cards" id="channelCards"></div>
+    </div>
+
+    <!-- ── Section 2: Frequency matrix ── -->
+    <div class="section">
+      <h2 class="h2">Frequency Matrix — Format × Channel × Phase</h2>
+      <p class="project-desc">
+        Each cell shows the planned publication frequency per campaign phase.
+        Phase intensity scales with observed purchase volume: Phase 2 (Peak) carries the highest
+        content load; Phase 3 (Cool-Down) deliberately reduces frequency to protect audience quality.
+      </p>
+
+      <div class="matrix-wrap">
+        <table class="matrix-table" id="matrixTable"></table>
+      </div>
+    </div>
+
+    <!-- ── Section 3: Asset specification matrix ── -->
+    <div class="section">
+      <h2 class="h2">Asset Specification Matrix</h2>
+      <p class="project-desc">
+        For each content format, this matrix documents the production requirements, lead time,
+        and channel applicability — providing an operational brief for content production planning.
+      </p>
+
+      <div class="asset-matrix-wrap">
+        <table class="asset-table" id="assetTable"></table>
+      </div>
+    </div>
+
+    <!-- ── Section 4: Strategic rationale ── -->
+    <div class="section">
+      <h2 class="h2">Frequency Rationale</h2>
+      <p class="project-desc">
+        The decisions behind cadence — not just the cadence itself.
+      </p>
+
+      <div class="rationale-grid" id="rationaleGrid"></div>
+
+      <div style="background-color: #f3f4f6; padding: 1.5rem; border-left: 4px solid var(--accent); border-radius: 6px;">
+        <h3 class="h3" style="margin-top: 0;">Saturation Principle</h3>
+        <p style="margin-bottom: 0; color: var(--text-muted);">
+          The frequency matrix is deliberately asymmetric. Organic Search receives the highest sustained
+          cadence because SEO compounds — content published in Phase 1 continues to generate sessions in
+          Phases 2 and 3. Paid Search frequency peaks sharply in Phase 2 then drops to near-zero in Phase 3,
+          reflecting the purchase volume data (833 peak → 170 in cool-down). Email is highest in Phase 2
+          but kept minimal in Phase 3 to protect list health and open rates heading into the next campaign.
+        </p>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>&copy; <script>document.write(new Date().getFullYear())</script> Jenniefer Farhan.<br>Designed for clarity and precision.</p>
+  </footer>
+
+<script>
+// ── Data ────────────────────────────────────────────────────────────────────
+
+const CHANNELS = [
+  {
+    key: 'organic',
+    name: 'Organic Search',
+    source: 'google / organic',
+    sessions: 112918,
+    totalSessions: 360778,
+    convRate: 0.0041,
+    color: '#16a34a',
+    bg: '#dcfce7',
+    priority: 'HIGH',
+    note: 'Highest volume channel. Content compounds over time — SEO investment in Phase 1 pays through Phase 2 peak.',
+  },
+  {
+    key: 'direct',
+    name: 'Direct',
+    source: '(direct) / (none)',
+    sessions: 83677,
+    totalSessions: 360778,
+    convRate: 0.0059,
+    color: '#0ea5e9',
+    bg: '#e0f2fe',
+    priority: 'HIGH',
+    note: 'Second-largest volume channel. Represents brand awareness and repeat intent — email drives this channel.',
+  },
+  {
+    key: 'referral',
+    name: 'Referral',
+    source: '<Other> / referral',
+    sessions: 34740,
+    totalSessions: 360778,
+    convRate: 0.0062,
+    color: '#f59e0b',
+    bg: '#fef3c7',
+    priority: 'MEDIUM',
+    note: 'Solid conversion rate. Partner-driven; content is outreach briefs and co-branded assets, not owned production.',
+  },
+  {
+    key: 'cpc',
+    name: 'Paid Search',
+    source: 'google / cpc',
+    sessions: 15650,
+    totalSessions: 360778,
+    convRate: 0.0128,
+    color: '#9d174d',
+    bg: '#fce7f3',
+    priority: 'HIGH',
+    note: 'Lowest volume but highest conversion rate (1.28%). Concentrated spend in Phase 2 justifies cost-per-click outlay.',
+  },
+];
+
+// Frequency matrix: rows = content formats, cols = channel × phase
+// freq: [ramp, peak, cooldown] per channel
+const FORMATS = [
+  {
+    name: 'Blog Post / Article',
+    tier: 'Evergreen',
+    tierColor: '#16a34a',
+    tierBg: '#dcfce7',
+    freq: {
+      organic:  ['2× / week', '3× / week', '1× / week'],
+      direct:   ['—',         '—',         '—'],
+      referral: ['—',         '—',         '—'],
+      cpc:      ['—',         '—',         '—'],
+    }
+  },
+  {
+    name: 'Landing Page',
+    tier: 'Campaign Asset',
+    tierColor: '#9d174d',
+    tierBg: '#fce7f3',
+    freq: {
+      organic:  ['1 built',   '1 live',    '1 updated'],
+      direct:   ['—',         '—',         '—'],
+      referral: ['—',         '—',         '—'],
+      cpc:      ['1 built',   '1 live',    '—'],
+    }
+  },
+  {
+    name: 'Search Ad Copy',
+    tier: 'Paid',
+    tierColor: '#9d174d',
+    tierBg: '#fce7f3',
+    freq: {
+      organic:  ['—',         '—',         '—'],
+      direct:   ['—',         '—',         '—'],
+      referral: ['—',         '—',         '—'],
+      cpc:      ['1× / week', '2× / week', '1 paused'],
+    }
+  },
+  {
+    name: 'Email Send',
+    tier: 'Retention',
+    tierColor: '#0ea5e9',
+    tierBg: '#e0f2fe',
+    freq: {
+      organic:  ['—',         '—',         '—'],
+      direct:   ['1× / week', '3× / week', '1× / 2wk'],
+      referral: ['—',         '—',         '—'],
+      cpc:      ['—',         '—',         '—'],
+    }
+  },
+  {
+    name: 'Partner Brief / Outreach',
+    tier: 'Referral',
+    tierColor: '#f59e0b',
+    tierBg: '#fef3c7',
+    freq: {
+      organic:  ['—',         '—',         '—'],
+      direct:   ['—',         '—',         '—'],
+      referral: ['1× / week', '1× / week', '1× / 2wk'],
+      cpc:      ['—',         '—',         '—'],
+    }
+  },
+  {
+    name: 'Co-branded Asset / Guest Post',
+    tier: 'Referral',
+    tierColor: '#f59e0b',
+    tierBg: '#fef3c7',
+    freq: {
+      organic:  ['—',         '—',         '—'],
+      direct:   ['—',         '—',         '—'],
+      referral: ['1× / 2wk',  '1× / week', '1× / 2wk'],
+      cpc:      ['—',         '—',         '—'],
+    }
+  },
+  {
+    name: 'On-Page SEO / Technical',
+    tier: 'Evergreen',
+    tierColor: '#16a34a',
+    tierBg: '#dcfce7',
+    freq: {
+      organic:  ['1× / week', '1× / 2wk',  '1× / 2wk'],
+      direct:   ['—',         '—',          '—'],
+      referral: ['—',         '—',          '—'],
+      cpc:      ['—',         '—',          '—'],
+    }
+  },
+  {
+    name: 'Remarketing Audience',
+    tier: 'Paid',
+    tierColor: '#9d174d',
+    tierBg: '#fce7f3',
+    freq: {
+      organic:  ['—',         '—',         '—'],
+      direct:   ['—',         '—',         '—'],
+      referral: ['—',         '—',         '—'],
+      cpc:      ['Setup',     '2 active',  '—'],
+    }
+  },
+];
+
+// Asset specification matrix
+const ASSETS = [
+  {
+    format: 'Blog Post',
+    wordCount: '800–1,200 words',
+    leadTime: '3–4 days',
+    specs: ['SEO keyword brief', 'Internal links', 'Meta title + description', 'Featured image'],
+    channels: ['Organic Search'],
+    priority: 'HIGH',
+  },
+  {
+    format: 'Landing Page',
+    wordCount: '400–600 words',
+    leadTime: '5–7 days',
+    specs: ['CTA above fold', 'Schema markup', 'Page speed <2s', 'Conversion tracking'],
+    channels: ['Organic Search', 'Paid Search'],
+    priority: 'HIGH',
+  },
+  {
+    format: 'Search Ad Copy',
+    wordCount: '30 / 90 chars (headlines / desc)',
+    leadTime: '1–2 days',
+    specs: ['3 headlines', '2 descriptions', 'Display URL path', 'Ad extensions'],
+    channels: ['Paid Search'],
+    priority: 'HIGH',
+  },
+  {
+    format: 'Email',
+    wordCount: '200–400 words',
+    leadTime: '2–3 days',
+    specs: ['Subject line A/B', 'Mobile-optimised', 'Plain text version', 'Unsubscribe link'],
+    channels: ['Direct'],
+    priority: 'HIGH',
+  },
+  {
+    format: 'Partner Brief',
+    wordCount: '1 page PDF / 300 words',
+    leadTime: '2 days',
+    specs: ['Campaign dates', 'UTM link set', 'Key messages', 'Image assets pack'],
+    channels: ['Referral'],
+    priority: 'MEDIUM',
+  },
+  {
+    format: 'Co-branded Asset',
+    wordCount: 'Variable (800–1,500 words)',
+    leadTime: '7–10 days',
+    specs: ['Partner brand guidelines', 'Joint CTA', 'Backlink agreement', 'Analytics UTM'],
+    channels: ['Referral'],
+    priority: 'MEDIUM',
+  },
+  {
+    format: 'On-Page SEO Audit',
+    wordCount: 'N/A (audit deliverable)',
+    leadTime: '3–5 days',
+    specs: ['Crawl report', 'Title tag audit', 'Core Web Vitals', 'Internal link map'],
+    channels: ['Organic Search'],
+    priority: 'MEDIUM',
+  },
+  {
+    format: 'Remarketing Audience',
+    wordCount: 'N/A (platform config)',
+    leadTime: '1 day setup',
+    specs: ['Pixel verified', 'Audience window 30d', 'Exclusion lists set', 'Bid modifier'],
+    channels: ['Paid Search'],
+    priority: 'MEDIUM',
+  },
+];
+
+// Strategic rationale cards
+const RATIONALE = [
+  {
+    title: 'Why Organic Search gets the highest sustained cadence',
+    body: 'Organic Search drove 112,918 sessions — 31% of all attributable traffic. More importantly, SEO content compounds: a blog post published in Week 1 continues generating sessions in Weeks 6 and 13 without incremental cost. This justifies a 2–3× per week blog cadence maintained across all three phases.',
+  },
+  {
+    title: 'Why Paid Search spikes in Phase 2 then near-zeros',
+    body: 'Google / CPC had the highest conversion rate in the dataset (1.28%), but relatively low session volume. This signals it should be used as a precision tool, not a volume driver. Budget is concentrated in Phase 2 where purchase volume was highest (833 conversions in W6). In Phase 3, CPC drops to near-zero to protect ROAS as conversion volume falls.',
+  },
+  {
+    title: 'Why Email frequency peaks in Phase 2 with 3× sends',
+    body: 'Direct sessions (83,677) are the second-largest volume channel and have a measured conversion rate of 0.59% — higher than organic. Email is the primary lever for this channel. Phase 2 carries three sends per week (launch, reminder, last-chance) aligned with Black Friday and holiday urgency. Phase 3 drops to fortnightly to protect list health.',
+  },
+  {
+    title: 'Why Referral content is medium-frequency partner outreach',
+    body: 'Referral traffic from shop.googlemerchandisestore.com and other domains contributed 34,740 sessions with a 0.62% conversion rate — competitive with direct. Content for this channel is not owned-channel production; it is outreach briefs and co-branded assets. One touchpoint per week in Phases 1 and 2 maintains partner relationships without overcommitting production resources.',
+  },
+];
+
+// ── Render: Channel cards ────────────────────────────────────────────────────
+const cardsEl = document.getElementById('channelCards');
+const maxSessions = Math.max(...CHANNELS.map(c => c.sessions));
+
+CHANNELS.forEach(ch => {
+  const sharePct = ((ch.sessions / ch.totalSessions) * 100).toFixed(1);
+  const barPct = Math.round((ch.sessions / maxSessions) * 100);
+  const priorityColor = ch.priority === 'HIGH' ? '#9d174d' : ch.priority === 'MEDIUM' ? '#d97706' : '#6b7280';
+
+  cardsEl.innerHTML += `
+    <div class="channel-card">
+      <div class="channel-card-top" style="border-top: 3px solid ${ch.color};">
+        <div class="channel-card-name">${ch.name}</div>
+        <div class="channel-card-label" style="color:${ch.color};">${ch.source}</div>
+      </div>
+      <div class="channel-card-stats">
+        <div class="stat-row">
+          <span class="stat-label">Sessions</span>
+          <span class="stat-val">${ch.sessions.toLocaleString()}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Traffic share</span>
+          <span class="stat-val">${sharePct}%</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Conv. rate</span>
+          <span class="stat-val">${(ch.convRate * 100).toFixed(2)}%</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Priority</span>
+          <span class="stat-val" style="color:${priorityColor};">${ch.priority}</span>
+        </div>
+        <div class="channel-bar-track">
+          <div class="channel-bar-fill" style="width:${barPct}%; background:${ch.color};"></div>
+        </div>
+        <p style="font-size:0.78rem; color:var(--text-muted); margin:0.5rem 0 0; line-height:1.5;">${ch.note}</p>
+      </div>
+    </div>
+  `;
+});
+
+// ── Render: Frequency matrix ─────────────────────────────────────────────────
+const matrixEl = document.getElementById('matrixTable');
+
+const PHASE_CONFIG = [
+  { key: 'ramp',     label: 'Phase 1 — Ramp-Up',   span: 1, bg: '#fef3c7', color: '#92400e', weeks: 'W1–W3' },
+  { key: 'peak',     label: 'Phase 2 — Peak',       span: 1, bg: '#fce7f3', color: '#831843', weeks: 'W4–W7' },
+  { key: 'cooldown', label: 'Phase 3 — Cool-Down',  span: 1, bg: '#dbeafe', color: '#1e3a5f', weeks: 'W8–W13' },
+];
+
+const CH_ORDER = ['organic', 'direct', 'referral', 'cpc'];
+const CH_INFO = {
+  organic:  { label: 'Organic', color: '#16a34a' },
+  direct:   { label: 'Direct',  color: '#0ea5e9' },
+  referral: { label: 'Referral',color: '#f59e0b' },
+  cpc:      { label: 'Paid',    color: '#9d174d' },
+};
+
+// Phase header row
+let headerHTML = `
+  <thead>
+    <tr class="phase-header-row">
+      <th style="width:200px;"></th>
+      ${PHASE_CONFIG.map(p => `
+        <th colspan="${CH_ORDER.length}" class="phase-label-cell" style="text-align:center; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">
+          <span class="phase-label" style="background:${p.bg}; color:${p.color};">${p.label}</span>
+          <div style="font-size:0.65rem; color:var(--text-muted); margin-top:0.2rem; font-weight:400; text-transform:none; letter-spacing:0;">${p.weeks}</div>
+        </th>
+      `).join('')}
+    </tr>
+    <tr>
+      <th>Format</th>
+      ${PHASE_CONFIG.map(p =>
+        CH_ORDER.map(ch => `
+          <th class="ch-head" style="color:${CH_INFO[ch].color};">${CH_INFO[ch].label}</th>
+        `).join('')
+      ).join('')}
+    </tr>
+  </thead>
+`;
+
+// Body rows
+let bodyHTML = '<tbody>';
+FORMATS.forEach(fmt => {
+  bodyHTML += `<tr>
+    <td>
+      <div class="format-name">${fmt.name}</div>
+      <span class="format-tier" style="background:${fmt.tierBg}; color:${fmt.tierColor};">${fmt.tier}</span>
+    </td>
+  `;
+  PHASE_CONFIG.forEach((phase, pi) => {
+    CH_ORDER.forEach(ch => {
+      const val = fmt.freq[ch][pi];
+      if (val === '—') {
+        bodyHTML += `<td class="freq-cell no-content">—</td>`;
+      } else {
+        bodyHTML += `<td class="freq-cell">
+          <div class="freq-pill">
+            <span class="freq-num" style="color:${CH_INFO[ch].color};">${val.split(' /')[0]}</span>
+            ${val.includes('/') ? `<span class="freq-unit">${val.split('/ ')[1] || ''}</span>` : ''}
+          </div>
+        </td>`;
+      }
+    });
+  });
+  bodyHTML += '</tr>';
+});
+bodyHTML += '</tbody>';
+
+matrixEl.innerHTML = headerHTML + bodyHTML;
+
+// ── Render: Asset table ──────────────────────────────────────────────────────
+const assetEl = document.getElementById('assetTable');
+assetEl.innerHTML = `
+  <thead>
+    <tr>
+      <th>Format</th>
+      <th>Word Count / Volume</th>
+      <th>Lead Time</th>
+      <th>Production Specs</th>
+      <th>Applicable Channels</th>
+      <th>Priority</th>
+    </tr>
+  </thead>
+  <tbody>
+    ${ASSETS.map(a => {
+      const pClass = a.priority === 'HIGH' ? 'priority-high' : a.priority === 'MEDIUM' ? 'priority-medium' : 'priority-low';
+      const chColors = { 'Organic Search': '#16a34a', 'Direct': '#0ea5e9', 'Referral': '#f59e0b', 'Paid Search': '#9d174d' };
+      return `
+        <tr>
+          <td style="font-weight:700; color:var(--text-main);">${a.format}</td>
+          <td>${a.wordCount}</td>
+          <td>${a.leadTime}</td>
+          <td>
+            <div class="tag-list">
+              ${a.specs.map(s => `<span class="spec-tag">${s}</span>`).join('')}
+            </div>
+          </td>
+          <td>
+            <div class="tag-list">
+              ${a.channels.map(c => `<span class="spec-tag" style="background:${chColors[c]}18; color:${chColors[c]};">${c}</span>`).join('')}
+            </div>
+          </td>
+          <td class="${pClass}">${a.priority}</td>
+        </tr>
+      `;
+    }).join('')}
+  </tbody>
+`;
+
+// ── Render: Rationale cards ──────────────────────────────────────────────────
+const rationaleEl = document.getElementById('rationaleGrid');
+rationaleEl.innerHTML = RATIONALE.map(r => `
+  <div class="rationale-card">
+    <h4>${r.title}</h4>
+    <p>${r.body}</p>
+  </div>
+`).join('');
+</script>
+
+</body>
+</html>

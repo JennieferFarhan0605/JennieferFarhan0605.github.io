@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Content Calendar | Jenniefer Farhan</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ── Calendar-specific styles ── */
+    .cal-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .cal-filter-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .cal-filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text-muted);
+    }
+    .cal-filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .cal-filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .cal-filter-btn .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* Phase legend */
+    .phase-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+    }
+    .phase-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      font-family: var(--font-sans);
+    }
+    .phase-badge .phase-dot {
+      width: 10px; height: 10px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* Week blocks */
+    .cal-grid { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .week-block {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+      transition: box-shadow 0.2s;
+    }
+    .week-block:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+
+    .week-header {
+      display: grid;
+      grid-template-columns: 160px 1fr auto;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+    }
+    .week-label {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+    }
+    .week-title {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .week-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .intensity-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .intensity-track {
+      width: 64px; height: 6px;
+      background: #f0efed;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .intensity-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--accent);
+    }
+    .week-chevron {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+    .week-block.is-open .week-chevron { transform: rotate(180deg); }
+
+    /* Week body */
+    .week-body { display: none; }
+    .week-block.is-open .week-body { display: block; }
+
+    .phase-strip {
+      padding: 0.45rem 1.25rem;
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .entries-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .entries-table th {
+      background: #faf9f8;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      padding: 0.6rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .entries-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid #f3f4f0;
+      vertical-align: top;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .entries-table tr:last-child td { border-bottom: none; }
+    .entries-table tr { transition: background 0.15s; }
+    .entries-table tr:hover td { background: #fdfcfc; }
+
+    .ch-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .ch-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+    .type-tag {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: var(--text-muted);
+    }
+
+    .goal-text { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
+    .entry-title { font-weight: 700; color: var(--text-main); font-size: 0.9rem; }
+
+    /* Data note */
+    .data-note {
+      background: #fdfcfc;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2.5rem;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .data-note strong { color: var(--text-main); }
+
+    /* Summary bar */
+    .summary-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2.5rem;
+    }
+    .summary-cell {
+      background: #fff;
+      padding: 1.1rem 1.25rem;
+      text-align: center;
+    }
+    .summary-cell .sc-val {
+      font-family: var(--font-serif);
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.1;
+    }
+    .summary-cell .sc-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    @media (max-width: 768px) {
+      .week-header { grid-template-columns: 1fr auto; }
+      .week-title { display: none; }
+      .summary-row { grid-template-columns: repeat(2, 1fr); }
+      .entries-table th:nth-child(4),
+      .entries-table td:nth-child(4) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav-wrap">
+    <a href="index.html" class="brand">Jenniefer <span>Farhan.</span></a>
+    <a href="digital-campaign-analysis.html" class="btn-link">← Back to Campaign Analysis</a>
+  </nav>
+
+  <main class="container">
+    <header style="padding: 4rem 0 2rem;">
+      <span class="label">Marketing Operations & Analytics</span>
+      <h1 class="h1">Campaign Content Calendar</h1>
+      <p class="project-desc" style="max-width: 72ch;">
+        A 13-week content plan covering November 2020 – January 2021, structured around the four acquisition
+        channels present in the GA4 dataset. Content type, cadence, and intensity are derived directly from
+        weekly session volume and conversion patterns in the data.
+      </p>
+      <div style="margin-top: 1.5rem; display: flex; gap: 2rem; flex-wrap: wrap;">
+        <a href="frequency-matrix.html" class="btn-link">View Frequency Matrix →</a>
+        <a href="campaign-performance-dashboard.html" class="btn-link">View Performance Dashboard →</a>
+      </div>
+    </header>
+
+    <div class="section">
+
+      <div class="data-note">
+        <strong>Data-driven rationale:</strong> Channel prioritisation and content intensity are informed by the GA4 BigQuery export
+        (Nov 2020 – Jan 2021). <strong>Google / Organic</strong> drove the highest session volume (112,918 sessions) making SEO content
+        the highest-frequency channel. <strong>Google / CPC</strong> had the highest conversion rate, justifying targeted paid copy.
+        Peak weeks (W4–W7, late Nov – mid Dec) reflect Black Friday and holiday shopping — content intensity scales accordingly.
+      </div>
+
+      <!-- Summary -->
+      <div class="summary-row">
+        <div class="summary-cell">
+          <div class="sc-val">13</div>
+          <div class="sc-label">Weeks</div>
+        </div>
+        <div class="summary-cell">
+          <div class="sc-val">4</div>
+          <div class="sc-label">Channels</div>
+        </div>
+        <div class="summary-cell">
+          <div class="sc-val">78</div>
+          <div class="sc-label">Planned Pieces</div>
+        </div>
+        <div class="summary-cell">
+          <div class="sc-val">3</div>
+          <div class="sc-label">Campaign Phases</div>
+        </div>
+      </div>
+
+      <!-- Phase legend -->
+      <div class="phase-legend">
+        <div class="phase-badge" style="background:#fef3c7; color:#92400e;">
+          <div class="phase-dot" style="background:#d97706;"></div>Ramp-Up (W1–W3 · Nov 1–21)
+        </div>
+        <div class="phase-badge" style="background:#fce7f3; color:#831843;">
+          <div class="phase-dot" style="background:#9d174d;"></div>Peak · Black Friday &amp; Holiday (W4–W7 · Nov 22 – Dec 18)
+        </div>
+        <div class="phase-badge" style="background:#dbeafe; color:#1e3a5f;">
+          <div class="phase-dot" style="background:#3b82f6;"></div>Cool-Down &amp; Re-Engagement (W8–W13 · Dec 19 – Jan 31)
+        </div>
+      </div>
+
+      <!-- Channel filter -->
+      <div class="cal-controls">
+        <span style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted);">Filter by channel:</span>
+        <div class="cal-filter-group">
+          <button class="cal-filter-btn active" data-channel="all">All Channels</button>
+          <button class="cal-filter-btn" data-channel="organic">
+            <span class="dot" style="background:#16a34a;"></span>Organic Search
+          </button>
+          <button class="cal-filter-btn" data-channel="cpc">
+            <span class="dot" style="background:#9d174d;"></span>Paid Search
+          </button>
+          <button class="cal-filter-btn" data-channel="direct">
+            <span class="dot" style="background:#0ea5e9;"></span>Direct
+          </button>
+          <button class="cal-filter-btn" data-channel="referral">
+            <span class="dot" style="background:#f59e0b;"></span>Referral
+          </button>
+        </div>
+      </div>
+
+      <!-- Calendar weeks -->
+      <div class="cal-grid" id="calGrid"></div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; <script>document.write(new Date().getFullYear())</script> Jenniefer Farhan.<br>Designed for clarity and precision.</p>
+  </footer>
+
+<script>
+// ── Channel config ──────────────────────────────────────────────────────────
+const CH = {
+  organic:  { label: 'Organic Search', color: '#16a34a', bg: '#dcfce7' },
+  cpc:      { label: 'Paid Search',    color: '#9d174d', bg: '#fce7f3' },
+  direct:   { label: 'Direct',         color: '#0ea5e9', bg: '#e0f2fe' },
+  referral: { label: 'Referral',       color: '#f59e0b', bg: '#fef3c7' },
+};
+
+// ── Phase config ────────────────────────────────────────────────────────────
+const PHASES = {
+  ramp:     { label: 'Phase 1 — Ramp-Up',                      bg: '#fef3c7', color: '#92400e' },
+  peak:     { label: 'Phase 2 — Peak · Black Friday & Holiday', bg: '#fce7f3', color: '#831843' },
+  cooldown: { label: 'Phase 3 — Cool-Down & Re-Engagement',     bg: '#dbeafe', color: '#1e3a5f' },
+};
+
+// ── Content types ───────────────────────────────────────────────────────────
+// Each entry: { channel, type, title, goal, intensity (1-5) }
+// intensity drives the bar width; derived from weekly purchase/revenue data
+
+const WEEKS = [
+  {
+    week: 1, dates: 'Nov 1 – 7', theme: 'Campaign Launch & Baseline Awareness', phase: 'ramp',
+    purchases: 273, maxPurchases: 833,
+    entries: [
+      { ch:'organic',  type:'Blog Post',     title:'How to Choose the Right Google Merchandise',         goal:'Capture informational intent; seed organic rankings ahead of holiday peak.' },
+      { ch:'organic',  type:'On-Page SEO',   title:'Category page optimisation — keyword refresh',       goal:'Ensure landing pages are indexed and relevant for anticipated Nov search surges.' },
+      { ch:'cpc',      type:'Search Ad',     title:'Brand awareness campaign — launch copy A/B test',    goal:'Establish paid presence; test two headline variants before peak budget commitment.' },
+      { ch:'direct',   type:'Email',         title:'Welcome / re-engagement sequence — Segment A',       goal:'Activate dormant users ahead of seasonal period; drive direct return sessions.' },
+      { ch:'referral', type:'Partner Brief', title:'Outreach to top referral domain — co-promotion ask', goal:'Initiate relationship with shop.googlemerchandisestore.com referral partner.' },
+    ]
+  },
+  {
+    week: 2, dates: 'Nov 8 – 14', theme: 'Trust & Product Education', phase: 'ramp',
+    purchases: 375, maxPurchases: 833,
+    entries: [
+      { ch:'organic',  type:'Blog Post',     title:'Gift Guide: Top 10 Picks Under $50',                  goal:'Target early holiday gift searchers; high commercial intent keyword cluster.' },
+      { ch:'organic',  type:'Internal Links','title':'Silo update — link gift guide to product pages',    goal:'Pass link equity to product pages ahead of peak crawl period.' },
+      { ch:'cpc',      type:'Search Ad',     title:'Product category ads — rotate winning variant from W1', goal:'Scale the better-performing W1 ad variant; pause underperformer.' },
+      { ch:'direct',   type:'Email',         title:'Product spotlight — best sellers this week',          goal:'Surface top-performing products to direct audience; benchmark click-through.' },
+      { ch:'referral', type:'Guest Content', title:'Submit co-branded blog to referral partner',          goal:'Generate inbound referral links; expand reach beyond owned channels.' },
+    ]
+  },
+  {
+    week: 3, dates: 'Nov 15 – 21', theme: 'Pre-Peak Priming', phase: 'ramp',
+    purchases: 526, maxPurchases: 833,
+    entries: [
+      { ch:'organic',  type:'Blog Post',     title:'Early Black Friday Preview — What\'s Coming',        goal:'Capture "Black Friday deals" search intent early; drive bookmark behaviour.' },
+      { ch:'organic',  type:'Landing Page',  title:'Black Friday hub page — go live (noindex until W4)', goal:'Build the page now; index it at W4 for maximum crawl-to-rank lead time.' },
+      { ch:'cpc',      type:'Search Ad',     title:'Black Friday teaser — countdown copy',               goal:'Prime paid audiences for the imminent offer; build remarketing lists.' },
+      { ch:'cpc',      type:'Audience',      title:'Set up remarketing lists for W4 peak push',          goal:'Tag site visitors now so remarketing pools are populated for W4 spend.' },
+      { ch:'direct',   type:'Email',         title:'"Early Access" teaser — Black Friday exclusive list', goal:'Create urgency and exclusivity for direct subscribers ahead of peak week.' },
+      { ch:'referral', type:'Link Asset',    title:'Shareable promo graphic pack for referral partners',  goal:'Give partners ready-made assets to promote the BF campaign on their properties.' },
+    ]
+  },
+  {
+    week: 4, dates: 'Nov 22 – 28', theme: 'Black Friday — Peak Activation', phase: 'peak',
+    purchases: 688, maxPurchases: 833,
+    entries: [
+      { ch:'organic',  type:'Landing Page',  title:'Black Friday hub — index live, push on social',     goal:'Maximum organic visibility during the highest purchase-intent period of the campaign.' },
+      { ch:'organic',  type:'Blog Post',     title:'Black Friday Deals: Full List (updated daily)',      goal:'Freshness signals; capture long-tail "best Black Friday deal" queries.' },
+      { ch:'cpc',      type:'Search Ad',     title:'Black Friday campaign — full budget activation',     goal:'Highest CPC spend of the campaign; conversion rate justifies cost-per-click outlay.' },
+      { ch:'cpc',      type:'Search Ad',     title:'Remarketing ads to W1–W3 site visitors',            goal:'Re-capture high-intent visitors who browsed but did not convert pre-peak.' },
+      { ch:'direct',   type:'Email',         title:'Black Friday LIVE — exclusive offer drop (x3 sends)', goal:'Three sends: launch, mid-day reminder, last-chance. Drive direct session spike.' },
+      { ch:'referral', type:'Partner Post',  title:'Partner sites publish co-branded Black Friday post', goal:'Referral traffic spike aligned with peak purchase week.' },
+    ]
+  },
+  {
+    week: 5, dates: 'Nov 29 – Dec 5', theme: 'Cyber Week — Sustain Momentum', phase: 'peak',
+    purchases: 654, maxPurchases: 833,
+    entries: [
+      { ch:'organic',  type:'Blog Post',     title:'Cyber Monday Picks — Last Chance Gift Guide',       goal:'Extend organic visibility into Cyber Week; target "Cyber Monday" keyword cluster.' },
+      { ch:'organic',  type:'FAQ Content',   title:'Shipping & delivery FAQ — holiday cutoff dates',    goal:'Reduce purchase friction; answer intent-rich queries about holiday delivery.' },
+      { ch:'cpc',      type:'Search Ad',     title:'Cyber Monday ads — shift from BF copy to CM copy', goal:'Refresh creative to reflect Cyber Monday framing; avoid ad fatigue from W4.' },
+      { ch:'direct',   type:'Email',         title:'Cyber Week — "Still on offer" follow-up send',      goal:'Capture subscribers who missed Black Friday; extend conversion window.' },
+      { ch:'referral', type:'Round-up Post', title:'Submit product to Cyber Monday round-up lists',     goal:'Appear in third-party "best Cyber Monday deals" articles for earned referral traffic.' },
+    ]
+  },
+  {
+    week: 6, dates: 'Dec 6 – 12', theme: 'Holiday Gift Push — Peak Revenue Week', phase: 'peak',
+    purchases: 833, maxPurchases: 833,
+    entries: [
+      { ch:'organic',  type:'Blog Post',     title:'Holiday Gift Guide by Recipient Type',              goal:'Highest purchase week of entire campaign. Capture "gifts for him/her" queries.' },
+      { ch:'organic',  type:'Blog Post',     title:'Stocking Stuffers Under $25 — curated list',       goal:'Low-AOV but high-volume segment; drives sessions and assists conversions.' },
+      { ch:'cpc',      type:'Search Ad',     title:'Holiday gift intent — broad match expansion',       goal:'Expand keyword coverage at peak to capture adjacent gift-search queries.' },
+      { ch:'cpc',      type:'Search Ad',     title:'Dynamic remarketing — product-level retargeting',   goal:'Show specific viewed products to cart-abandoners and past visitors.' },
+      { ch:'direct',   type:'Email',         title:'Gift guide email — segmented by past purchase AOV', goal:'Higher-AOV segment receives premium picks; lower-AOV receives budget guide.' },
+      { ch:'referral', type:'Partner Brief', title:'Confirm Dec 20 shipping cutoff with referral partners', goal:'Align partner promotions with real shipping deadlines to prevent returns.' },
+    ]
+  },
+  {
+    week: 7, dates: 'Dec 13 – 19', theme: 'Last-Minute Holiday — Shipping Cutoff Urgency', phase: 'peak',
+    purchases: 740, maxPurchases: 833,
+    entries: [
+      { ch:'organic',  type:'Landing Page',  title:'"Last orders for Christmas delivery" — urgency page', goal:'Capture "last minute Christmas gift" queries; reduce purchase hesitation.' },
+      { ch:'organic',  type:'Blog Post',     title:'Digital Gifts & E-Gift Cards — no shipping needed', goal:'Serve buyers who missed physical shipping cutoff; extend revenue window.' },
+      { ch:'cpc',      type:'Search Ad',     title:'Countdown copy — "X days left to order by Dec 20"', goal:'Urgency-driven messaging to convert last-minute searchers before cutoff.' },
+      { ch:'direct',   type:'Email',         title:'FINAL CALL — last shipping day reminder',           goal:'High-urgency single send; clear CTA to complete purchase before cutoff.' },
+      { ch:'referral', type:'Partner Post',  title:'Partner last-chance promotion — paid placement',    goal:'Maintain referral visibility during final peak days of the holiday window.' },
+    ]
+  },
+  {
+    week: 8, dates: 'Dec 20 – 26', theme: 'Post-Peak Wind-Down — Boxing Day Prep', phase: 'cooldown',
+    purchases: 257, maxPurchases: 833,
+    entries: [
+      { ch:'organic',  type:'Blog Post',     title:'What to Do With Your Holiday Gift Cards',           goal:'Capture post-Christmas gift card redemption intent; maintain organic presence.' },
+      { ch:'cpc',      type:'Search Ad',     title:'Reduce CPC budget 60% — maintain brand visibility only', goal:'Purchase volume drops sharply post-Dec 20 (data: 20 purchases Dec 20). Protect margin.' },
+      { ch:'direct',   type:'Email',         title:'Thank you — Year in Review for subscribers',        goal:'Relationship maintenance; no hard sell during low-conversion period.' },
+    ]
+  },
+  {
+    week: 9, dates: 'Dec 27 – Jan 2', theme: 'New Year Transition', phase: 'cooldown',
+    purchases: 170, maxPurchases: 833,
+    entries: [
+      { ch:'organic',  type:'Blog Post',     title:'New Year, New You — January product focus',         goal:'Seed content for anticipated Jan intent shift; bridge holiday to new-year positioning.' },
+      { ch:'cpc',      type:'Search Ad',     title:'Pause campaign — restart Jan 5 with refreshed copy', goal:'Lowest purchase week of period (data). Zero paid spend Dec 27 – Jan 4.' },
+      { ch:'direct',   type:'Email',         title:'New Year preview — "What\'s new in January"',      goal:'Prime re-engagement for January recovery; tease upcoming product focus.' },
+    ]
+  },
+  {
+    week: 10, dates: 'Jan 3 – 9', theme: 'January Re-Engagement', phase: 'cooldown',
+    purchases: 170, maxPurchases: 833,
+    entries: [
+      { ch:'organic',  type:'Blog Post',     title:'How to Use Your New Google Merchandise in 2021',   goal:'Evergreen content targeting new product owners; supports SEO long-tail recovery.' },
+      { ch:'cpc',      type:'Search Ad',     title:'New year copy launch — aspirational messaging',     goal:'Re-engage paid channel post-holiday with fresh January positioning.' },
+      { ch:'direct',   type:'Email',         title:'Re-engagement sequence — inactive subscriber win-back', goal:'Target subscribers who did not open Dec emails; reduce list decay.' },
+      { ch:'referral', type:'Guest Content', title:'January trends guest post on referral partner site', goal:'Rebuild referral volume post-holiday-dip; new editorial angle.' },
+    ]
+  },
+  {
+    week: 11, dates: 'Jan 10 – 16', theme: 'Recovery — Organic Focus', phase: 'cooldown',
+    purchases: 254, maxPurchases: 833,
+    entries: [
+      { ch:'organic',  type:'Blog Post',     title:'"Best of 2020" roundup — link bait &amp; recap',   goal:'Recapture links from "year in review" coverage; strong organic equity asset.' },
+      { ch:'organic',  type:'SEO Audit',     title:'Post-holiday technical SEO check — crawl errors',  goal:'Identify any crawl issues or ranking drops from December high-traffic period.' },
+      { ch:'cpc',      type:'Search Ad',     title:'Scale CPC back to 50% of peak — test Jan audiences', goal:'Recovery period; test new audience segments before committing budget.' },
+      { ch:'direct',   type:'Email',         title:'Product focus — January top sellers spotlight',    goal:'Surface what is selling in Jan data; validate against GA4 channel signals.' },
+    ]
+  },
+  {
+    week: 12, dates: 'Jan 17 – 23', theme: 'Momentum Building — Conversion Optimisation', phase: 'cooldown',
+    purchases: 373, maxPurchases: 833,
+    entries: [
+      { ch:'organic',  type:'Blog Post',     title:'Valentine\'s Day Early Guide — gifts to consider', goal:'Seed next seasonal moment early; "Valentine\'s Day gift" queries begin this week.' },
+      { ch:'cpc',      type:'Search Ad',     title:'Valentine\'s Day teaser ads — awareness phase',    goal:'Get ahead of the next peak; build remarketing pools before CPC competition rises.' },
+      { ch:'direct',   type:'Email',         title:'Valentine\'s preview email — early-bird angle',    goal:'Reward engaged subscribers with early access framing before public launch.' },
+      { ch:'referral', type:'Partner Brief', title:'Brief referral partners on Valentine\'s campaign',  goal:'Coordinate partner content for the next seasonal peak; set lead time expectations.' },
+    ]
+  },
+  {
+    week: 13, dates: 'Jan 24 – 31', theme: 'Campaign Wrap & Post-Mortem Prep', phase: 'cooldown',
+    purchases: 360, maxPurchases: 833,
+    entries: [
+      { ch:'organic',  type:'Landing Page',  title:'Update Valentine\'s hub page — index and promote', goal:'Go live with next campaign page; maintain organic continuity post-simulation.' },
+      { ch:'cpc',      type:'Search Ad',     title:'Valentine\'s campaign launch — activate full copy', goal:'Transition cleanly from Jan re-engagement to next seasonal push.' },
+      { ch:'direct',   type:'Email',         title:'Campaign wrap — performance summary to subscribers', goal:'Transparency content: share campaign highlights; strengthens list relationship.' },
+      { ch:'referral', type:'Round-up',      title:'Collate referral partner performance — final report', goal:'Document referral channel contribution for post-mortem; inform next campaign brief.' },
+    ]
+  },
+];
+
+// ── Render ──────────────────────────────────────────────────────────────────
+const grid = document.getElementById('calGrid');
+let activeChannel = 'all';
+
+function chTag(chKey) {
+  const c = CH[chKey];
+  return `<span class="ch-tag" style="background:${c.bg}; color:${c.color};">
+    <span class="ch-dot" style="background:${c.color};"></span>${c.label}
+  </span>`;
+}
+
+function intensityPct(purchases, max) {
+  return Math.max(12, Math.round((purchases / max) * 100));
+}
+
+function renderWeeks() {
+  grid.innerHTML = '';
+  WEEKS.forEach((wk, idx) => {
+    const phase = PHASES[wk.phase];
+    const pct = intensityPct(wk.purchases, wk.maxPurchases);
+    const filtered = activeChannel === 'all'
+      ? wk.entries
+      : wk.entries.filter(e => e.ch === activeChannel);
+
+    if (filtered.length === 0) return;
+
+    const block = document.createElement('div');
+    block.className = 'week-block' + (idx < 2 ? ' is-open' : '');
+
+    const rows = filtered.map(e => `
+      <tr data-channel="${e.ch}">
+        <td>${chTag(e.ch)}</td>
+        <td><span class="entry-title">${e.title}</span></td>
+        <td><span class="type-tag">${e.type}</span></td>
+        <td class="goal-text">${e.goal}</td>
+      </tr>
+    `).join('');
+
+    block.innerHTML = `
+      <div class="week-header">
+        <div class="week-label">Week ${wk.week} &nbsp;·&nbsp; ${wk.dates}</div>
+        <div class="week-title">${wk.theme}</div>
+        <div class="week-meta">
+          <div class="intensity-bar">
+            <div class="intensity-track">
+              <div class="intensity-fill" style="width:${pct}%;"></div>
+            </div>
+            <span>${wk.purchases} conv.</span>
+          </div>
+          <span class="week-chevron">▾</span>
+        </div>
+      </div>
+      <div class="week-body">
+        <div class="phase-strip" style="background:${phase.bg}; color:${phase.color};">${phase.label}</div>
+        <table class="entries-table">
+          <thead>
+            <tr>
+              <th style="width:160px;">Channel</th>
+              <th>Content Piece</th>
+              <th style="width:130px;">Format</th>
+              <th>Strategic Goal</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    `;
+
+    block.querySelector('.week-header').addEventListener('click', () => {
+      block.classList.toggle('is-open');
+    });
+
+    grid.appendChild(block);
+  });
+}
+
+// Filter buttons
+document.querySelectorAll('.cal-filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cal-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeChannel = btn.dataset.channel;
+    renderWeeks();
+    // Re-open first visible block
+    const first = grid.querySelector('.week-block');
+    if (first) first.classList.add('is-open');
+  });
+});
+
+renderWeeks();
+</script>
+
+</body>
+</html>
