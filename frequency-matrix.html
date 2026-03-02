@@ -91,7 +91,7 @@
     .matrix-table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 700px;
+      min-width: 820px;
     }
     .matrix-table th {
       background: #faf9f8;
@@ -103,21 +103,28 @@
       padding: 0.75rem 1rem;
       text-align: left;
       border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
       white-space: nowrap;
     }
+    .matrix-table th:last-child { border-right: none; }
     .matrix-table th.ch-head {
       text-align: center;
-      width: 120px;
+      width: 90px;
     }
     .matrix-table td {
       padding: 0.75rem 1rem;
-      border-bottom: 1px solid #f3f4f0;
+      border-bottom: 1px solid #e7e5e4;
+      border-right: 1px solid #f0efed;
       vertical-align: middle;
       font-size: 0.88rem;
       color: var(--text-muted);
     }
+    .matrix-table td:last-child { border-right: none; }
     .matrix-table tr:last-child td { border-bottom: none; }
     .matrix-table tbody tr:hover td { background: #fdfcfc; }
+    /* Stronger vertical separator between phase groups */
+    .matrix-table td.phase-sep,
+    .matrix-table th.phase-sep { border-right: 2px solid var(--border) !important; }
 
     .format-name {
       font-weight: 700;
@@ -218,14 +225,18 @@
       padding: 0.75rem 1rem;
       text-align: left;
       border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
     }
+    .asset-table th:last-child { border-right: none; }
     .asset-table td {
       padding: 0.7rem 1rem;
-      border-bottom: 1px solid #f3f4f0;
+      border-bottom: 1px solid #e7e5e4;
+      border-right: 1px solid #f0efed;
       font-size: 0.85rem;
       color: var(--text-muted);
       vertical-align: top;
     }
+    .asset-table td:last-child { border-right: none; }
     .asset-table tr:last-child td { border-bottom: none; }
     .asset-table tbody tr:hover td { background: #fdfcfc; }
 
@@ -312,9 +323,25 @@
       </p>
 
       <div class="data-note">
-        <strong>Data source:</strong> ga4_sessions_by_day_channel.csv &amp; ga4_funnel_by_day_channel.csv (Nov 2020 – Jan 2021).
-        Session share and conversion rate figures are aggregated across the full 13-week period.
-        <strong>Conversion rate</strong> = purchase events ÷ sessions per channel.
+        <div style="font-size:0.72rem; font-weight:900; text-transform:uppercase; letter-spacing:1.5px; color:var(--accent); margin-bottom:0.85rem;">Data Source</div>
+        <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem 2rem;">
+          <div style="display:flex; gap:0.5rem; align-items:baseline;">
+            <span style="font-weight:700; color:var(--text-main); white-space:nowrap;">Files:</span>
+            <span>ga4_sessions_by_day_channel.csv &amp; ga4_funnel_by_day_channel.csv</span>
+          </div>
+          <div style="display:flex; gap:0.5rem; align-items:baseline;">
+            <span style="font-weight:700; color:var(--text-main); white-space:nowrap;">Period:</span>
+            <span>Nov 2020 – Jan 2021 · 13 weeks aggregated</span>
+          </div>
+          <div style="display:flex; gap:0.5rem; align-items:baseline;">
+            <span style="font-weight:700; color:var(--text-main); white-space:nowrap;">Metric basis:</span>
+            <span>Session share &amp; conversion rate per channel across full period</span>
+          </div>
+          <div style="display:flex; gap:0.5rem; align-items:baseline;">
+            <span style="font-weight:700; color:var(--text-main); white-space:nowrap;">Conv. rate:</span>
+            <span>purchase events ÷ sessions per channel</span>
+          </div>
+        </div>
       </div>
 
       <div class="channel-cards" id="channelCards"></div>
@@ -358,13 +385,25 @@
 
       <div style="background-color: #f3f4f6; padding: 1.5rem; border-left: 4px solid var(--accent); border-radius: 6px;">
         <h3 class="h3" style="margin-top: 0;">Saturation Principle</h3>
-        <p style="margin-bottom: 0; color: var(--text-muted);">
-          The frequency matrix is deliberately asymmetric. Organic Search receives the highest sustained
-          cadence because SEO compounds — content published in Phase 1 continues to generate sessions in
-          Phases 2 and 3. Paid Search frequency peaks sharply in Phase 2 then drops to near-zero in Phase 3,
-          reflecting the purchase volume data (833 peak → 170 in cool-down). Email is highest in Phase 2
-          but kept minimal in Phase 3 to protect list health and open rates heading into the next campaign.
-        </p>
+        <p style="margin-bottom: 1rem; color: var(--text-muted);">The frequency matrix is deliberately asymmetric. Each channel's cadence reflects a different strategic logic:</p>
+        <ul style="color: var(--text-muted); list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.65rem;">
+          <li style="display:flex; gap:0.75rem; align-items:baseline;">
+            <span style="width:10px; height:10px; border-radius:50%; background:#16a34a; flex-shrink:0; margin-top:5px; display:inline-block;"></span>
+            <span><strong style="color:var(--text-main);">Organic Search — highest sustained cadence.</strong> SEO compounds: content published in Phase 1 continues generating sessions in Phases 2 and 3 at no incremental cost.</span>
+          </li>
+          <li style="display:flex; gap:0.75rem; align-items:baseline;">
+            <span style="width:10px; height:10px; border-radius:50%; background:#9d174d; flex-shrink:0; margin-top:5px; display:inline-block;"></span>
+            <span><strong style="color:var(--text-main);">Paid Search — sharp Phase 2 peak, near-zero in Phase 3.</strong> Purchase volume data drives this directly: 833 conversions in peak week → 170 in cool-down. CPC spend follows conversion opportunity, not habit.</span>
+          </li>
+          <li style="display:flex; gap:0.75rem; align-items:baseline;">
+            <span style="width:10px; height:10px; border-radius:50%; background:#0ea5e9; flex-shrink:0; margin-top:5px; display:inline-block;"></span>
+            <span><strong style="color:var(--text-main);">Email — 3× in Phase 2, fortnightly in Phase 3.</strong> High send frequency during peak is justified by purchase urgency. It drops sharply post-holiday to protect list health and open rates ahead of the next campaign.</span>
+          </li>
+          <li style="display:flex; gap:0.75rem; align-items:baseline;">
+            <span style="width:10px; height:10px; border-radius:50%; background:#f59e0b; flex-shrink:0; margin-top:5px; display:inline-block;"></span>
+            <span><strong style="color:var(--text-main);">Referral — consistent medium cadence across all phases.</strong> Partner relationships require ongoing communication regardless of season; one touchpoint per week maintains momentum without overcommitting production resources.</span>
+          </li>
+        </ul>
       </div>
     </div>
 
@@ -679,9 +718,9 @@ const CH_INFO = {
 let headerHTML = `
   <thead>
     <tr class="phase-header-row">
-      <th style="width:200px;"></th>
-      ${PHASE_CONFIG.map(p => `
-        <th colspan="${CH_ORDER.length}" class="phase-label-cell" style="text-align:center; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">
+      <th style="width:260px;"></th>
+      ${PHASE_CONFIG.map((p, pi) => `
+        <th colspan="${CH_ORDER.length}" class="phase-label-cell${pi < PHASE_CONFIG.length - 1 ? ' phase-sep' : ''}" style="text-align:center; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">
           <span class="phase-label" style="background:${p.bg}; color:${p.color};">${p.label}</span>
           <div style="font-size:0.65rem; color:var(--text-muted); margin-top:0.2rem; font-weight:400; text-transform:none; letter-spacing:0;">${p.weeks}</div>
         </th>
@@ -689,10 +728,11 @@ let headerHTML = `
     </tr>
     <tr>
       <th>Format</th>
-      ${PHASE_CONFIG.map(p =>
-        CH_ORDER.map(ch => `
-          <th class="ch-head" style="color:${CH_INFO[ch].color};">${CH_INFO[ch].label}</th>
-        `).join('')
+      ${PHASE_CONFIG.map((p, pi) =>
+        CH_ORDER.map((ch, chi) => {
+          const isLastInPhase = chi === CH_ORDER.length - 1 && pi < PHASE_CONFIG.length - 1;
+          return `<th class="ch-head${isLastInPhase ? ' phase-sep' : ''}" style="color:${CH_INFO[ch].color};">${CH_INFO[ch].label}</th>`;
+        }).join('')
       ).join('')}
     </tr>
   </thead>
@@ -708,12 +748,14 @@ FORMATS.forEach(fmt => {
     </td>
   `;
   PHASE_CONFIG.forEach((phase, pi) => {
-    CH_ORDER.forEach(ch => {
+    CH_ORDER.forEach((ch, chi) => {
       const val = fmt.freq[ch][pi];
+      const isLastInPhase = chi === CH_ORDER.length - 1 && pi < PHASE_CONFIG.length - 1;
+      const sepClass = isLastInPhase ? ' phase-sep' : '';
       if (val === '—') {
-        bodyHTML += `<td class="freq-cell no-content">—</td>`;
+        bodyHTML += `<td class="freq-cell no-content${sepClass}">—</td>`;
       } else {
-        bodyHTML += `<td class="freq-cell">
+        bodyHTML += `<td class="freq-cell${sepClass}">
           <div class="freq-pill">
             <span class="freq-num" style="color:${CH_INFO[ch].color};">${val.split(' /')[0]}</span>
             ${val.includes('/') ? `<span class="freq-unit">${val.split('/ ')[1] || ''}</span>` : ''}
