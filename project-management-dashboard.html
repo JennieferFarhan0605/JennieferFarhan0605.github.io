@@ -214,20 +214,36 @@
     .gantt-header,
     .gantt-row {
       display: grid;
-      grid-template-columns: 180px 1fr;
-      gap: 1rem;
-      margin-bottom: 0.75rem;
+      grid-template-columns: 200px 1fr;
+      gap: 1.5rem;
+      margin-bottom: 0;
       align-items: center;
+      border-bottom: 1px solid #f3f4f6;
     }
 
     .gantt-header {
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.75rem;
+      margin-bottom: 0;
+      padding-bottom: 1rem;
       border-bottom: 2px solid var(--border);
+      background: #fafafa;
+      padding: 1rem 0;
+    }
+
+    .gantt-row {
+      padding: 1.25rem 0;
+      transition: all 0.2s ease;
+    }
+
+    .gantt-row:hover {
+      background: #fafafa;
+    }
+
+    .gantt-row:last-child {
+      border-bottom: none;
     }
 
     .gantt-label {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       padding-right: 1rem;
     }
 
@@ -235,66 +251,109 @@
       display: block;
       color: var(--text-main);
       font-weight: 700;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.35rem;
+      font-size: 1rem;
     }
 
     .gantt-status {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 600;
     }
 
     .gantt-timeline {
       display: grid;
       grid-template-columns: repeat(12, 1fr);
-      gap: 2px;
+      gap: 1px;
       min-width: 600px;
+      position: relative;
+      background: #f3f4f6;
+      border-radius: 6px;
+      padding: 1px;
     }
 
     .gantt-week {
       text-align: center;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
       font-weight: 600;
-      padding: 0.5rem 0;
+      padding: 0.75rem 0.25rem;
+      background: #fafafa;
+      border-right: 1px solid #e5e7eb;
+    }
+
+    .gantt-week:last-child {
+      border-right: none;
     }
 
     .gantt-bar {
-      height: 32px;
+      height: 40px;
       border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gantt-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 6px 6px 0 0;
     }
 
     .gantt-bar.green {
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border: 2px solid #047857;
     }
 
     .gantt-bar.amber {
       background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      border: 2px solid #b45309;
     }
 
     .gantt-bar.red {
-      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      border: 2px solid #b91c1c;
     }
 
     .gantt-bar.gray {
       background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+      border: 2px solid #4b5563;
+    }
+
+    .gantt-bar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
 
     .gantt-bar-label {
       color: #fff;
       font-weight: 700;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
 
     .gantt-row.active {
-      background: #fef7fb;
-      padding: 0.75rem;
-      margin: 0 -0.75rem 0.75rem;
+      background: linear-gradient(135deg, #fef7fb 0%, #fdf4f8 100%);
+      border-left: 4px solid var(--accent);
+      padding-left: calc(1rem - 4px);
+      margin-left: -1rem;
+      padding-right: 1rem;
+      margin-right: -1rem;
       border-radius: 8px;
-      border: 2px solid var(--accent);
+    }
+
+    .gantt-row.active .gantt-label strong {
+      color: var(--accent);
     }
 
     /* Risk Matrix */
@@ -756,7 +815,24 @@
       
       .gantt-header,
       .gantt-row {
-        grid-template-columns: 120px 1fr;
+        grid-template-columns: 140px 1fr;
+        gap: 1rem;
+      }
+
+      .gantt-label strong {
+        font-size: 0.9rem;
+      }
+
+      .gantt-status {
+        font-size: 0.75rem;
+      }
+
+      .gantt-bar {
+        height: 36px;
+      }
+
+      .gantt-bar-label {
+        font-size: 0.75rem;
       }
       
       .timeline-labels {
