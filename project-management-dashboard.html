@@ -208,7 +208,26 @@
       border-radius: 10px;
       padding: 0;
       margin-bottom: 2.5rem;
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    .gantt-container::-webkit-scrollbar {
+      height: 10px;
+    }
+
+    .gantt-container::-webkit-scrollbar-track {
+      background: #f3f4f6;
+      border-radius: 0 0 10px 10px;
+    }
+
+    .gantt-container::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 10px;
+    }
+
+    .gantt-container::-webkit-scrollbar-thumb:hover {
+      background: #831843;
     }
 
     .gantt-header,
