@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Project Management Dashboard | Jenniefer Farhan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <nav class="nav-wrap">
+    <a href="index.html" class="brand">Jenniefer <span>Farhan.</span></a>
+    <a href="it-rollout-simulation.html" class="btn-link">← Back to Case Study</a>
+  </nav>
+
+  <main class="container">
+    <div class="dashboard-header">
+      <span class="label">Interactive Project Simulation</span>
+      <h1 class="h1">Enterprise IT Rollout Dashboard</h1>
+      <p class="project-desc">
+        Live simulation of a 12-week enterprise system deployment. Navigate through project phases
+        to see risk management, resource allocation, and milestone tracking in action.
+      </p>
+    </div>
+
+    <!-- Phase Timeline Slider -->
+    <div class="timeline-control">
+      <div class="timeline-header">
+        <h3 class="h3">Project Timeline</h3>
+        <div class="phase-info">
+          <span class="phase-label">Current Phase:</span>
+          <span class="phase-name" id="currentPhase">Planning</span>
+          <span class="phase-status" id="phaseStatus">● On Track</span>
+        </div>
+      </div>
+      
+      <div class="timeline-slider-container">
+        <input type="range" id="phaseSlider" min="0" max="4" value="0" step="1" class="phase-slider">
+        <div class="timeline-labels">
+          <span>Planning</span>
+          <span>Design</span>
+          <span>Development</span>
+          <span>Testing</span>
+          <span>Deployment</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI Grid -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Project Progress</div>
+        <div class="kpi-value" id="kpi-progress">0%</div>
+        <div class="kpi-change" id="kpi-progress-desc">Week 0 of 12</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Budget Utilized</div>
+        <div class="kpi-value" id="kpi-budget">$0</div>
+        <div class="kpi-change" id="kpi-budget-desc">$250K total budget</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Active Risks</div>
+        <div class="kpi-value" id="kpi-risks">0</div>
+        <div class="kpi-change" id="kpi-risks-desc">0 high priority</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Team Utilization</div>
+        <div class="kpi-value" id="kpi-team">0%</div>
+        <div class="kpi-change" id="kpi-team-desc">0 resources allocated</div>
+      </div>
+    </div>
+
+    <!-- Gantt Chart -->
+    <div class="chart-container" style="height: auto;">
+      <div class="chart-title">Project Timeline (Gantt Chart)</div>
+      <div id="ganttChart" class="gantt-container"></div>
+    </div>
+
+    <!-- Risk Register -->
+    <div class="section">
+      <h2 class="h2">Risk Register</h2>
+      <div class="risk-matrix-container">
+        <div class="risk-matrix" id="riskMatrix"></div>
+        <div class="risk-legend">
+          <h4 class="h4">Risk Severity</h4>
+          <div class="legend-item"><span class="legend-color critical"></span> Critical (Impact: High × Probability: High)</div>
+          <div class="legend-item"><span class="legend-color high"></span> High (Impact: High × Probability: Medium)</div>
+          <div class="legend-item"><span class="legend-color medium"></span> Medium (Impact: Medium × Probability: Medium)</div>
+          <div class="legend-item"><span class="legend-color low"></span> Low (Impact: Low × Probability: Low)</div>
+        </div>
+      </div>
+      
+      <div class="channel-table">
+        <table id="riskTable">
+          <thead>
+            <tr>
+              <th>Risk ID</th>
+              <th>Description</th>
+              <th>Impact</th>
+              <th>Probability</th>
+              <th>Severity</th>
+              <th>Mitigation</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="riskTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Resource Allocation -->
+    <div class="chart-container">
+      <div class="chart-title">Resource Allocation by Phase</div>
+      <canvas id="resourceChart"></canvas>
+    </div>
+
+    <!-- Milestone Tracker -->
+    <div class="section">
+      <h2 class="h2">Milestone Tracker</h2>
+      <div class="milestone-grid" id="milestoneGrid"></div>
+    </div>
+
+    <!-- Status Report -->
+    <div class="insights-section">
+      <h3 class="h3" style="margin-top: 0;">Project Status Report</h3>
+      <div id="statusReport"></div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>&copy; <script>document.write(new Date().getFullYear())</script> Jenniefer Farhan.<br>Designed for clarity and precision.</p>
+  </footer>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <script>
+    // Project data structure
+    const projectPhases = [
+      {
+        name: 'Planning',
+        weeks: [1, 2],
+        progress: 100,
+        budget: 25000,
+        risks: [
+          { id: 'R001', desc: 'Scope creep from stakeholders', impact: 'High', probability: 'Medium', mitigation: 'Formal change control process', status: 'Mitigated' },
+          { id: 'R002', desc: 'Incomplete requirements gathering', impact: 'High', probability: 'High', mitigation: 'Weekly stakeholder reviews', status: 'Active' }
+        ],
+        milestones: [
+          { name: 'Project Charter Approved', status: 'complete', date: 'Week 1' },
+          { name: 'Stakeholder Analysis Complete', status: 'complete', date: 'Week 2' },
+          { name: 'Requirements Documented', status: 'complete', date: 'Week 2' }
+        ],
+        resources: { pm: 100, dev: 20, qa: 10, ops: 10 },
+        status: 'On Track',
+        statusColor: 'green'
+      },
+      {
+        name: 'Design',
+        weeks: [3, 4, 5],
+        progress: 75,
+        budget: 50000,
+        risks: [
+          { id: 'R003', desc: 'Technical architecture complexity', impact: 'High', probability: 'Medium', mitigation: 'Architecture review board established', status: 'Mitigated' },
+          { id: 'R004', desc: 'Integration with legacy systems', impact: 'Medium', probability: 'High', mitigation: 'API design with abstraction layer', status: 'Active' }
+        ],
+        milestones: [
+          { name: 'System Architecture Defined', status: 'complete', date: 'Week 3' },
+          { name: 'Database Schema Approved', status: 'complete', date: 'Week 4' },
+          { name: 'UI/UX Mockups Complete', status: 'in-progress', date: 'Week 5' }
+        ],
+        resources: { pm: 50, dev: 80, qa: 20, ops: 30 },
+        status: 'At Risk',
+        statusColor: 'amber'
+      },
+      {
+        name: 'Development',
+        weeks: [6, 7, 8, 9],
+        progress: 45,
+        budget: 100000,
+        risks: [
+          { id: 'R005', desc: 'Key developer availability', impact: 'High', probability: 'Low', mitigation: 'Cross-training and documentation', status: 'Monitored' },
+          { id: 'R006', desc: 'Third-party API rate limits', impact: 'Medium', probability: 'Medium', mitigation: 'Caching and queue implementation', status: 'Active' },
+          { id: 'R007', desc: 'Performance degradation under load', impact: 'High', probability: 'Medium', mitigation: 'Load testing in sprint cycles', status: 'Active' }
+        ],
+        milestones: [
+          { name: 'Backend API Development Complete', status: 'in-progress', date: 'Week 7' },
+          { name: 'Frontend Components Built', status: 'pending', date: 'Week 8' },
+          { name: 'Integration Testing Started', status: 'pending', date: 'Week 9' }
+        ],
+        resources: { pm: 40, dev: 100, qa: 60, ops: 20 },
+        status: 'On Track',
+        statusColor: 'green'
+      },
+      {
+        name: 'Testing',
+        weeks: [10, 11],
+        progress: 20,
+        budget: 50000,
+        risks: [
+          { id: 'R008', desc: 'UAT feedback requires major changes', impact: 'High', probability: 'Medium', mitigation: 'Iterative UAT in development phase', status: 'Active' },
+          { id: 'R009', desc: 'Security vulnerabilities discovered', impact: 'Critical', probability: 'Low', mitigation: 'Security audit and pen testing', status: 'Active' }
+        ],
+        milestones: [
+          { name: 'QA Testing Complete', status: 'pending', date: 'Week 10' },
+          { name: 'UAT Sign-off Received', status: 'pending', date: 'Week 11' },
+          { name: 'Security Audit Passed', status: 'pending', date: 'Week 11' }
+        ],
+        resources: { pm: 50, dev: 40, qa: 100, ops: 30 },
+        status: 'Not Started',
+        statusColor: 'gray'
+      },
+      {
+        name: 'Deployment',
+        weeks: [12],
+        progress: 0,
+        budget: 25000,
+        risks: [
+          { id: 'R010', desc: 'Rollback complexity if issues arise', impact: 'High', probability: 'Medium', mitigation: 'Blue-green deployment strategy', status: 'Planned' },
+          { id: 'R011', desc: 'User adoption resistance', impact: 'Medium', probability: 'High', mitigation: 'Training program and support desk', status: 'Planned' }
+        ],
+        milestones: [
+          { name: 'Production Environment Ready', status: 'pending', date: 'Week 12' },
+          { name: 'Go-Live Executed', status: 'pending', date: 'Week 12' },
+          { name: 'Post-Deployment Support Active', status: 'pending', date: 'Week 12' }
+        ],
+        resources: { pm: 60, dev: 50, qa: 40, ops: 100 },
+        status: 'Not Started',
+        statusColor: 'gray'
+      }
+    ];
+
+    let currentPhaseIndex = 0;
+    let resourceChart = null;
+
+    // Initialize dashboard
+    function init() {
+      updateDashboard();
+      renderGanttChart();
+      renderResourceChart();
+      
+      // Event listener for phase slider
+      document.getElementById('phaseSlider').addEventListener('input', (e) => {
+        currentPhaseIndex = parseInt(e.target.value);
+        updateDashboard();
+      });
+    }
+
+    // Update dashboard based on current phase
+    function updateDashboard() {
+      const phase = projectPhases[currentPhaseIndex];
+      
+      // Update phase info
+      document.getElementById('currentPhase').textContent = phase.name;
+      const statusEl = document.getElementById('phaseStatus');
+      statusEl.textContent = `● ${phase.status}`;
+      statusEl.style.color = getStatusColor(phase.statusColor);
+      
+      // Update KPIs
+      const totalBudget = projectPhases.reduce((sum, p) => sum + p.budget, 0);
+      const usedBudget = projectPhases.slice(0, currentPhaseIndex + 1).reduce((sum, p) => sum + p.budget, 0);
+      const totalWeeks = 12;
+      const currentWeek = phase.weeks[phase.weeks.length - 1];
+      
+      document.getElementById('kpi-progress').textContent = phase.progress + '%';
+      document.getElementById('kpi-progress-desc').textContent = `Week ${currentWeek} of ${totalWeeks}`;
+      
+      document.getElementById('kpi-budget').textContent = `$${(usedBudget / 1000).toFixed(0)}K`;
+      document.getElementById('kpi-budget-desc').textContent = `$${(totalBudget / 1000).toFixed(0)}K total budget`;
+      
+      const activeRisks = phase.risks.filter(r => r.status === 'Active');
+      const highRisks = activeRisks.filter(r => r.impact === 'High' || r.impact === 'Critical');
+      document.getElementById('kpi-risks').textContent = activeRisks.length;
+      document.getElementById('kpi-risks-desc').textContent = `${highRisks.length} high priority`;
+      
+      const maxTeam = 100;
+      const avgUtilization = (phase.resources.pm + phase.resources.dev + phase.resources.qa + phase.resources.ops) / 4;
+      document.getElementById('kpi-team').textContent = avgUtilization.toFixed(0) + '%';
+      document.getElementById('kpi-team-desc').textContent = `${Math.round(avgUtilization * 4 / 100)} resources allocated`;
+      
+      // Update risk register
+      renderRiskMatrix(phase.risks);
+      renderRiskTable(phase.risks);
+      
+      // Update milestones
+      renderMilestones(phase.milestones);
+      
+      // Update status report
+      renderStatusReport(phase);
+      
+      // Update resource chart
+      updateResourceChart();
+    }
+
+    // Render Gantt Chart
+    function renderGanttChart() {
+      const gantt = document.getElementById('ganttChart');
+      let html = `
+        <div class="gantt-header">
+          <div class="gantt-label">Phase</div>
+          <div class="gantt-timeline">
+            ${Array.from({length: 12}, (_, i) => `<div class="gantt-week">W${i+1}</div>`).join('')}
+          </div>
+        </div>
+      `;
+      
+      projectPhases.forEach((phase, idx) => {
+        const start = phase.weeks[0] - 1;
+        const duration = phase.weeks[phase.weeks.length - 1] - phase.weeks[0] + 1;
+        const isActive = idx === currentPhaseIndex;
+        
+        html += `
+          <div class="gantt-row ${isActive ? 'active' : ''}">
+            <div class="gantt-label">
+              <strong>${phase.name}</strong>
+              <span class="gantt-status" style="color: ${getStatusColor(phase.statusColor)}">${phase.status}</span>
+            </div>
+            <div class="gantt-timeline">
+              <div class="gantt-bar ${phase.statusColor}" style="grid-column: ${start + 1} / span ${duration};">
+                <span class="gantt-bar-label">${phase.progress}%</span>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      gantt.innerHTML = html;
+    }
+
+    // Render Risk Matrix
+    function renderRiskMatrix(risks) {
+      const matrix = document.getElementById('riskMatrix');
+      const impacts = ['Critical', 'High', 'Medium', 'Low'];
+      const probabilities = ['High', 'Medium', 'Low'];
+      
+      let html = '<div class="matrix-grid">';
+      html += '<div class="matrix-label-y">Impact →</div>';
+      
+      // Header row with probability labels
+      html += '<div class="matrix-cell header"></div>';
+      probabilities.forEach(prob => {
+        html += `<div class="matrix-cell header">${prob}</div>`;
+      });
+      
+      // Matrix cells
+      impacts.forEach(impact => {
+        html += `<div class="matrix-cell header">${impact}</div>`;
+        probabilities.forEach(prob => {
+          const cellRisks = risks.filter(r => r.impact === impact && r.probability === prob);
+          const severity = getSeverity(impact, prob);
+          html += `
+            <div class="matrix-cell ${severity}" title="${cellRisks.length} risk(s)">
+              ${cellRisks.length > 0 ? cellRisks.length : ''}
+            </div>
+          `;
+        });
+      });
+      
+      html += '</div>';
+      html += '<div class="matrix-label-x">← Probability</div>';
+      matrix.innerHTML = html;
+    }
+
+    // Render Risk Table
+    function renderRiskTable(risks) {
+      const tbody = document.getElementById('riskTableBody');
+      let html = '';
+      
+      risks.forEach(risk => {
+        const severity = getSeverity(risk.impact, risk.probability);
+        html += `
+          <tr>
+            <td><strong>${risk.id}</strong></td>
+            <td>${risk.desc}</td>
+            <td>${risk.impact}</td>
+            <td>${risk.probability}</td>
+            <td><span class="severity-badge ${severity}">${severity.toUpperCase()}</span></td>
+            <td>${risk.mitigation}</td>
+            <td><span class="status-badge ${risk.status.toLowerCase()}">${risk.status}</span></td>
+          </tr>
+        `;
+      });
+      
+      tbody.innerHTML = html;
+    }
+
+    // Render Resource Chart
+    function renderResourceChart() {
+      const ctx = document.getElementById('resourceChart').getContext('2d');
+      updateResourceChart();
+    }
+
+    function updateResourceChart() {
+      const phase = projectPhases[currentPhaseIndex];
+      const data = {
+        labels: ['Project Manager', 'Developers', 'QA Team', 'Operations'],
+        datasets: [{
+          label: 'Resource Utilization (%)',
+          data: [phase.resources.pm, phase.resources.dev, phase.resources.qa, phase.resources.ops],
+          backgroundColor: [
+            'rgba(157, 23, 77, 0.8)',
+            'rgba(220, 38, 38, 0.8)',
+            'rgba(234, 88, 12, 0.8)',
+            'rgba(6, 95, 70, 0.8)'
+          ],
+          borderColor: [
+            '#9d174d',
+            '#dc2626',
+            '#ea580c',
+            '#065f46'
+          ],
+          borderWidth: 2
+        }]
+      };
+      
+      if (resourceChart) {
+        resourceChart.destroy();
+      }
+      
+      const ctx = document.getElementById('resourceChart').getContext('2d');
+      resourceChart = new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                callback: (value) => value + '%'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      });
+    }
+
+    // Render Milestones
+    function renderMilestones(milestones) {
+      const grid = document.getElementById('milestoneGrid');
+      let html = '';
+      
+      milestones.forEach(milestone => {
+        const iconMap = {
+          complete: '✓',
+          'in-progress': '⟳',
+          pending: '○'
+        };
+        const icon = iconMap[milestone.status];
+        
+        html += `
+          <div class="milestone-card ${milestone.status}">
+            <div class="milestone-icon">${icon}</div>
+            <div class="milestone-content">
+              <div class="milestone-name">${milestone.name}</div>
+              <div class="milestone-date">${milestone.date}</div>
+            </div>
+          </div>
+        `;
+      });
+      
+      grid.innerHTML = html;
+    }
+
+    // Render Status Report
+    function renderStatusReport(phase) {
+      const report = document.getElementById('statusReport');
+      const highRisks = phase.risks.filter(r => r.impact === 'High' || r.impact === 'Critical');
+      const completedMilestones = phase.milestones.filter(m => m.status === 'complete').length;
+      const totalMilestones = phase.milestones.length;
+      
+      let statusClass = 'status-green';
+      let statusText = 'The project is progressing as planned with no major blockers.';
+      
+      if (phase.status === 'At Risk') {
+        statusClass = 'status-amber';
+        statusText = 'Some risks require attention, but mitigation plans are in place.';
+      } else if (phase.status === 'Blocked') {
+        statusClass = 'status-red';
+        statusText = 'Critical issues are blocking progress and require immediate action.';
+      }
+      
+      report.innerHTML = `
+        <div class="status-summary ${statusClass}">
+          <h4 style="margin: 0 0 0.5rem 0;">Overall Status: ${phase.status}</h4>
+          <p style="margin: 0; color: var(--text-muted);">${statusText}</p>
+        </div>
+        
+        <div class="status-metrics">
+          <div class="status-metric">
+            <div class="status-metric-label">Phase Progress</div>
+            <div class="status-metric-value">${phase.progress}%</div>
+            <div class="progress-bar"><div class="progress-fill" style="width: ${phase.progress}%; background: var(--accent);"></div></div>
+          </div>
+          
+          <div class="status-metric">
+            <div class="status-metric-label">Milestones Completed</div>
+            <div class="status-metric-value">${completedMilestones} / ${totalMilestones}</div>
+          </div>
+          
+          <div class="status-metric">
+            <div class="status-metric-label">Active High Risks</div>
+            <div class="status-metric-value">${highRisks.length}</div>
+          </div>
+          
+          <div class="status-metric">
+            <div class="status-metric-label">Budget Spent (Phase)</div>
+            <div class="status-metric-value">$${(phase.budget / 1000).toFixed(0)}K</div>
+          </div>
+        </div>
+        
+        <div class="status-notes">
+          <h4 style="margin: 0 0 1rem 0; font-size: 1rem;">Key Updates</h4>
+          <ul style="margin: 0; padding-left: 1.5rem; color: var(--text-muted);">
+            ${phase.milestones.filter(m => m.status === 'complete').map(m => `<li>${m.name} successfully completed</li>`).join('')}
+            ${highRisks.length > 0 ? `<li>${highRisks.length} high-priority risk(s) being actively managed</li>` : ''}
+            <li>Team operating at ${Math.round((phase.resources.pm + phase.resources.dev + phase.resources.qa + phase.resources.ops) / 4)}% average capacity</li>
+          </ul>
+        </div>
+      `;
+    }
+
+    // Helper functions
+    function getSeverity(impact, probability) {
+      if (impact === 'Critical' && probability === 'High') return 'critical';
+      if ((impact === 'High' && probability === 'High') || (impact === 'Critical' && probability === 'Medium')) return 'high';
+      if (impact === 'Medium' && probability === 'Medium') return 'medium';
+      return 'low';
+    }
+
+    function getStatusColor(color) {
+      const colors = {
+        green: '#10b981',
+        amber: '#f59e0b',
+        red: '#dc2626',
+        gray: '#6b7280'
+      };
+      return colors[color] || colors.gray;
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+
+</body>
+</html>
