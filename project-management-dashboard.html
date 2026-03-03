@@ -7,6 +7,147 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  
+  <style>
+    /* Timeline Control Container */
+    .timeline-control {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .phase-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.95rem;
+    }
+
+    .phase-label {
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+    }
+
+    .phase-name {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .phase-status {
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .timeline-slider-container {
+      margin-top: 1rem;
+    }
+
+    /* Timeline Slider Alignment Fix */
+    .phase-slider {
+      width: 100%;
+      height: 8px;
+      background: #f3f4f6;
+      border-radius: 999px;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+      margin: 0;
+    }
+
+    /* Webkit browsers (Chrome, Safari, Edge) */
+    .phase-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      background: var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(157, 23, 77, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .phase-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      box-shadow: 0 4px 12px rgba(157, 23, 77, 0.4);
+    }
+
+    /* Firefox */
+    .phase-slider::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      background: var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 8px rgba(157, 23, 77, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .phase-slider::-moz-range-thumb:hover {
+      transform: scale(1.15);
+      box-shadow: 0 4px 12px rgba(157, 23, 77, 0.4);
+    }
+
+    /* Track styling for better alignment */
+    .phase-slider::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 8px;
+      background: #f3f4f6;
+      border-radius: 999px;
+    }
+
+    .phase-slider::-moz-range-track {
+      width: 100%;
+      height: 8px;
+      background: #f3f4f6;
+      border-radius: 999px;
+    }
+
+    /* Timeline labels aligned with thumb positions */
+    .timeline-labels {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      position: relative;
+    }
+
+    /* Adjust label positioning to align with thumb */
+    .timeline-labels span {
+      position: relative;
+      display: block;
+      text-align: center;
+    }
+
+    .timeline-labels span:first-child {
+      text-align: left;
+    }
+
+    .timeline-labels span:last-child {
+      text-align: right;
+    }
+  </style>
 </head>
 <body>
 
