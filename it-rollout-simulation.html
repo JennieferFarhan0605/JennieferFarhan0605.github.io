@@ -189,7 +189,7 @@
           <div class="template-desc">
             Professional Excel file with 50+ tasks, Gantt view, progress tracking, and project summary dashboard.
           </div>
-          <a href="Work_Breakdown_Structure.xlsx" download class="template-download">Download Excel ↓</a>
+          <a href="assets/Work_Breakdown_Structure.xlsx" download class="template-download">Download Excel ↓</a>
         </div>
         
         <div class="template-card">
@@ -198,7 +198,7 @@
           <div class="template-desc">
             Multi-sheet Excel with risk log, visual matrix, severity tracking, and automated risk summary statistics.
           </div>
-          <a href="Risk_Register.xlsx" download class="template-download">Download Excel ↓</a>
+          <a href="assets/Risk_Register.xlsx" download class="template-download">Download Excel ↓</a>
         </div>
         
         <div class="template-card">
@@ -207,7 +207,7 @@
           <div class="template-desc">
             Color-coded responsibility matrix with R/A/C/I assignments, best practices guide, and template instructions.
           </div>
-          <a href="RACI_Matrix.xlsx" download class="template-download">Download Excel ↓</a>
+          <a href="assets/RACI_Matrix.xlsx" download class="template-download">Download Excel ↓</a>
         </div>
         
         <div class="template-card">
@@ -216,7 +216,7 @@
           <div class="template-desc">
             Executive dashboard with KPIs, milestone tracker, budget monitoring, and resource allocation across 4 sheets.
           </div>
-          <a href="Project_Status_Dashboard.xlsx" download class="template-download">Download Excel ↓</a>
+          <a href="assets/Project_Status_Dashboard.xlsx" download class="template-download">Download Excel ↓</a>
         </div>
       </div>
     </div>
@@ -269,16 +269,204 @@
     </div>
 
     <div class="section">
-      <h2 class="h2">Technical Stack & Tools</h2>
+      <h2 class="h2">Frequently Asked Questions</h2>
       <p class="project-desc">
-        This simulation was built using modern web technologies to create an interactive, data-driven experience:
+        Common questions about the project management frameworks, methodologies, and best practices demonstrated in this simulation.
       </p>
-      <div class="pillrow">
-        <span class="pill"><strong>Frontend:</strong> HTML5, CSS3, Vanilla JavaScript</span>
-        <span class="pill"><strong>Visualization:</strong> Chart.js for resource allocation charts</span>
-        <span class="pill"><strong>Data Management:</strong> CSV templates for portability</span>
-        <span class="pill"><strong>Design:</strong> Responsive, mobile-first architecture</span>
-        <span class="pill"><strong>Deployment:</strong> GitHub Pages (static hosting)</span>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">1. Why decompose projects into a Work Breakdown Structure (WBS)?</h3>
+        <p class="project-desc">
+          A WBS prevents scope gaps and ensures nothing is forgotten. By breaking complex deliverables into manageable work packages,
+          you create clear accountability, enable accurate effort estimation, and establish a foundation for schedule development.
+          The hierarchical structure also helps stakeholders visualize the full scope at varying levels of detail.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">2. How do you determine the right level of granularity for WBS tasks?</h3>
+        <p class="project-desc">
+          Apply the "8/80 rule": no task should be shorter than 8 hours or longer than 80 hours. Tasks smaller than 8 hours
+          create administrative overhead; tasks larger than 80 hours are too difficult to estimate accurately and track progress.
+          Additionally, tasks should align with natural work packages that a single resource or team can complete.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">3. What's the difference between Impact and Probability in risk assessment?</h3>
+        <p class="project-desc">
+          <strong>Impact</strong> measures the severity of consequences if the risk occurs (cost overrun, schedule delay, quality degradation).
+          <strong>Probability</strong> measures the likelihood the risk will actually happen. A high-impact, low-probability risk (e.g., data breach)
+          requires different mitigation than a low-impact, high-probability risk (e.g., minor design revisions).
+          The Risk Score (Impact × Probability) helps prioritize which risks demand immediate attention.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">4. Why must each task have exactly one "Accountable" person in a RACI matrix?</h3>
+        <p class="project-desc">
+          Multiple accountable parties create ambiguity about decision authority, leading to delays and finger-pointing when issues arise.
+          The single "A" ensures there's one throat to choke—one person who owns the outcome and can make final decisions without endless consensus loops.
+          This doesn't mean they do all the work (that's "Responsible"), but they're answerable for results.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">5. How do you identify the Critical Path in a project schedule?</h3>
+        <p class="project-desc">
+          The Critical Path is the longest sequence of dependent tasks that determines the minimum project duration. To find it:
+          map all task dependencies, calculate Early Start/Early Finish dates forward through the network, then calculate
+          Late Start/Late Finish dates backward. Tasks with zero slack (where Early Start = Late Start) are on the Critical Path.
+          Any delay to these tasks directly delays the project finish date.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">6. What's the difference between Risk Mitigation and Risk Contingency?</h3>
+        <p class="project-desc">
+          <strong>Mitigation</strong> is proactive—actions taken now to reduce the probability or impact before the risk occurs
+          (e.g., cross-training team members). <strong>Contingency</strong> is reactive—the backup plan if mitigation fails and the risk
+          actually happens (e.g., hiring contractors if the team member quits). Good risk management requires both.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">7. Why track Earned Value Management (EVM) metrics like SPI and CPI?</h3>
+        <p class="project-desc">
+          <strong>Schedule Performance Index (SPI)</strong> = Earned Value / Planned Value shows if you're ahead or behind schedule.
+          <strong>Cost Performance Index (CPI)</strong> = Earned Value / Actual Cost shows if you're under or over budget.
+          These objective metrics cut through subjective status reports—an SPI of 0.8 means you've completed 80% of planned work,
+          regardless of how confident your team sounds. EVM provides early warning of budget overruns before it's too late to correct.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">8. When should you escalate a risk to the steering committee?</h3>
+        <p class="project-desc">
+          Escalate when: (1) the risk severity is Critical or High and mitigation isn't working, (2) the risk requires funding
+          beyond your authority, (3) the risk impacts other projects or business units, or (4) the risk requires executive
+          decision-making (e.g., scope reduction vs. timeline extension). Don't escalate every yellow status—save escalations
+          for issues that genuinely require senior intervention.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">9. How do you prevent scope creep without appearing inflexible?</h3>
+        <p class="project-desc">
+          Implement formal change control: every scope change request goes through an impact assessment (cost, schedule, risk),
+          documented decision by the change control board, and baseline update if approved. This isn't rigidity—it's transparency.
+          Stakeholders can still request changes, but they see the trade-offs. The key phrase: "Yes, we can do that—here's what
+          we'd need to deprioritize or delay to accommodate it."
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">10. What's the purpose of a project baseline, and when should it be re-baselined?</h3>
+        <p class="project-desc">
+          The baseline is your approved scope, schedule, and budget—the measuring stick for variance analysis. Re-baseline only
+          when there's a significant, formally approved change that makes the original baseline meaningless for performance measurement.
+          Frequent re-baselining hides problems and prevents learning. If you're constantly re-baselining, you have an estimation
+          problem, not a flexibility problem.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">11. Why separate "Consulted" from "Informed" in stakeholder communication?</h3>
+        <p class="project-desc">
+          <strong>Consulted</strong> stakeholders provide input before decisions are made (two-way communication).
+          <strong>Informed</strong> stakeholders only need to know outcomes after decisions are made (one-way communication).
+          Treating everyone as "Consulted" creates decision paralysis and endless meetings. Properly categorizing stakeholders
+          respects their time and clarifies whose input actually shapes decisions versus who just needs awareness.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">12. How do you estimate task durations without historical data?</h3>
+        <p class="project-desc">
+          Use Three-Point Estimation: get Optimistic (O), Most Likely (M), and Pessimistic (P) estimates from experts, then
+          calculate Expected Duration = (O + 4M + P) / 6. This weights the realistic case while accounting for best/worst scenarios.
+          For completely novel work, decompose into smaller chunks until you find something analogous you can estimate, then aggregate up.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">13. What's the difference between a milestone and a deliverable?</h3>
+        <p class="project-desc">
+          A <strong>deliverable</strong> is a tangible output (e.g., "Requirements Document"). A <strong>milestone</strong> is
+          a significant point in time with zero duration (e.g., "Requirements Approved"). Milestones mark completion of deliverables
+          or phase gates. In schedules, deliverables have duration and consume resources; milestones are checkpoints that don't.
+          Good milestones are binary (complete/incomplete), not percentage-based.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">14. Why use RAG (Red/Amber/Green) status indicators instead of percentage complete?</h3>
+        <p class="project-desc">
+          Percentage complete is often gamed ("90% syndrome"—tasks stay at 90% for weeks). RAG status forces honest assessment:
+          <strong>Green</strong> = on track with no intervention needed, <strong>Amber</strong> = at risk but recoverable with action,
+          <strong>Red</strong> = blocked or critically delayed. This simplicity enables executives to quickly identify what needs
+          their attention without drowning in percentage details.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">15. How do you balance resource utilization without burning out the team?</h3>
+        <p class="project-desc">
+          Target 80-85% utilization for productive work, leaving 15-20% for meetings, email, training, and unexpected issues.
+          100% utilization looks efficient but leaves zero buffer for reality. When utilization exceeds 90% for extended periods,
+          quality drops and people burn out. Also account for non-project time—people have mandatory training, all-hands meetings,
+          and administrative tasks that don't show up in your project schedule.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">16. What's the purpose of a lessons learned session, and when should it happen?</h3>
+        <p class="project-desc">
+          Lessons learned captures what worked, what didn't, and what to do differently next time—but only if done correctly.
+          Hold them at phase gates and project closure when memories are fresh. The key: create psychological safety so people
+          share uncomfortable truths (e.g., "we underestimated integration complexity") without fear of blame. Document concrete
+          actions ("always include integration testing in estimates") not vague platitudes ("communicate better").
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">17. How do you decide between Agile and Waterfall project methodologies?</h3>
+        <p class="project-desc">
+          Use <strong>Waterfall</strong> when: requirements are stable and well-understood, regulatory compliance demands documentation,
+          or dependencies require sequential execution (e.g., you can't pour concrete before excavation). Use <strong>Agile</strong> when:
+          requirements will evolve, rapid feedback loops add value, or early delivery of partial functionality benefits users.
+          Many successful projects use hybrid approaches—Waterfall for infrastructure, Agile for application development.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">18. Why conduct User Acceptance Testing (UAT) separately from QA testing?</h3>
+        <p class="project-desc">
+          <strong>QA testing</strong> validates the system works as designed (technical correctness). <strong>UAT</strong> validates
+          the system solves the business problem (functional fitness). A system can pass all QA tests but fail UAT because what
+          was designed doesn't match what users actually need. UAT should be conducted by actual end users in realistic scenarios,
+          not by developers testing their own code against requirements they wrote.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">19. What's the difference between a risk and an issue?</h3>
+        <p class="project-desc">
+          A <strong>risk</strong> is a potential future problem (might happen). An <strong>issue</strong> is a current problem
+          (already happened). Risks have probability; issues have probability of 100%. Risk management is proactive (mitigation planning);
+          issue management is reactive (resolution). When a risk materializes, it becomes an issue. Both require tracking, but
+          issues demand immediate action while risks require monitoring and contingency planning.
+        </p>
+      </div>
+
+      <div class="callout" style="margin-bottom: 2rem;">
+        <h3 class="h3">20. Why maintain a 10-15% budget contingency reserve?</h3>
+        <p class="project-desc">
+          No estimate is perfect—unknown unknowns always emerge. A contingency reserve (10-15% for well-defined projects, 20-30%
+          for novel work) provides a buffer for legitimate surprises without needing to re-baseline or request emergency funding
+          every time reality diverges from plan. This isn't "padding"—it's acknowledging estimation uncertainty. The key: contingency
+          is for risks that weren't identified in planning, not for covering poor estimation or scope creep.
+        </p>
       </div>
     </div>
 
