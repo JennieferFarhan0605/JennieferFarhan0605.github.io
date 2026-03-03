@@ -4,147 +4,14 @@
   <meta charset="utf-8">
   <title>Project Management Dashboard | Jenniefer Farhan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-
+  <link rel="stylesheet" href="styles.css">
+  
   <style>
-    /* ─── RESET & BASE ─────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --accent:       #9d174d;
-      --accent-dark:  #831843;
-      --accent-light: #fdf4f8;
-      --border:       #e5e7eb;
-      --text-main:    #111827;
-      --text-muted:   #6b7280;
-      --bg:           #f9fafb;
-      --white:        #ffffff;
-      --font-serif:   'Playfair Display', Georgia, serif;
-      --font-sans:    'Lato', sans-serif;
-    }
-
-    body {
-      font-family: var(--font-sans);
-      background: var(--bg);
-      color: var(--text-main);
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    /* ─── NAV ─────────────────────────────────────────────────── */
-    .nav-wrap {
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .brand {
-      font-family: var(--font-serif);
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-main);
-      text-decoration: none;
-    }
-
-    .brand span { color: var(--accent); }
-
-    .btn-link {
-      font-size: 0.875rem;
-      font-weight: 700;
-      color: var(--accent);
-      text-decoration: none;
-      padding: 0.4rem 0.9rem;
-      border: 1.5px solid var(--accent);
-      border-radius: 6px;
-      transition: all 0.2s;
-    }
-
-    .btn-link:hover {
-      background: var(--accent);
-      color: #fff;
-    }
-
-    /* ─── LAYOUT ──────────────────────────────────────────────── */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2.5rem 2rem 4rem;
-    }
-
-    /* ─── TYPOGRAPHY ──────────────────────────────────────────── */
-    .h1 {
-      font-family: var(--font-serif);
-      font-size: clamp(1.8rem, 4vw, 2.75rem);
-      font-weight: 700;
-      color: var(--text-main);
-      line-height: 1.15;
-      margin-bottom: 0.75rem;
-    }
-
-    .h2 {
-      font-family: var(--font-serif);
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 1.25rem;
-    }
-
-    .h3 {
-      font-family: var(--font-serif);
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .h4 {
-      font-family: var(--font-serif);
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 1rem;
-    }
-
-    .label {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--accent);
-      margin-bottom: 0.6rem;
-    }
-
-    /* ─── DASHBOARD HEADER ────────────────────────────────────── */
-    .dashboard-header {
-      margin-bottom: 2.5rem;
-    }
-
-    .project-desc {
-      color: var(--text-muted);
-      max-width: 680px;
-      font-size: 1rem;
-      margin-top: 0.5rem;
-    }
-
-    /* ─── SECTION ─────────────────────────────────────────────── */
-    .section { margin-bottom: 2.5rem; }
-
-    /* ─── CARD BASE ───────────────────────────────────────────── */
-    .card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-    }
-
-    /* ─── TIMELINE CONTROL ────────────────────────────────────── */
+    /* Timeline Control Container */
     .timeline-control {
-      background: var(--white);
+      background: #fff;
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 2rem;
@@ -164,6 +31,7 @@
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      font-size: 0.95rem;
     }
 
     .phase-label {
@@ -176,7 +44,7 @@
 
     .phase-name {
       font-family: var(--font-serif);
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--accent);
     }
@@ -186,7 +54,11 @@
       font-size: 0.9rem;
     }
 
-    /* Slider */
+    .timeline-slider-container {
+      margin-top: 1rem;
+    }
+
+    /* Timeline Slider Alignment Fix */
     .phase-slider {
       width: 100%;
       height: 8px;
@@ -195,54 +67,75 @@
       outline: none;
       -webkit-appearance: none;
       appearance: none;
+      margin: 0;
+    }
+
+    .phase-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      background: var(--accent);
+      border-radius: 50%;
       cursor: pointer;
+      box-shadow: 0 2px 8px rgba(157, 23, 77, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .phase-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      box-shadow: 0 4px 12px rgba(157, 23, 77, 0.4);
+    }
+
+    .phase-slider::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      background: var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 8px rgba(157, 23, 77, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .phase-slider::-moz-range-thumb:hover {
+      transform: scale(1.15);
+      box-shadow: 0 4px 12px rgba(157, 23, 77, 0.4);
     }
 
     .phase-slider::-webkit-slider-runnable-track {
-      width: 100%; height: 8px;
-      background: #f3f4f6; border-radius: 999px;
+      width: 100%;
+      height: 8px;
+      background: #f3f4f6;
+      border-radius: 999px;
     }
+
     .phase-slider::-moz-range-track {
-      width: 100%; height: 8px;
-      background: #f3f4f6; border-radius: 999px;
-    }
-    .phase-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 24px; height: 24px;
-      background: var(--accent);
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(157,23,77,0.3);
-      transition: transform 0.2s, box-shadow 0.2s;
-      margin-top: -8px;
-    }
-    .phase-slider::-webkit-slider-thumb:hover {
-      transform: scale(1.15);
-      box-shadow: 0 4px 12px rgba(157,23,77,0.4);
-    }
-    .phase-slider::-moz-range-thumb {
-      width: 24px; height: 24px;
-      background: var(--accent);
-      border-radius: 50%;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(157,23,77,0.3);
+      width: 100%;
+      height: 8px;
+      background: #f3f4f6;
+      border-radius: 999px;
     }
 
     .timeline-labels {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      margin-top: 1rem;
-      font-size: 0.82rem;
+      gap: 0;
+      margin-top: 1.25rem;
+      text-align: center;
+      font-size: 0.85rem;
       color: var(--text-muted);
       font-weight: 600;
+      position: relative;
     }
 
     .timeline-labels span {
+      position: relative;
+      display: block;
       text-align: center;
-      padding: 0.4rem 0.25rem;
-      border-radius: 5px;
-      transition: all 0.2s;
+      padding: 0.5rem 0.25rem;
+      transition: all 0.2s ease;
+      border-radius: 6px;
     }
 
     .timeline-labels span:first-child { text-align: left; }
@@ -251,10 +144,10 @@
     .timeline-labels span.active {
       color: var(--accent);
       font-weight: 700;
-      background: var(--accent-light);
+      background: #fdf4f8;
     }
 
-    /* ─── KPI GRID ────────────────────────────────────────────── */
+    /* KPI Grid — always 2×2 */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -263,25 +156,25 @@
     }
 
     .kpi-card {
-      background: var(--white);
+      background: #fff;
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 1.75rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: all 0.2s ease;
     }
 
     .kpi-card:hover {
       border-color: var(--accent);
-      box-shadow: 0 4px 12px rgba(157,23,77,0.08);
+      box-shadow: 0 4px 12px rgba(157, 23, 77, 0.08);
     }
 
     .kpi-label {
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--text-muted);
       font-weight: 700;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.75rem;
     }
 
     .kpi-value {
@@ -289,102 +182,99 @@
       font-size: 2rem;
       font-weight: 700;
       color: var(--accent);
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.5rem;
     }
 
-    .kpi-change {
-      font-size: 0.82rem;
+    .kpi-detail {
+      font-size: 0.85rem;
       color: var(--text-muted);
     }
 
-    /* ─── GANTT CHART ─────────────────────────────────────────── */
-    .chart-title {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      padding: 1.25rem 1.5rem 0.75rem;
-      border-bottom: 1px solid var(--border);
-    }
-
+    /* ── Gantt Chart (fixed) ── */
     .gantt-container {
-      background: var(--white);
+      background: #fff;
       border: 1px solid var(--border);
       border-radius: 10px;
       margin-bottom: 2.5rem;
-      overflow: hidden;
+      overflow: hidden; /* outer clips; scroll is on inner track area only */
     }
 
-    /* Shared row structure: label column + track column */
-    /* Gantt: frozen label col + scrollable track area side by side */
+    /* Two-column layout: frozen label col + scrollable track col */
     .gantt-body {
       display: flex;
       align-items: stretch;
     }
 
+    /* Frozen left label column */
     .gantt-labels-col {
-      flex: 0 0 180px;
-      min-width: 180px;
+      flex: 0 0 200px;
+      min-width: 200px;
       border-right: 1px solid var(--border);
     }
 
     .gantt-label-header {
       background: #f9fafb;
       border-bottom: 2px solid var(--border);
-      padding: 0.75rem 1.25rem;
-      font-size: 0.78rem;
+      padding: 1rem 2rem;
       font-weight: 700;
+      color: var(--text-main);
+      font-size: 0.85rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      color: var(--text-main);
+      height: 44px;
       display: flex;
       align-items: center;
-      height: 36px;
     }
 
     .gantt-label-cell {
-      padding: 0.85rem 1.25rem;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #f3f4f6;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      border-bottom: 1px solid #f3f4f6;
-      height: 60px;
+      min-height: 66px;
+      transition: background 0.2s ease;
     }
 
     .gantt-label-cell:last-child { border-bottom: none; }
 
     .gantt-label-cell strong {
       display: block;
-      font-weight: 700;
       color: var(--text-main);
-      font-size: 0.95rem;
-      margin-bottom: 0.2rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      font-size: 1rem;
     }
 
     .gantt-label-cell.active {
       background: linear-gradient(135deg, #fef7fb 0%, #fdf4f8 100%);
       border-left: 4px solid var(--accent);
-      padding-left: calc(1.25rem - 4px);
+      padding-left: calc(2rem - 4px);
     }
 
     .gantt-label-cell.active strong { color: var(--accent); }
 
-    .gantt-status-text { font-size: 0.8rem; font-weight: 600; }
+    .gantt-status {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
 
-    /* Scrollable right side */
+    /* Scrollable right track area */
     .gantt-tracks-scroll {
       flex: 1 1 auto;
       overflow-x: auto;
       overflow-y: hidden;
     }
 
-    .gantt-tracks-scroll::-webkit-scrollbar { height: 8px; }
+    .gantt-tracks-scroll::-webkit-scrollbar { height: 10px; }
     .gantt-tracks-scroll::-webkit-scrollbar-track { background: #f3f4f6; border-radius: 0 0 10px 10px; }
     .gantt-tracks-scroll::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
-    .gantt-tracks-scroll::-webkit-scrollbar-thumb:hover { background: var(--accent-dark); }
+    .gantt-tracks-scroll::-webkit-scrollbar-thumb:hover { background: #831843; }
 
-    .gantt-tracks-inner { min-width: 800px; }
+    /* Inner content — min-width forces the scrollbar */
+    .gantt-tracks-inner {
+      min-width: 900px;
+    }
 
     /* Week label header */
     .gantt-week-header {
@@ -392,106 +282,91 @@
       grid-template-columns: repeat(12, 1fr);
       background: #f9fafb;
       border-bottom: 2px solid var(--border);
-      height: 36px;
+      height: 44px;
     }
 
     .gantt-week-label {
       text-align: center;
-      font-size: 0.68rem;
-      font-weight: 700;
+      font-size: 0.7rem;
       color: var(--text-muted);
+      font-weight: 700;
       letter-spacing: 0.5px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-right: 1px solid #e9e9e9;
+      border-right: 1px solid #efefef;
     }
 
     .gantt-week-label:last-child { border-right: none; }
 
-    /* Bar track */
+    /* Bar track row */
     .gantt-bar-track {
       position: relative;
-      width: 100%;
-      height: 60px;
+      height: 66px;
       border-bottom: 1px solid #f3f4f6;
       background-image: repeating-linear-gradient(
         to right,
         transparent,
         transparent calc(100% / 12 - 1px),
-        #f0f0f0 calc(100% / 12 - 1px),
-        #f0f0f0 calc(100% / 12)
+        #f3f4f6 calc(100% / 12 - 1px),
+        #f3f4f6 calc(100% / 12)
       );
+      transition: background-color 0.2s ease;
     }
 
     .gantt-bar-track:last-child { border-bottom: none; }
-    .gantt-bar-track:hover { background-color: rgba(249,250,251,0.8); }
+    .gantt-bar-track:hover { background-color: #fafafa; }
     .gantt-bar-track.active { background-color: #fef7fb; }
 
+    /* The coloured bar itself */
     .gantt-bar {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      height: 34px;
-      border-radius: 5px;
+      height: 36px;
+      border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: opacity 0.2s;
-      min-width: 28px;
+      transition: opacity 0.2s ease;
     }
 
-    .gantt-bar:hover { opacity: 0.82; cursor: pointer; }
+    .gantt-bar:hover { opacity: 0.85; }
 
-    .gantt-bar.green  { background: #10b981; }
-    .gantt-bar.amber  { background: #f59e0b; }
-    .gantt-bar.red    { background: #ef4444; }
-    .gantt-bar.gray   { background: #9ca3af; }
+    .gantt-bar.green { background: #10b981; }
+    .gantt-bar.amber { background: #f59e0b; }
+    .gantt-bar.red   { background: #ef4444; }
+    .gantt-bar.gray  { background: #9ca3af; }
 
     .gantt-bar-label {
       color: #fff;
       font-weight: 700;
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       white-space: nowrap;
       padding: 0 0.5rem;
     }
 
-    /* ─── KPI + RESOURCE CHART AREA ──────────────────────────── */
-    .chart-wrap {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      margin-bottom: 2.5rem;
-      overflow: hidden;
-    }
-
-    .chart-body {
-      padding: 1.5rem;
-      position: relative;
-      height: 280px;
-    }
-
-    /* ─── RISK SECTION ────────────────────────────────────────── */
-    .risk-layout {
+    /* Risk Matrix */
+    .risk-matrix-container {
       display: grid;
       grid-template-columns: 1fr 300px;
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .risk-matrix-card {
-      background: var(--white);
+      gap: 2rem;
+      margin-bottom: 2rem;
+      background: #fff;
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 1.75rem;
+      padding: 2rem;
+    }
+
+    .risk-matrix {
+      position: relative;
     }
 
     .matrix-grid {
       display: grid;
-      grid-template-columns: 72px repeat(3, 1fr);
-      grid-template-rows: 38px repeat(4, 72px);
+      grid-template-columns: 80px repeat(3, 1fr);
+      grid-template-rows: 40px repeat(4, 80px);
       gap: 4px;
-      margin-top: 0.75rem;
     }
 
     .matrix-cell {
@@ -500,222 +375,234 @@
       justify-content: center;
       border-radius: 6px;
       font-weight: 600;
-      font-size: 0.88rem;
-      transition: transform 0.15s, box-shadow 0.15s;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
     }
 
-    .matrix-cell.mh { /* header */
+    .matrix-cell.header {
       background: #f9f9f7;
       color: var(--text-main);
       font-weight: 700;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-    }
-
-    .matrix-cell.critical { background: linear-gradient(135deg,#fee2e2,#fecaca); border: 2px solid #dc2626; color: #991b1b; font-size: 1.2rem; }
-    .matrix-cell.high     { background: linear-gradient(135deg,#fed7aa,#fdba74); border: 2px solid #ea580c; color: #9a3412; font-size: 1.05rem; }
-    .matrix-cell.medium   { background: linear-gradient(135deg,#fef3c7,#fde68a); border: 2px solid #f59e0b; color: #92400e; }
-    .matrix-cell.low      { background: linear-gradient(135deg,#d1fae5,#a7f3d0); border: 2px solid #10b981; color: #065f46; }
-
-    .matrix-cell:not(.mh):hover {
-      transform: scale(1.06);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      cursor: pointer;
-      z-index: 1;
-    }
-
-    .matrix-axis-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-align: center;
-      margin-top: 0.5rem;
-    }
-
-    .risk-legend-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.75rem;
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-      margin-bottom: 1rem;
-    }
-
-    .legend-item:last-child { margin-bottom: 0; }
-
-    .legend-color {
-      width: 22px; height: 22px;
-      border-radius: 4px;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .legend-color.critical { background: linear-gradient(135deg,#fee2e2,#fecaca); border: 2px solid #dc2626; }
-    .legend-color.high     { background: linear-gradient(135deg,#fed7aa,#fdba74); border: 2px solid #ea580c; }
-    .legend-color.medium   { background: linear-gradient(135deg,#fef3c7,#fde68a); border: 2px solid #f59e0b; }
-    .legend-color.low      { background: linear-gradient(135deg,#d1fae5,#a7f3d0); border: 2px solid #10b981; }
-
-    /* ─── RISK TABLE ──────────────────────────────────────────── */
-    .table-wrap {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow-x: auto;
-      margin-bottom: 2.5rem;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
-
-    th {
-      background: #f9fafb;
-      color: var(--text-main);
-      font-weight: 700;
-      text-align: left;
-      padding: 0.75rem 1rem;
-      border-bottom: 2px solid var(--border);
       font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      white-space: nowrap;
     }
 
-    td {
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid var(--border);
-      color: var(--text-muted);
-      vertical-align: top;
+    .matrix-cell.critical {
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      border: 2px solid #dc2626;
+      color: #991b1b;
+      font-size: 1.25rem;
     }
 
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #fefdfb; }
+    .matrix-cell.high {
+      background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+      border: 2px solid #ea580c;
+      color: #9a3412;
+      font-size: 1.1rem;
+    }
 
-    /* Badges */
-    .badge {
-      display: inline-block;
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      font-size: 0.72rem;
+    .matrix-cell.medium {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid #f59e0b;
+      color: #92400e;
+    }
+
+    .matrix-cell.low {
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      border: 2px solid #10b981;
+      color: #065f46;
+    }
+
+    .matrix-cell:not(.header):hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+    }
+
+    .matrix-label-x,
+    .matrix-label-y {
+      text-align: center;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
     }
 
-    .badge.critical { background: #fee2e2; color: #991b1b; border: 1px solid #dc2626; }
-    .badge.high     { background: #fed7aa; color: #9a3412; border: 1px solid #ea580c; }
-    .badge.medium   { background: #fef3c7; color: #92400e; border: 1px solid #f59e0b; }
-    .badge.low      { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
-
-    .badge.status-active    { background: #fee2e2; color: #991b1b; }
-    .badge.status-mitigated { background: #d1fae5; color: #065f46; }
-    .badge.status-monitored { background: #fef3c7; color: #92400e; }
-    .badge.status-planned   { background: #e0e7ff; color: #3730a3; }
-
-    /* ─── MILESTONES ──────────────────────────────────────────── */
-    .milestone-row {
-      display: flex;
-      gap: 1.25rem;
-      overflow-x: auto;
-      padding-bottom: 0.5rem;
-      margin-bottom: 2.5rem;
+    .matrix-label-y {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      position: absolute;
+      left: -2rem;
+      top: 50%;
+      transform: translateY(-50%) rotate(180deg);
     }
 
-    .milestone-row::-webkit-scrollbar { height: 7px; }
-    .milestone-row::-webkit-scrollbar-track { background: #f3f4f6; border-radius: 10px; }
-    .milestone-row::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
-
-    .milestone-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.25rem 1.5rem;
+    .risk-legend {
       display: flex;
+      flex-direction: column;
       gap: 1rem;
-      align-items: center;
-      min-width: 270px;
-      flex-shrink: 0;
-      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    .milestone-card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 4px 12px rgba(157,23,77,0.08);
-    }
-
-    .milestone-icon {
-      width: 44px; height: 44px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .h3 {
+      font-family: var(--font-serif);
       font-size: 1.4rem;
-      flex-shrink: 0;
-    }
-
-    .milestone-card.complete    .milestone-icon { background: linear-gradient(135deg,#d1fae5,#a7f3d0); color: #065f46; border: 2px solid #10b981; }
-    .milestone-card.in-progress .milestone-icon { background: linear-gradient(135deg,#dbeafe,#bfdbfe); color: #1e40af; border: 2px solid #3b82f6; }
-    .milestone-card.pending     .milestone-icon { background: linear-gradient(135deg,#f3f4f6,#e5e7eb); color: #6b7280; border: 2px solid #9ca3af; }
-
-    .milestone-name {
       font-weight: 700;
       color: var(--text-main);
-      margin-bottom: 0.25rem;
-      font-size: 0.92rem;
+      margin: 0 0 1.5rem 0;
     }
 
-    .milestone-date {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-    }
-
-    /* ─── STATUS REPORT ───────────────────────────────────────── */
-    .insights-section {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 2rem;
-    }
-
-    .status-banner {
-      padding: 1.25rem 1.5rem;
-      border-radius: 8px;
-      margin-bottom: 1.5rem;
-      border-left: 4px solid;
-    }
-
-    .status-banner.green { background: linear-gradient(135deg,#f0fdf4,#dcfce7); border-left-color: #10b981; }
-    .status-banner.amber { background: linear-gradient(135deg,#fffbeb,#fef3c7); border-left-color: #f59e0b; }
-    .status-banner.red   { background: linear-gradient(135deg,#fef2f2,#fee2e2); border-left-color: #dc2626; }
-    .status-banner.gray  { background: linear-gradient(135deg,#f9fafb,#f3f4f6); border-left-color: #9ca3af; }
-
-    .status-banner h4 {
+    .h4 {
       font-family: var(--font-serif);
       font-size: 1.1rem;
       font-weight: 700;
       color: var(--text-main);
-      margin-bottom: 0.4rem;
+      margin: 0 0 1rem 0;
     }
 
-    .status-banner p { color: var(--text-muted); font-size: 0.92rem; }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .legend-color {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .legend-color.critical { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border: 2px solid #dc2626; }
+    .legend-color.high     { background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%); border: 2px solid #ea580c; }
+    .legend-color.medium   { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; }
+    .legend-color.low      { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border: 2px solid #10b981; }
+
+    /* Severity and Status Badges */
+    .severity-badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .severity-badge.critical { background: #fee2e2; color: #991b1b; border: 1px solid #dc2626; }
+    .severity-badge.high     { background: #fed7aa; color: #9a3412; border: 1px solid #ea580c; }
+    .severity-badge.medium   { background: #fef3c7; color: #92400e; border: 1px solid #f59e0b; }
+    .severity-badge.low      { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+
+    .status-badge.active    { background: #fee2e2; color: #991b1b; }
+    .status-badge.mitigated { background: #d1fae5; color: #065f46; }
+    .status-badge.monitored { background: #fef3c7; color: #92400e; }
+    .status-badge.planned   { background: #e0e7ff; color: #3730a3; }
+
+    /* Milestone Grid */
+    .milestone-grid {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+
+    .milestone-grid::-webkit-scrollbar { height: 8px; }
+    .milestone-grid::-webkit-scrollbar-track { background: #f3f4f6; border-radius: 10px; }
+    .milestone-grid::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+    .milestone-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      transition: all 0.2s ease;
+      min-width: 280px;
+      flex-shrink: 0;
+    }
+
+    .milestone-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(157, 23, 77, 0.08);
+    }
+
+    .milestone-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .milestone-card.complete    .milestone-icon { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: #065f46; border: 2px solid #10b981; }
+    .milestone-card.in-progress .milestone-icon { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #1e40af; border: 2px solid #3b82f6; }
+    .milestone-card.pending     .milestone-icon { background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); color: #6b7280;  border: 2px solid #9ca3af; }
+
+    .milestone-content { flex: 1; }
+
+    .milestone-name {
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.35rem;
+      font-size: 0.95rem;
+    }
+
+    .milestone-date {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Status Report */
+    .status-summary {
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      border-left: 4px solid;
+    }
+
+    .status-summary.status-green { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-left-color: #10b981; }
+    .status-summary.status-amber { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border-left-color: #f59e0b; }
+    .status-summary.status-red   { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border-left-color: #dc2626; }
+
+    .status-summary h4 {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 0 0 0.75rem 0;
+    }
+
+    .status-summary p {
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.6;
+    }
 
     .status-metrics {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 1.25rem;
-      margin-bottom: 1.5rem;
-      padding: 1.25rem;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
       background: #f9fafb;
       border-radius: 8px;
     }
@@ -723,80 +610,102 @@
     .status-metric { text-align: center; }
 
     .status-metric-label {
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--text-muted);
       font-weight: 700;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
     }
 
     .status-metric-value {
       font-family: var(--font-serif);
-      font-size: 1.65rem;
+      font-size: 1.75rem;
       font-weight: 700;
       color: var(--text-main);
     }
 
-    .progress-bar {
-      height: 6px;
-      background: #e5e7eb;
-      border-radius: 999px;
-      margin-top: 0.4rem;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      border-radius: 999px;
-      background: var(--accent);
-      transition: width 0.4s ease;
-    }
-
     .status-notes {
-      background: var(--white);
+      background: #fff;
+      padding: 1.5rem;
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 1.25rem 1.5rem;
+      margin-bottom: 2.5rem;
     }
 
     .status-notes h5 {
       font-weight: 700;
       color: var(--text-main);
-      margin-bottom: 0.75rem;
-      font-size: 0.95rem;
+      margin: 0 0 1rem 0;
+      font-size: 1rem;
     }
 
     .status-notes ul {
       list-style: disc;
-      padding-left: 1.4rem;
+      padding-left: 1.5rem;
+      margin: 0;
       color: var(--text-muted);
     }
 
     .status-notes li {
-      margin-bottom: 0.4rem;
-      line-height: 1.55;
-      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
     }
 
-    /* ─── FOOTER ──────────────────────────────────────────────── */
-    footer {
-      text-align: center;
+    /* Resource Allocation Chart */
+    .resource-chart {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
       padding: 2rem;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      border-top: 1px solid var(--border);
-      background: var(--white);
+      margin-bottom: 2.5rem;
     }
 
-    /* ─── RESPONSIVE ──────────────────────────────────────────── */
+    .chart-container {
+      position: relative;
+      height: 300px;
+    }
+
+    /* Responsive */
     @media (max-width: 768px) {
-      .risk-layout { grid-template-columns: 1fr; }
-      .status-metrics { grid-template-columns: 1fr 1fr; }
-      .gantt-labels-col { flex: 0 0 130px; min-width: 130px; }
+      .risk-matrix-container {
+        grid-template-columns: 1fr;
+      }
+
+      .gantt-labels-col {
+        flex: 0 0 140px;
+        min-width: 140px;
+      }
+
+      .gantt-label-header,
+      .gantt-label-cell {
+        padding: 1rem 1rem;
+      }
+
+      .gantt-label-cell.active {
+        padding-left: calc(1rem - 4px);
+      }
+
+      .gantt-label-cell strong { font-size: 0.9rem; }
+      .gantt-status            { font-size: 0.75rem; }
+      .gantt-bar               { height: 32px; }
+      .gantt-bar-label         { font-size: 0.75rem; }
+
+      .timeline-labels { font-size: 0.75rem; }
+
+      .matrix-grid {
+        grid-template-columns: 60px repeat(3, 1fr);
+        grid-template-rows: 32px repeat(4, 60px);
+      }
+
+      .status-metrics {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      .status-metric-label { font-size: 0.7rem; }
+      .status-metric-value { font-size: 1.5rem; }
     }
-
-
   </style>
 </head>
 <body>
@@ -807,7 +716,6 @@
   </nav>
 
   <main class="container">
-
     <div class="dashboard-header">
       <span class="label">Interactive Project Simulation</span>
       <h1 class="h1">Enterprise IT Rollout Dashboard</h1>
@@ -827,13 +735,16 @@
           <span class="phase-status" id="phaseStatus">● On Track</span>
         </div>
       </div>
-      <input type="range" id="phaseSlider" min="0" max="4" value="0" step="1" class="phase-slider">
-      <div class="timeline-labels">
-        <span>Planning</span>
-        <span>Design</span>
-        <span>Development</span>
-        <span>Testing</span>
-        <span>Deployment</span>
+      
+      <div class="timeline-slider-container">
+        <input type="range" id="phaseSlider" min="0" max="4" value="0" step="1" class="phase-slider">
+        <div class="timeline-labels">
+          <span>Planning</span>
+          <span>Design</span>
+          <span>Development</span>
+          <span>Testing</span>
+          <span>Deployment</span>
+        </div>
       </div>
     </div>
 
@@ -844,16 +755,19 @@
         <div class="kpi-value" id="kpi-progress">0%</div>
         <div class="kpi-change" id="kpi-progress-desc">Week 0 of 12</div>
       </div>
+
       <div class="kpi-card">
         <div class="kpi-label">Budget Utilized</div>
         <div class="kpi-value" id="kpi-budget">$0</div>
         <div class="kpi-change" id="kpi-budget-desc">$250K total budget</div>
       </div>
+
       <div class="kpi-card">
         <div class="kpi-label">Active Risks</div>
         <div class="kpi-value" id="kpi-risks">0</div>
         <div class="kpi-change" id="kpi-risks-desc">0 high priority</div>
       </div>
+
       <div class="kpi-card">
         <div class="kpi-label">Team Utilization</div>
         <div class="kpi-value" id="kpi-team">0%</div>
@@ -862,44 +776,30 @@
     </div>
 
     <!-- Gantt Chart -->
-    <div class="gantt-container" id="ganttContainer">
-      <div class="chart-title">Project Timeline — Gantt Chart</div>
-      <div id="ganttInner"></div>
+    <div class="chart-container" style="height: auto;">
+      <div class="chart-title">Project Timeline (Gantt Chart)</div>
+      <div id="ganttChart" class="gantt-container"></div>
     </div>
 
-    <!-- Resource Allocation -->
-    <div class="chart-wrap">
-      <div class="chart-title">Resource Allocation by Role — Current Phase</div>
-      <div class="chart-body">
-        <canvas id="resourceChart"></canvas>
-      </div>
-    </div>
-
-    <!-- Risk Section -->
+    <!-- Risk Register -->
     <div class="section">
       <h2 class="h2">Risk Register</h2>
-
-      <div class="risk-layout">
-        <div class="risk-matrix-card">
-          <h4 class="h4" style="margin-bottom:0.25rem;">Risk Matrix</h4>
-          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:0.75rem;">Impact × Probability</p>
-          <div id="riskMatrix"></div>
-          <div class="matrix-axis-label">← Probability (High · Medium · Low)</div>
-        </div>
-        <div class="risk-legend-card">
-          <h4 class="h4">Severity Key</h4>
-          <div class="legend-item"><span class="legend-color critical"></span>Critical — High impact, high probability</div>
-          <div class="legend-item"><span class="legend-color high"></span>High — High impact or high probability</div>
-          <div class="legend-item"><span class="legend-color medium"></span>Medium — Moderate impact &amp; probability</div>
-          <div class="legend-item"><span class="legend-color low"></span>Low — Low impact &amp; low probability</div>
+      <div class="risk-matrix-container">
+        <div class="risk-matrix" id="riskMatrix"></div>
+        <div class="risk-legend">
+          <h4 class="h4">Risk Severity</h4>
+          <div class="legend-item"><span class="legend-color critical"></span> Critical (Impact: High × Probability: High)</div>
+          <div class="legend-item"><span class="legend-color high"></span> High (Impact: High × Probability: Medium)</div>
+          <div class="legend-item"><span class="legend-color medium"></span> Medium (Impact: Medium × Probability: Medium)</div>
+          <div class="legend-item"><span class="legend-color low"></span> Low (Impact: Low × Probability: Low)</div>
         </div>
       </div>
-
-      <div class="table-wrap">
-        <table>
+      
+      <div class="channel-table">
+        <table id="riskTable">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>Risk ID</th>
               <th>Description</th>
               <th>Impact</th>
               <th>Probability</th>
@@ -913,145 +813,171 @@
       </div>
     </div>
 
+    <!-- Resource Allocation -->
+    <div class="chart-container">
+      <div class="chart-title">Resource Allocation by Phase</div>
+      <canvas id="resourceChart"></canvas>
+    </div>
+
     <!-- Milestone Tracker -->
     <div class="section">
       <h2 class="h2">Milestone Tracker</h2>
-      <div class="milestone-row" id="milestoneGrid"></div>
+      <div class="milestone-grid" id="milestoneGrid"></div>
     </div>
 
     <!-- Status Report -->
     <div class="insights-section">
-      <h3 class="h3" style="margin-bottom:1.5rem;">Project Status Report</h3>
+      <h3 class="h3" style="margin-top: 0;">Project Status Report</h3>
       <div id="statusReport"></div>
     </div>
 
   </main>
 
   <footer>
-    <p>&copy; <script>document.write(new Date().getFullYear())</script> Jenniefer Farhan. Designed for clarity and precision.</p>
+    <p>&copy; <script>document.write(new Date().getFullYear())</script> Jenniefer Farhan.<br>Designed for clarity and precision.</p>
   </footer>
 
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
   <script>
-    /* ─────────────────────────────────────────
-       PROJECT DATA
-    ───────────────────────────────────────── */
     const projectPhases = [
       {
         name: 'Planning', weeks: [1, 2], progress: 100, budget: 25000,
         risks: [
-          { id:'R001', desc:'Scope creep from stakeholders',      impact:'High',   probability:'Medium', mitigation:'Formal change control process',   status:'Mitigated' },
-          { id:'R002', desc:'Incomplete requirements gathering',   impact:'High',   probability:'High',   mitigation:'Weekly stakeholder reviews',       status:'Active'    }
+          { id: 'R001', desc: 'Scope creep from stakeholders', impact: 'High', probability: 'Medium', mitigation: 'Formal change control process', status: 'Mitigated' },
+          { id: 'R002', desc: 'Incomplete requirements gathering', impact: 'High', probability: 'High', mitigation: 'Weekly stakeholder reviews', status: 'Active' }
         ],
         milestones: [
-          { name:'Project Charter Approved',       status:'complete',    date:'Week 1' },
-          { name:'Stakeholder Analysis Complete',  status:'complete',    date:'Week 2' },
-          { name:'Requirements Documented',        status:'complete',    date:'Week 2' }
+          { name: 'Project Charter Approved', status: 'complete', date: 'Week 1' },
+          { name: 'Stakeholder Analysis Complete', status: 'complete', date: 'Week 2' },
+          { name: 'Requirements Documented', status: 'complete', date: 'Week 2' }
         ],
-        resources: { pm:100, dev:20, qa:10, ops:10 },
-        status:'On Track', statusColor:'green'
+        resources: { pm: 100, dev: 20, qa: 10, ops: 10 },
+        status: 'On Track', statusColor: 'green'
       },
       {
         name: 'Design', weeks: [3, 4, 5], progress: 75, budget: 50000,
         risks: [
-          { id:'R003', desc:'Technical architecture complexity',  impact:'High',   probability:'Medium', mitigation:'Architecture review board established', status:'Mitigated' },
-          { id:'R004', desc:'Integration with legacy systems',    impact:'Medium', probability:'High',   mitigation:'API design with abstraction layer',     status:'Active'    }
+          { id: 'R003', desc: 'Technical architecture complexity', impact: 'High', probability: 'Medium', mitigation: 'Architecture review board established', status: 'Mitigated' },
+          { id: 'R004', desc: 'Integration with legacy systems', impact: 'Medium', probability: 'High', mitigation: 'API design with abstraction layer', status: 'Active' }
         ],
         milestones: [
-          { name:'System Architecture Defined',  status:'complete',    date:'Week 3' },
-          { name:'Database Schema Approved',     status:'complete',    date:'Week 4' },
-          { name:'UI/UX Mockups Complete',       status:'in-progress', date:'Week 5' }
+          { name: 'System Architecture Defined', status: 'complete', date: 'Week 3' },
+          { name: 'Database Schema Approved', status: 'complete', date: 'Week 4' },
+          { name: 'UI/UX Mockups Complete', status: 'in-progress', date: 'Week 5' }
         ],
-        resources: { pm:50, dev:80, qa:20, ops:30 },
-        status:'At Risk', statusColor:'amber'
+        resources: { pm: 50, dev: 80, qa: 20, ops: 30 },
+        status: 'At Risk', statusColor: 'amber'
       },
       {
         name: 'Development', weeks: [6, 7, 8, 9], progress: 45, budget: 100000,
         risks: [
-          { id:'R005', desc:'Key developer availability',           impact:'High',   probability:'Low',    mitigation:'Cross-training and documentation',      status:'Monitored' },
-          { id:'R006', desc:'Third-party API rate limits',          impact:'Medium', probability:'Medium', mitigation:'Caching and queue implementation',       status:'Active'    },
-          { id:'R007', desc:'Performance degradation under load',   impact:'High',   probability:'Medium', mitigation:'Load testing in sprint cycles',          status:'Active'    }
+          { id: 'R005', desc: 'Key developer availability', impact: 'High', probability: 'Low', mitigation: 'Cross-training and documentation', status: 'Monitored' },
+          { id: 'R006', desc: 'Third-party API rate limits', impact: 'Medium', probability: 'Medium', mitigation: 'Caching and queue implementation', status: 'Active' },
+          { id: 'R007', desc: 'Performance degradation under load', impact: 'High', probability: 'Medium', mitigation: 'Load testing in sprint cycles', status: 'Active' }
         ],
         milestones: [
-          { name:'Backend API Development Complete', status:'in-progress', date:'Week 7' },
-          { name:'Frontend Components Built',        status:'pending',     date:'Week 8' },
-          { name:'Integration Testing Started',      status:'pending',     date:'Week 9' }
+          { name: 'Backend API Development Complete', status: 'in-progress', date: 'Week 7' },
+          { name: 'Frontend Components Built', status: 'pending', date: 'Week 8' },
+          { name: 'Integration Testing Started', status: 'pending', date: 'Week 9' }
         ],
-        resources: { pm:40, dev:100, qa:60, ops:20 },
-        status:'On Track', statusColor:'green'
+        resources: { pm: 40, dev: 100, qa: 60, ops: 20 },
+        status: 'On Track', statusColor: 'green'
       },
       {
         name: 'Testing', weeks: [10, 11], progress: 20, budget: 50000,
         risks: [
-          { id:'R008', desc:'UAT feedback requires major changes',  impact:'High',     probability:'Medium', mitigation:'Iterative UAT in development phase', status:'Active' },
-          { id:'R009', desc:'Security vulnerabilities discovered',  impact:'Critical', probability:'Low',    mitigation:'Security audit and pen testing',     status:'Active' }
+          { id: 'R008', desc: 'UAT feedback requires major changes', impact: 'High', probability: 'Medium', mitigation: 'Iterative UAT in development phase', status: 'Active' },
+          { id: 'R009', desc: 'Security vulnerabilities discovered', impact: 'Critical', probability: 'Low', mitigation: 'Security audit and pen testing', status: 'Active' }
         ],
         milestones: [
-          { name:'QA Testing Complete',     status:'pending', date:'Week 10' },
-          { name:'UAT Sign-off Received',   status:'pending', date:'Week 11' },
-          { name:'Security Audit Passed',   status:'pending', date:'Week 11' }
+          { name: 'QA Testing Complete', status: 'pending', date: 'Week 10' },
+          { name: 'UAT Sign-off Received', status: 'pending', date: 'Week 11' },
+          { name: 'Security Audit Passed', status: 'pending', date: 'Week 11' }
         ],
-        resources: { pm:50, dev:40, qa:100, ops:30 },
-        status:'Not Started', statusColor:'gray'
+        resources: { pm: 50, dev: 40, qa: 100, ops: 30 },
+        status: 'Not Started', statusColor: 'gray'
       },
       {
-        name: 'Deployment', weeks: [12, 12], progress: 0, budget: 25000,
+        name: 'Deployment', weeks: [12], progress: 0, budget: 25000,
         risks: [
-          { id:'R010', desc:'Rollback complexity if issues arise', impact:'High',   probability:'Medium', mitigation:'Blue-green deployment strategy',      status:'Planned' },
-          { id:'R011', desc:'User adoption resistance',            impact:'Medium', probability:'High',   mitigation:'Training program and support desk',   status:'Planned' }
+          { id: 'R010', desc: 'Rollback complexity if issues arise', impact: 'High', probability: 'Medium', mitigation: 'Blue-green deployment strategy', status: 'Planned' },
+          { id: 'R011', desc: 'User adoption resistance', impact: 'Medium', probability: 'High', mitigation: 'Training program and support desk', status: 'Planned' }
         ],
         milestones: [
-          { name:'Production Environment Ready', status:'pending', date:'Week 12' },
-          { name:'Go-Live Executed',             status:'pending', date:'Week 12' },
-          { name:'Post-Deployment Support Active', status:'pending', date:'Week 12' }
+          { name: 'Production Environment Ready', status: 'pending', date: 'Week 12' },
+          { name: 'Go-Live Executed', status: 'pending', date: 'Week 12' },
+          { name: 'Post-Deployment Support Active', status: 'pending', date: 'Week 12' }
         ],
-        resources: { pm:60, dev:50, qa:40, ops:100 },
-        status:'Not Started', statusColor:'gray'
+        resources: { pm: 60, dev: 50, qa: 40, ops: 100 },
+        status: 'Not Started', statusColor: 'gray'
       }
     ];
 
     let currentPhaseIndex = 0;
     let resourceChart = null;
-    const TOTAL_WEEKS = 12;
 
-    /* ─────────────────────────────────────────
-       HELPERS
-    ───────────────────────────────────────── */
-    function statusColor(c) {
-      return { green:'#10b981', amber:'#f59e0b', red:'#dc2626', gray:'#6b7280' }[c] || '#6b7280';
+    function init() {
+      updateDashboard();
+      document.getElementById('phaseSlider').addEventListener('input', (e) => {
+        currentPhaseIndex = parseInt(e.target.value);
+        updateDashboard();
+      });
     }
 
-    function getSeverity(impact, prob) {
-      if (impact === 'Critical' && prob === 'High')   return 'critical';
-      if ((impact === 'High' && prob === 'High') || (impact === 'Critical' && prob === 'Medium')) return 'high';
-      if (impact === 'Medium' && prob === 'Medium')    return 'medium';
-      return 'low';
+    function updateDashboard() {
+      const phase = projectPhases[currentPhaseIndex];
+
+      document.getElementById('currentPhase').textContent = phase.name;
+      const statusEl = document.getElementById('phaseStatus');
+      statusEl.textContent = `● ${phase.status}`;
+      statusEl.style.color = getStatusColor(phase.statusColor);
+
+      document.querySelectorAll('.timeline-labels span').forEach((span, index) => {
+        span.classList.toggle('active', index === currentPhaseIndex);
+      });
+
+      const totalBudget = projectPhases.reduce((sum, p) => sum + p.budget, 0);
+      const usedBudget  = projectPhases.slice(0, currentPhaseIndex + 1).reduce((sum, p) => sum + p.budget, 0);
+      const currentWeek = phase.weeks[phase.weeks.length - 1];
+
+      document.getElementById('kpi-progress').textContent     = phase.progress + '%';
+      document.getElementById('kpi-progress-desc').textContent = `Week ${currentWeek} of 12`;
+      document.getElementById('kpi-budget').textContent        = `$${(usedBudget / 1000).toFixed(0)}K`;
+      document.getElementById('kpi-budget-desc').textContent   = `$${(totalBudget / 1000).toFixed(0)}K total budget`;
+
+      const activeRisks = phase.risks.filter(r => r.status === 'Active');
+      const highRisks   = activeRisks.filter(r => r.impact === 'High' || r.impact === 'Critical');
+      document.getElementById('kpi-risks').textContent      = activeRisks.length;
+      document.getElementById('kpi-risks-desc').textContent = `${highRisks.length} high priority`;
+
+      const avgUtilization = (phase.resources.pm + phase.resources.dev + phase.resources.qa + phase.resources.ops) / 4;
+      document.getElementById('kpi-team').textContent      = avgUtilization.toFixed(0) + '%';
+      document.getElementById('kpi-team-desc').textContent = `${Math.round(avgUtilization * 4 / 100)} resources allocated`;
+
+      renderRiskMatrix(phase.risks);
+      renderRiskTable(phase.risks);
+      renderGanttChart();
+      renderMilestones(phase.milestones);
+      renderStatusReport(phase);
+      updateResourceChart();
     }
 
-    /* ─────────────────────────────────────────
-       GANTT CHART
-    ───────────────────────────────────────── */
-    function renderGantt() {
-      const inner = document.getElementById('ganttInner');
+    // ── Gantt Chart ──────────────────────────────────────────────
+    function renderGanttChart() {
+      const container = document.getElementById('ganttChart');
       const TOTAL = 12;
 
-      // Frozen label column (left, not scrollable)
+      // Frozen label column HTML
       const labelCells = projectPhases.map((phase, idx) => `
         <div class="gantt-label-cell${idx === currentPhaseIndex ? ' active' : ''}">
           <strong>${phase.name}</strong>
-          <span class="gantt-status-text" style="color:${statusColor(phase.statusColor)}">${phase.status}</span>
+          <span class="gantt-status" style="color:${getStatusColor(phase.statusColor)}">${phase.status}</span>
         </div>
       `).join('');
 
-      const labelCol = `
-        <div class="gantt-labels-col">
-          <div class="gantt-label-header">Phase</div>
-          ${labelCells}
-        </div>
-      `;
-
-      // Scrollable track column (right)
+      // Scrollable track column HTML
       const weekLabels = Array.from({length: TOTAL}, (_, i) =>
         `<div class="gantt-week-label">W${i + 1}</div>`
       ).join('');
@@ -1064,233 +990,183 @@
         const isActive  = idx === currentPhaseIndex;
         return `
           <div class="gantt-bar-track${isActive ? ' active' : ''}">
-            <div class="gantt-bar ${phase.statusColor}"
-                 style="left:${leftPct}%; width:${widthPct}%;">
+            <div class="gantt-bar ${phase.statusColor}" style="left:${leftPct}%; width:${widthPct}%;">
               <span class="gantt-bar-label">${phase.progress}%</span>
             </div>
           </div>
         `;
       }).join('');
 
-      const tracksCol = `
-        <div class="gantt-tracks-scroll">
-          <div class="gantt-tracks-inner">
-            <div class="gantt-week-header">${weekLabels}</div>
-            ${tracks}
+      container.innerHTML = `
+        <div class="gantt-body">
+          <div class="gantt-labels-col">
+            <div class="gantt-label-header">Phase</div>
+            ${labelCells}
+          </div>
+          <div class="gantt-tracks-scroll">
+            <div class="gantt-tracks-inner">
+              <div class="gantt-week-header">${weekLabels}</div>
+              ${tracks}
+            </div>
           </div>
         </div>
       `;
-
-      inner.innerHTML = `<div class="gantt-body">${labelCol}${tracksCol}</div>`;
     }
 
-    /* ─────────────────────────────────────────
-       RISK MATRIX
-    ───────────────────────────────────────── */
+    // ── Risk Matrix ───────────────────────────────────────────────
     function renderRiskMatrix(risks) {
+      const matrix = document.getElementById('riskMatrix');
       const impacts = ['Critical', 'High', 'Medium', 'Low'];
-      const probs   = ['High', 'Medium', 'Low'];
+      const probabilities = ['High', 'Medium', 'Low'];
 
       let html = '<div class="matrix-grid">';
-      // Top-left empty cell + probability headers
-      html += '<div class="matrix-cell mh"></div>';
-      probs.forEach(p => { html += `<div class="matrix-cell mh">${p}</div>`; });
+      html += '<div class="matrix-label-y">Impact →</div>';
+      html += '<div class="matrix-cell header"></div>';
+      probabilities.forEach(prob => { html += `<div class="matrix-cell header">${prob}</div>`; });
 
       impacts.forEach(impact => {
-        html += `<div class="matrix-cell mh">${impact}</div>`;
-        probs.forEach(prob => {
+        html += `<div class="matrix-cell header">${impact}</div>`;
+        probabilities.forEach(prob => {
           const cellRisks = risks.filter(r => r.impact === impact && r.probability === prob);
-          const sev = getSeverity(impact, prob);
-          html += `<div class="matrix-cell ${sev}" title="${cellRisks.length} risk(s)">${cellRisks.length || ''}</div>`;
+          const severity  = getSeverity(impact, prob);
+          html += `<div class="matrix-cell ${severity}" title="${cellRisks.length} risk(s)">${cellRisks.length > 0 ? cellRisks.length : ''}</div>`;
         });
       });
 
       html += '</div>';
-      document.getElementById('riskMatrix').innerHTML = html;
+      html += '<div class="matrix-label-x">← Probability</div>';
+      matrix.innerHTML = html;
     }
 
-    /* ─────────────────────────────────────────
-       RISK TABLE
-    ───────────────────────────────────────── */
+    // ── Risk Table ────────────────────────────────────────────────
     function renderRiskTable(risks) {
-      document.getElementById('riskTableBody').innerHTML = risks.map(r => {
-        const sev = getSeverity(r.impact, r.probability);
+      const tbody = document.getElementById('riskTableBody');
+      tbody.innerHTML = risks.map(risk => {
+        const severity = getSeverity(risk.impact, risk.probability);
         return `
           <tr>
-            <td><strong>${r.id}</strong></td>
-            <td>${r.desc}</td>
-            <td>${r.impact}</td>
-            <td>${r.probability}</td>
-            <td><span class="badge ${sev}">${sev.toUpperCase()}</span></td>
-            <td>${r.mitigation}</td>
-            <td><span class="badge status-${r.status.toLowerCase()}">${r.status}</span></td>
-          </tr>`;
+            <td><strong>${risk.id}</strong></td>
+            <td>${risk.desc}</td>
+            <td>${risk.impact}</td>
+            <td>${risk.probability}</td>
+            <td><span class="severity-badge ${severity}">${severity.toUpperCase()}</span></td>
+            <td>${risk.mitigation}</td>
+            <td><span class="status-badge ${risk.status.toLowerCase()}">${risk.status}</span></td>
+          </tr>
+        `;
       }).join('');
     }
 
-    /* ─────────────────────────────────────────
-       RESOURCE CHART
-    ───────────────────────────────────────── */
-    function renderResourceChart() {
+    // ── Resource Chart ────────────────────────────────────────────
+    function renderResourceChart() { updateResourceChart(); }
+
+    function updateResourceChart() {
       const phase = projectPhases[currentPhaseIndex];
       const data = {
         labels: ['Project Manager', 'Developers', 'QA Team', 'Operations'],
         datasets: [{
-          label: 'Utilization (%)',
+          label: 'Resource Utilization (%)',
           data: [phase.resources.pm, phase.resources.dev, phase.resources.qa, phase.resources.ops],
-          backgroundColor: ['rgba(157,23,77,0.82)','rgba(220,38,38,0.82)','rgba(234,88,12,0.82)','rgba(6,95,70,0.82)'],
-          borderColor:     ['#9d174d','#dc2626','#ea580c','#065f46'],
-          borderWidth: 2,
-          borderRadius: 5
+          backgroundColor: ['rgba(157,23,77,0.8)','rgba(220,38,38,0.8)','rgba(234,88,12,0.8)','rgba(6,95,70,0.8)'],
+          borderColor: ['#9d174d','#dc2626','#ea580c','#065f46'],
+          borderWidth: 2
         }]
       };
 
       if (resourceChart) resourceChart.destroy();
 
-      resourceChart = new Chart(document.getElementById('resourceChart').getContext('2d'), {
+      const ctx = document.getElementById('resourceChart').getContext('2d');
+      resourceChart = new Chart(ctx, {
         type: 'bar',
-        data,
+        data: data,
         options: {
           responsive: true,
           maintainAspectRatio: false,
           scales: {
-            y: {
-              beginAtZero: true,
-              max: 100,
-              ticks: { callback: v => v + '%' },
-              grid: { color: '#f3f4f6' }
-            },
-            x: { grid: { display: false } }
+            y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }
           },
           plugins: { legend: { display: false } }
         }
       });
     }
 
-    /* ─────────────────────────────────────────
-       MILESTONES
-    ───────────────────────────────────────── */
+    // ── Milestones ────────────────────────────────────────────────
     function renderMilestones(milestones) {
-      const icons = { complete:'✓', 'in-progress':'⟳', pending:'○' };
-      document.getElementById('milestoneGrid').innerHTML = milestones.map(m => `
-        <div class="milestone-card ${m.status}">
-          <div class="milestone-icon">${icons[m.status]}</div>
-          <div>
-            <div class="milestone-name">${m.name}</div>
-            <div class="milestone-date">${m.date}</div>
+      const grid = document.getElementById('milestoneGrid');
+      const iconMap = { complete: '✓', 'in-progress': '⟳', pending: '○' };
+      grid.innerHTML = milestones.map(milestone => `
+        <div class="milestone-card ${milestone.status}">
+          <div class="milestone-icon">${iconMap[milestone.status]}</div>
+          <div class="milestone-content">
+            <div class="milestone-name">${milestone.name}</div>
+            <div class="milestone-date">${milestone.date}</div>
           </div>
-        </div>`
-      ).join('');
+        </div>
+      `).join('');
     }
 
-    /* ─────────────────────────────────────────
-       STATUS REPORT
-    ───────────────────────────────────────── */
+    // ── Status Report ─────────────────────────────────────────────
     function renderStatusReport(phase) {
-      const highRisks  = phase.risks.filter(r => r.impact === 'High' || r.impact === 'Critical');
-      const completed  = phase.milestones.filter(m => m.status === 'complete').length;
-      const total      = phase.milestones.length;
-      const avgUtil    = Math.round((phase.resources.pm + phase.resources.dev + phase.resources.qa + phase.resources.ops) / 4);
+      const report = document.getElementById('statusReport');
+      const highRisks          = phase.risks.filter(r => r.impact === 'High' || r.impact === 'Critical');
+      const completedMilestones = phase.milestones.filter(m => m.status === 'complete').length;
+      const totalMilestones    = phase.milestones.length;
 
-      const colorClass = { 'On Track':'green', 'At Risk':'amber', 'Blocked':'red', 'Not Started':'gray' }[phase.status] || 'gray';
-      const statusText = {
-        'On Track':    'The project is progressing as planned with no major blockers.',
-        'At Risk':     'Some risks require attention, but mitigation plans are in place.',
-        'Blocked':     'Critical issues are blocking progress and require immediate action.',
-        'Not Started': 'This phase has not yet begun.'
-      }[phase.status] || '';
+      let statusClass = 'status-green';
+      let statusText  = 'The project is progressing as planned with no major blockers.';
+      if (phase.status === 'At Risk') { statusClass = 'status-amber'; statusText = 'Some risks require attention, but mitigation plans are in place.'; }
+      else if (phase.status === 'Blocked') { statusClass = 'status-red'; statusText = 'Critical issues are blocking progress and require immediate action.'; }
 
-      document.getElementById('statusReport').innerHTML = `
-        <div class="status-banner ${colorClass}">
-          <h4>Overall Status: ${phase.status}</h4>
-          <p>${statusText}</p>
+      report.innerHTML = `
+        <div class="status-summary ${statusClass}">
+          <h4 style="margin:0 0 0.5rem 0;">Overall Status: ${phase.status}</h4>
+          <p style="margin:0;color:var(--text-muted);">${statusText}</p>
         </div>
 
         <div class="status-metrics">
           <div class="status-metric">
             <div class="status-metric-label">Phase Progress</div>
             <div class="status-metric-value">${phase.progress}%</div>
-            <div class="progress-bar"><div class="progress-fill" style="width:${phase.progress}%"></div></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:${phase.progress}%;background:var(--accent);"></div></div>
           </div>
           <div class="status-metric">
             <div class="status-metric-label">Milestones Completed</div>
-            <div class="status-metric-value">${completed} / ${total}</div>
+            <div class="status-metric-value">${completedMilestones} / ${totalMilestones}</div>
           </div>
           <div class="status-metric">
             <div class="status-metric-label">Active High Risks</div>
             <div class="status-metric-value">${highRisks.length}</div>
           </div>
           <div class="status-metric">
-            <div class="status-metric-label">Phase Budget</div>
+            <div class="status-metric-label">Budget Spent (Phase)</div>
             <div class="status-metric-value">$${(phase.budget / 1000).toFixed(0)}K</div>
           </div>
         </div>
 
         <div class="status-notes">
-          <h5>Key Updates</h5>
-          <ul>
+          <h4 style="margin:0 0 1rem 0;font-size:1rem;">Key Updates</h4>
+          <ul style="margin:0;padding-left:1.5rem;color:var(--text-muted);">
             ${phase.milestones.filter(m => m.status === 'complete').map(m => `<li>${m.name} successfully completed</li>`).join('')}
             ${highRisks.length > 0 ? `<li>${highRisks.length} high-priority risk(s) being actively managed</li>` : ''}
-            <li>Team operating at ${avgUtil}% average capacity</li>
+            <li>Team operating at ${Math.round((phase.resources.pm + phase.resources.dev + phase.resources.qa + phase.resources.ops) / 4)}% average capacity</li>
           </ul>
         </div>
       `;
     }
 
-    /* ─────────────────────────────────────────
-       MAIN UPDATE
-    ───────────────────────────────────────── */
-    function updateDashboard() {
-      const phase = projectPhases[currentPhaseIndex];
-
-      // Phase info
-      document.getElementById('currentPhase').textContent = phase.name;
-      const statusEl = document.getElementById('phaseStatus');
-      statusEl.textContent = `● ${phase.status}`;
-      statusEl.style.color = statusColor(phase.statusColor);
-
-      // Timeline label highlight
-      document.querySelectorAll('.timeline-labels span').forEach((span, i) => {
-        span.classList.toggle('active', i === currentPhaseIndex);
-      });
-
-      // KPIs
-      const totalBudget = projectPhases.reduce((s, p) => s + p.budget, 0);
-      const usedBudget  = projectPhases.slice(0, currentPhaseIndex + 1).reduce((s, p) => s + p.budget, 0);
-      const currentWeek = phase.weeks[phase.weeks.length - 1];
-      const activeRisks = phase.risks.filter(r => r.status === 'Active');
-      const highRisks   = activeRisks.filter(r => r.impact === 'High' || r.impact === 'Critical');
-      const avgUtil     = Math.round((phase.resources.pm + phase.resources.dev + phase.resources.qa + phase.resources.ops) / 4);
-
-      document.getElementById('kpi-progress').textContent      = phase.progress + '%';
-      document.getElementById('kpi-progress-desc').textContent = `Week ${currentWeek} of ${TOTAL_WEEKS}`;
-      document.getElementById('kpi-budget').textContent        = `$${(usedBudget / 1000).toFixed(0)}K`;
-      document.getElementById('kpi-budget-desc').textContent   = `$${(totalBudget / 1000).toFixed(0)}K total budget`;
-      document.getElementById('kpi-risks').textContent         = activeRisks.length;
-      document.getElementById('kpi-risks-desc').textContent    = `${highRisks.length} high priority`;
-      document.getElementById('kpi-team').textContent          = avgUtil + '%';
-      document.getElementById('kpi-team-desc').textContent     = `${Math.round(avgUtil * 4 / 100)} resources allocated`;
-
-      // Sections
-      renderGantt();
-      renderResourceChart();
-      renderRiskMatrix(phase.risks);
-      renderRiskTable(phase.risks);
-      renderMilestones(phase.milestones);
-      renderStatusReport(phase);
+    // ── Helpers ───────────────────────────────────────────────────
+    function getSeverity(impact, probability) {
+      if (impact === 'Critical' && probability === 'High') return 'critical';
+      if ((impact === 'High' && probability === 'High') || (impact === 'Critical' && probability === 'Medium')) return 'high';
+      if (impact === 'Medium' && probability === 'Medium') return 'medium';
+      return 'low';
     }
 
-    /* ─────────────────────────────────────────
-       INIT
-    ───────────────────────────────────────── */
-    document.addEventListener('DOMContentLoaded', () => {
-      updateDashboard();
+    function getStatusColor(color) {
+      return { green: '#10b981', amber: '#f59e0b', red: '#dc2626', gray: '#6b7280' }[color] || '#6b7280';
+    }
 
-      document.getElementById('phaseSlider').addEventListener('input', e => {
-        currentPhaseIndex = parseInt(e.target.value);
-        updateDashboard();
-      });
-    });
+    document.addEventListener('DOMContentLoaded', init);
   </script>
 
 </body>
