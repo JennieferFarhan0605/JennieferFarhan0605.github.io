@@ -125,7 +125,7 @@
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 0;
-      margin-top: 1rem;
+      margin-top: 1.25rem;
       text-align: center;
       font-size: 0.85rem;
       color: var(--text-muted);
@@ -138,6 +138,9 @@
       position: relative;
       display: block;
       text-align: center;
+      padding: 0.5rem 0.25rem;
+      transition: all 0.2s ease;
+      border-radius: 6px;
     }
 
     .timeline-labels span:first-child {
@@ -146,6 +149,13 @@
 
     .timeline-labels span:last-child {
       text-align: right;
+    }
+
+    /* Active phase highlighting */
+    .timeline-labels span.active {
+      color: var(--accent);
+      font-weight: 700;
+      background: #fdf4f8;
     }
 
     /* KPI Grid */
@@ -501,12 +511,27 @@
       color: #3730a3;
     }
 
-    /* Milestone Grid */
+    /* Milestone Grid - Single Row */
     .milestone-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      display: flex;
       gap: 1.5rem;
       margin-bottom: 2.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+
+    .milestone-grid::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .milestone-grid::-webkit-scrollbar-track {
+      background: #f3f4f6;
+      border-radius: 10px;
+    }
+
+    .milestone-grid::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 10px;
     }
 
     .milestone-card {
@@ -518,6 +543,8 @@
       gap: 1rem;
       align-items: center;
       transition: all 0.2s ease;
+      min-width: 280px;
+      flex-shrink: 0;
     }
 
     .milestone-card:hover {
@@ -609,7 +636,7 @@
 
     .status-metrics {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 1.5rem;
       margin-bottom: 2rem;
       padding: 1.5rem;
@@ -745,12 +772,18 @@
         grid-template-columns: 1fr;
       }
 
-      .milestone-grid {
-        grid-template-columns: 1fr;
+      /* Keep status metrics 2x2 even on mobile */
+      .status-metrics {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
       }
 
-      .status-metrics {
-        grid-template-columns: 1fr;
+      .status-metric-label {
+        font-size: 0.7rem;
+      }
+
+      .status-metric-value {
+        font-size: 1.5rem;
       }
     }
   </style>
@@ -1008,6 +1041,15 @@
       const statusEl = document.getElementById('phaseStatus');
       statusEl.textContent = `● ${phase.status}`;
       statusEl.style.color = getStatusColor(phase.statusColor);
+      
+      // Highlight active timeline label
+      document.querySelectorAll('.timeline-labels span').forEach((span, index) => {
+        if (index === currentPhaseIndex) {
+          span.classList.add('active');
+        } else {
+          span.classList.remove('active');
+        }
+      });
       
       // Update KPIs
       const totalBudget = projectPhases.reduce((sum, p) => sum + p.budget, 0);
