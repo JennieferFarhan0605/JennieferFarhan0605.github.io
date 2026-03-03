@@ -64,28 +64,28 @@
           I established a robust project baseline by <strong>defining the full scope and critical milestones</strong>.
         </p>
         
-        <div class="process-flow">
-          <h4 class="h4">Project Initiation Process</h4>
-          <div class="process-steps">
-            <div class="process-step">
-              <div class="process-step-number">1</div>
-              <div class="process-step-title">Charter Development</div>
-              <div class="process-step-desc">Define scope, objectives, and success criteria with stakeholder approval</div>
+        <div style="background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 2rem; margin: 2rem 0;">
+          <h4 style="font-family: var(--font-serif); font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin: 0 0 1.5rem 0;">Project Initiation Process</h4>
+          <div class="process-flow-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; position: relative;">
+            <div style="background: linear-gradient(135deg, #fdf4f8 0%, #fef7fb 100%); border: 2px solid var(--accent); border-radius: 10px; padding: 1.5rem; text-align: center; position: relative;">
+              <div style="width: 32px; height: 32px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin: 0 auto 1rem;">1</div>
+              <div style="font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem; font-size: 0.95rem;">Charter Development</div>
+              <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Define scope, objectives, and success criteria with stakeholder approval</div>
             </div>
-            <div class="process-step">
-              <div class="process-step-number">2</div>
-              <div class="process-step-title">Stakeholder Mapping</div>
-              <div class="process-step-desc">Identify all stakeholders and establish communication protocols</div>
+            <div style="background: linear-gradient(135deg, #fdf4f8 0%, #fef7fb 100%); border: 2px solid var(--accent); border-radius: 10px; padding: 1.5rem; text-align: center; position: relative;">
+              <div style="width: 32px; height: 32px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin: 0 auto 1rem;">2</div>
+              <div style="font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem; font-size: 0.95rem;">Stakeholder Mapping</div>
+              <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Identify all stakeholders and establish communication protocols</div>
             </div>
-            <div class="process-step">
-              <div class="process-step-number">3</div>
-              <div class="process-step-title">Team Formation</div>
-              <div class="process-step-desc">Assemble cross-functional team with clear roles and responsibilities</div>
+            <div style="background: linear-gradient(135deg, #fdf4f8 0%, #fef7fb 100%); border: 2px solid var(--accent); border-radius: 10px; padding: 1.5rem; text-align: center; position: relative;">
+              <div style="width: 32px; height: 32px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin: 0 auto 1rem;">3</div>
+              <div style="font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem; font-size: 0.95rem;">Team Formation</div>
+              <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Assemble cross-functional team with clear roles and responsibilities</div>
             </div>
-            <div class="process-step">
-              <div class="process-step-number">4</div>
-              <div class="process-step-title">Baseline Establishment</div>
-              <div class="process-step-desc">Lock scope, schedule, and budget baselines for variance tracking</div>
+            <div style="background: linear-gradient(135deg, #fdf4f8 0%, #fef7fb 100%); border: 2px solid var(--accent); border-radius: 10px; padding: 1.5rem; text-align: center; position: relative;">
+              <div style="width: 32px; height: 32px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin: 0 auto 1rem;">4</div>
+              <div style="font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem; font-size: 0.95rem;">Baseline Establishment</div>
+              <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Lock scope, schedule, and budget baselines for variance tracking</div>
             </div>
           </div>
         </div>
@@ -481,6 +481,15 @@
     </div>
 
   </main>
+
+  <style>
+    /* Process Flow Responsive */
+    @media (max-width: 768px) {
+      .process-flow-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
 
   <style>
     .faq-list {
