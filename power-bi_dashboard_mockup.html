@@ -1,0 +1,1271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Healthcare Operations Dashboard | Jenniefer Farhan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════
+   HEALTHCARE OPERATIONS DASHBOARD MOCKUP
+   Aesthetic: Clinical Editorial — Mulberry & Warm Charcoal
+   Fonts: Instrument Serif (display) + DM Mono (data) + Lato (ui)
+═══════════════════════════════════════════════════════════ */
+:root {
+  --mulberry:     #9d174d;
+  --mulberry-d:   #7f0f3d;
+  --mulberry-10:  rgba(157,23,77,.08);
+  --mulberry-20:  rgba(157,23,77,.18);
+  --ink:          #1c1917;
+  --ink-60:       rgba(28,25,23,.6);
+  --paper:        #f9f9f7;
+  --white:        #ffffff;
+  --border:       #e7e5e4;
+  --border-soft:  #f0eeec;
+  --muted:        #78716c;
+  --teal:         #0f766e;
+  --teal-10:      rgba(15,118,110,.1);
+  --amber:        #b45309;
+  --amber-10:     rgba(180,83,9,.08);
+  --green:        #15803d;
+  --green-10:     rgba(21,128,61,.08);
+  --blue:         #1d4ed8;
+  --blue-10:      rgba(29,78,216,.08);
+  --red:          #dc2626;
+  --red-10:       rgba(220,38,38,.08);
+  --sidebar-w:    220px;
+  --topbar-h:     56px;
+  --serif:        'Instrument Serif', serif;
+  --mono:         'DM Mono', monospace;
+  --sans:         'Lato', sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;font-family:var(--sans);background:var(--paper);color:var(--ink)}
+a{text-decoration:none;color:inherit}
+canvas{display:block}
+
+/* ── Shell ──────────────────────────────────────────────── */
+.shell{display:grid;grid-template-columns:var(--sidebar-w) 1fr;grid-template-rows:var(--topbar-h) 1fr;height:100vh;width:100vw}
+
+/* ── Top bar ────────────────────────────────────────────── */
+.topbar{
+  grid-column:1/-1;
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 1.5rem;
+  z-index:100;
+}
+.topbar-brand{
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--serif);font-size:1.15rem;color:var(--ink);
+}
+.topbar-brand-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--mulberry);
+}
+.topbar-center{
+  display:flex;align-items:center;gap:0.25rem;
+  font-family:var(--mono);font-size:0.7rem;color:var(--muted);
+}
+.topbar-crumb-sep{opacity:.4;margin:0 2px}
+.topbar-crumb-active{color:var(--ink);font-weight:500}
+.topbar-right{display:flex;align-items:center;gap:1rem}
+.topbar-badge{
+  font-family:var(--mono);font-size:0.65rem;font-weight:500;
+  padding:.25rem .6rem;border-radius:99px;
+  background:var(--green-10);color:var(--green);
+  border:1px solid rgba(21,128,61,.2);
+}
+.topbar-date{font-family:var(--mono);font-size:0.7rem;color:var(--muted)}
+.topbar-avatar{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--mulberry);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:900;letter-spacing:.02em;
+  font-family:var(--sans);
+}
+
+/* ── Sidebar ────────────────────────────────────────────── */
+.sidebar{
+  background:var(--white);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  padding-top:.75rem;
+}
+.sidebar-section-label{
+  font-family:var(--mono);font-size:.6rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:.12em;
+  color:var(--muted);padding:.75rem 1.25rem .35rem;
+}
+.nav-item{
+  display:flex;align-items:center;gap:.65rem;
+  padding:.55rem 1.25rem;margin:1px .5rem;
+  border-radius:6px;cursor:pointer;
+  font-size:.82rem;font-weight:700;color:var(--muted);
+  transition:all .18s ease;
+  border:1px solid transparent;
+  font-family:var(--sans);
+}
+.nav-item:hover{background:var(--paper);color:var(--ink)}
+.nav-item.active{
+  background:var(--mulberry-10);color:var(--mulberry);
+  border-color:var(--mulberry-20);
+}
+.nav-icon{
+  width:16px;height:16px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;opacity:.7;
+}
+.nav-item.active .nav-icon{opacity:1}
+.sidebar-footer{
+  margin-top:auto;padding:1rem 1.25rem;
+  border-top:1px solid var(--border-soft);
+  font-family:var(--mono);font-size:.65rem;color:var(--muted);
+  line-height:1.6;
+}
+.sidebar-footer strong{color:var(--ink);display:block;margin-bottom:.1rem}
+
+/* ── Main content ───────────────────────────────────────── */
+.main{
+  overflow-y:auto;
+  background:var(--paper);
+  scroll-behavior:smooth;
+}
+.page{display:none;padding:1.75rem 2rem 3rem;animation:fadeIn .22s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ── Page header ────────────────────────────────────────── */
+.page-header{margin-bottom:1.5rem}
+.page-eyebrow{
+  font-family:var(--mono);font-size:.65rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:.14em;
+  color:var(--mulberry);margin-bottom:.35rem;
+}
+.page-title{
+  font-family:var(--serif);font-size:1.75rem;color:var(--ink);
+  line-height:1.2;margin-bottom:.3rem;
+}
+.page-title em{font-style:italic;color:var(--mulberry)}
+.page-sub{font-size:.82rem;color:var(--muted);font-family:var(--sans)}
+
+/* ── Filter bar ─────────────────────────────────────────── */
+.filter-bar{
+  display:flex;align-items:center;gap:.75rem;
+  margin-bottom:1.5rem;flex-wrap:wrap;
+}
+.filter-chip{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:.3rem .75rem;border-radius:99px;
+  border:1px solid var(--border);background:var(--white);
+  font-family:var(--mono);font-size:.67rem;font-weight:500;color:var(--muted);
+  cursor:pointer;transition:all .15s;
+}
+.filter-chip.active{
+  background:var(--mulberry-10);border-color:var(--mulberry-20);color:var(--mulberry);
+}
+.filter-chip:hover{border-color:var(--mulberry);color:var(--mulberry)}
+.filter-sep{width:1px;height:18px;background:var(--border)}
+
+/* ── KPI row ────────────────────────────────────────────── */
+.kpi-row{display:grid;gap:1rem;margin-bottom:1.25rem}
+.kpi-row-4{grid-template-columns:repeat(4,1fr)}
+.kpi-row-6{grid-template-columns:repeat(6,1fr)}
+
+.kpi{
+  background:var(--white);border:1px solid var(--border);border-radius:10px;
+  padding:1.1rem 1.25rem;position:relative;overflow:hidden;
+  transition:all .2s ease;
+}
+.kpi:hover{border-color:var(--mulberry);box-shadow:0 4px 16px rgba(157,23,77,.07);transform:translateY(-1px)}
+.kpi::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--kpi-color,var(--mulberry));opacity:0;transition:opacity .2s;
+}
+.kpi:hover::after{opacity:1}
+.kpi-label{
+  font-family:var(--mono);font-size:.62rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--muted);
+  margin-bottom:.4rem;
+}
+.kpi-val{
+  font-family:var(--serif);font-size:1.85rem;color:var(--ink);
+  line-height:1;margin-bottom:.25rem;
+}
+.kpi-sub{font-size:.72rem;color:var(--muted);font-family:var(--sans)}
+.kpi-delta{
+  display:inline-flex;align-items:center;gap:3px;
+  font-family:var(--mono);font-size:.67rem;font-weight:500;
+  padding:.15rem .4rem;border-radius:4px;margin-top:.3rem;
+}
+.delta-up{background:var(--green-10);color:var(--green)}
+.delta-dn{background:var(--red-10);color:var(--red)}
+.delta-nt{background:var(--amber-10);color:var(--amber)}
+
+/* ── Chart cards ────────────────────────────────────────── */
+.chart-grid{display:grid;gap:1rem;margin-bottom:1rem}
+.chart-grid-2{grid-template-columns:repeat(2,1fr)}
+.chart-grid-3{grid-template-columns:repeat(3,1fr)}
+.chart-grid-21{grid-template-columns:2fr 1fr}
+.chart-grid-12{grid-template-columns:1fr 2fr}
+
+.card{
+  background:var(--white);border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;transition:border-color .2s;
+}
+.card:hover{border-color:rgba(157,23,77,.25)}
+.card-head{
+  padding:.9rem 1.25rem .6rem;
+  border-bottom:1px solid var(--border-soft);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;
+}
+.card-title{
+  font-family:var(--serif);font-size:1rem;color:var(--ink);line-height:1.3;
+}
+.card-sub{font-size:.72rem;color:var(--muted);margin-top:.15rem;font-family:var(--sans)}
+.card-tag{
+  font-family:var(--mono);font-size:.6rem;font-weight:500;
+  padding:.2rem .5rem;border-radius:4px;white-space:nowrap;align-self:flex-start;
+  flex-shrink:0;
+}
+.tag-mul{background:var(--mulberry-10);color:var(--mulberry)}
+.tag-tel{background:var(--teal-10);color:var(--teal)}
+.tag-amb{background:var(--amber-10);color:var(--amber)}
+.tag-grn{background:var(--green-10);color:var(--green)}
+.tag-blu{background:var(--blue-10);color:var(--blue)}
+.card-body{padding:1rem 1.25rem}
+.chart-wrap{position:relative}
+
+/* ── Table ──────────────────────────────────────────────── */
+.data-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.data-table th{
+  font-family:var(--mono);font-size:.62rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
+  padding:.5rem .75rem;text-align:left;
+  border-bottom:2px solid var(--border);background:var(--paper);
+}
+.data-table td{
+  padding:.55rem .75rem;border-bottom:1px solid var(--border-soft);
+  color:var(--ink);font-family:var(--sans);
+}
+.data-table tbody tr:hover{background:var(--paper)}
+.data-table tbody tr:last-child td{border-bottom:none}
+.td-num{font-family:var(--mono);font-size:.75rem;text-align:right}
+.td-name{font-weight:700}
+
+/* ── Mini bar ───────────────────────────────────────────── */
+.mini-bar-wrap{display:flex;align-items:center;gap:6px}
+.mini-bar-track{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.mini-bar-fill{height:100%;border-radius:3px;background:var(--mulberry)}
+.mini-bar-val{font-family:var(--mono);font-size:.67rem;color:var(--muted);white-space:nowrap}
+
+/* ── Outcome pills ──────────────────────────────────────── */
+.outcome-grid{display:flex;flex-direction:column;gap:.5rem}
+.outcome-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:.75rem;padding:.5rem .75rem;border-radius:6px;
+  background:var(--paper);
+}
+.outcome-name{font-size:.78rem;font-weight:700;color:var(--ink);font-family:var(--sans)}
+.outcome-bar-wrap{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.outcome-bar-fill{height:100%;border-radius:3px}
+.outcome-pct{font-family:var(--mono);font-size:.7rem;color:var(--muted);width:36px;text-align:right}
+
+/* ── Insight callout ────────────────────────────────────── */
+.insight-strip{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;
+  margin-bottom:1rem;
+}
+.insight{
+  background:var(--white);border:1px solid var(--border);border-radius:8px;
+  padding:.9rem 1rem;display:flex;gap:.75rem;align-items:flex-start;
+}
+.insight-icon{
+  width:34px;height:34px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;flex-shrink:0;
+}
+.insight-body h5{font-family:var(--serif);font-size:.9rem;color:var(--ink);margin-bottom:.15rem}
+.insight-body p{font-size:.75rem;color:var(--muted);line-height:1.5;margin:0;font-family:var(--sans)}
+.insight-metric{font-family:var(--mono);font-size:.8rem;font-weight:500;color:var(--mulberry);margin-top:.2rem}
+
+/* ── Scrollbar ──────────────────────────────────────────── */
+.main::-webkit-scrollbar{width:4px}
+.main::-webkit-scrollbar-track{background:transparent}
+.main::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-brand-dot"></div>
+      Healthcare Operations
+    </div>
+    <div class="topbar-center">
+      <span>FY 2024</span>
+      <span class="topbar-crumb-sep">›</span>
+      <span id="crumb-page" class="topbar-crumb-active">Executive Summary</span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-badge">● Live Dataset</span>
+      <span class="topbar-date">366 days · 20,130 rows</span>
+      <div class="topbar-avatar">JF</div>
+    </div>
+  </header>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-section-label">Dashboard</div>
+    <div class="nav-item active" data-page="exec" onclick="switchPage(this,'exec','Executive Summary')">
+      <span class="nav-icon">◈</span> Executive Summary
+    </div>
+    <div class="nav-item" data-page="dept" onclick="switchPage(this,'dept','Department Performance')">
+      <span class="nav-icon">⊞</span> Department Performance
+    </div>
+    <div class="nav-item" data-page="clinical" onclick="switchPage(this,'clinical','Clinical Quality')">
+      <span class="nav-icon">✦</span> Clinical Quality
+    </div>
+    <div class="nav-item" data-page="finance" onclick="switchPage(this,'finance','Financial Performance')">
+      <span class="nav-icon">◎</span> Financial Performance
+    </div>
+    <div class="nav-item" data-page="physician" onclick="switchPage(this,'physician','Physician Productivity')">
+      <span class="nav-icon">⊹</span> Physician Productivity
+    </div>
+    <div class="nav-item" data-page="workforce" onclick="switchPage(this,'workforce','Workforce & Staffing')">
+      <span class="nav-icon">⬡</span> Workforce & Staffing
+    </div>
+
+    <div class="sidebar-footer">
+      <strong>Jenniefer Farhan</strong>
+      Power BI Mockup · FY 2024<br>
+      Healthcare Operations
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ══════════════════════════════════════════════════
+         PAGE 1 — EXECUTIVE SUMMARY
+    ══════════════════════════════════════════════════ -->
+    <div class="page active" id="page-exec">
+      <div class="page-header">
+        <div class="page-eyebrow">Executive Summary</div>
+        <h1 class="page-title">Hospital-Wide <em>Performance</em> Overview</h1>
+        <p class="page-sub">Full Year 2024 · 366 days · All departments combined</p>
+      </div>
+
+      <div class="filter-bar">
+        <div class="filter-chip active">All Departments</div>
+        <div class="filter-chip">Weekdays Only</div>
+        <div class="filter-chip">Q1 2024</div>
+        <div class="filter-chip">Q2 2024</div>
+        <div class="filter-chip">Q3 2024</div>
+        <div class="filter-chip">Q4 2024</div>
+        <div class="filter-sep"></div>
+        <div class="filter-chip">7-Day Rolling</div>
+        <div class="filter-chip">Monthly View</div>
+      </div>
+
+      <!-- KPI Row -->
+      <div class="kpi-row kpi-row-4" style="margin-bottom:1rem">
+        <div class="kpi" style="--kpi-color:var(--mulberry)">
+          <div class="kpi-label">Total Admissions</div>
+          <div class="kpi-val">21,473</div>
+          <div class="kpi-sub">FY 2024 · All departments</div>
+          <div class="kpi-delta delta-up">↑ 7.2% vs prior year</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--green)">
+          <div class="kpi-label">Total Revenue</div>
+          <div class="kpi-val">$102.8M</div>
+          <div class="kpi-sub">Across 8 departments</div>
+          <div class="kpi-delta delta-up">↑ 8.1% YoY</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--teal)">
+          <div class="kpi-label">EBITDA</div>
+          <div class="kpi-val">$18.5M</div>
+          <div class="kpi-sub">18.0% margin · FY 2024</div>
+          <div class="kpi-delta delta-up">↑ 1.4pp vs target</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--amber)">
+          <div class="kpi-label">Avg Patient Satisfaction</div>
+          <div class="kpi-val">8.10</div>
+          <div class="kpi-sub">HCAHPS-derived · out of 10</div>
+          <div class="kpi-delta delta-nt">→ Stable</div>
+        </div>
+      </div>
+
+      <div class="kpi-row kpi-row-4">
+        <div class="kpi" style="--kpi-color:var(--blue)">
+          <div class="kpi-label">Avg Bed Occupancy</div>
+          <div class="kpi-val">74.8%</div>
+          <div class="kpi-sub">Target: 75–88%</div>
+          <div class="kpi-delta delta-grn delta-up">↑ In target band</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--mulberry)">
+          <div class="kpi-label">Total Procedures</div>
+          <div class="kpi-val">27,002</div>
+          <div class="kpi-sub">Across all procedure types</div>
+          <div class="kpi-delta delta-up">↑ 6.4% YoY</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--red)">
+          <div class="kpi-label">Avg Mortality Rate</div>
+          <div class="kpi-val">1.9%</div>
+          <div class="kpi-sub">Risk-adjusted · in-hospital</div>
+          <div class="kpi-delta delta-up">↓ 0.2pp improvement</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--teal)">
+          <div class="kpi-label">Avg Wait Time</div>
+          <div class="kpi-val">3.8 hrs</div>
+          <div class="kpi-sub">All departments · FY avg</div>
+          <div class="kpi-delta delta-nt">→ Stable</div>
+        </div>
+      </div>
+
+      <!-- Charts Row 1 -->
+      <div class="chart-grid chart-grid-21" style="margin-top:1rem">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Monthly Admissions & Revenue</div>
+              <div class="card-sub">Dual-axis · admissions (bars) + revenue trend (line)</div>
+            </div>
+            <span class="card-tag tag-mul">FY 2024</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:200px">
+              <canvas id="chart-adm-rev"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Revenue by Department</div>
+              <div class="card-sub">FY 2024 total · $M</div>
+            </div>
+            <span class="card-tag tag-grn">Full Year</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:200px">
+              <canvas id="chart-dept-rev"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row 2 -->
+      <div class="chart-grid chart-grid-3">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Bed Occupancy — Daily Trend</div>
+              <div class="card-sub">Weekly averages · FY 2024</div>
+            </div>
+            <span class="card-tag tag-blu">Capacity</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:150px">
+              <canvas id="chart-occupancy"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Cost vs Revenue</div>
+              <div class="card-sub">Monthly · margin visible</div>
+            </div>
+            <span class="card-tag tag-amb">Finance</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:150px">
+              <canvas id="chart-cost-rev"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Admissions: Weekday vs Weekend</div>
+              <div class="card-sub">Avg daily · pattern analysis</div>
+            </div>
+            <span class="card-tag tag-tel">Pattern</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:150px">
+              <canvas id="chart-wkd"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════
+         PAGE 2 — DEPARTMENT PERFORMANCE
+    ══════════════════════════════════════════════════ -->
+    <div class="page" id="page-dept">
+      <div class="page-header">
+        <div class="page-eyebrow">Department Performance</div>
+        <h1 class="page-title">8 Departments · <em>Comparative</em> Analysis</h1>
+        <p class="page-sub">2,928 daily rows · Revenue, margin, LOS, complications by department</p>
+      </div>
+
+      <div class="kpi-row kpi-row-4">
+        <div class="kpi" style="--kpi-color:var(--mulberry)">
+          <div class="kpi-label">Highest Revenue Dept</div>
+          <div class="kpi-val">ICU</div>
+          <div class="kpi-sub">$20.8M FY 2024</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--green)">
+          <div class="kpi-label">Best Margin</div>
+          <div class="kpi-val">Radiology</div>
+          <div class="kpi-sub">31.6% EBITDA margin</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--amber)">
+          <div class="kpi-label">Highest Volume</div>
+          <div class="kpi-val">Emergency</div>
+          <div class="kpi-sub">4,685 admissions FY2024</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--teal)">
+          <div class="kpi-label">Tightest Margin</div>
+          <div class="kpi-val">ICU</div>
+          <div class="kpi-sub">10.7% — cost-intensive care</div>
+        </div>
+      </div>
+
+      <div class="chart-grid chart-grid-2">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">EBITDA Margin by Department</div>
+              <div class="card-sub">FY 2024 full year %</div>
+            </div>
+            <span class="card-tag tag-grn">Margin</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:220px">
+              <canvas id="chart-dept-margin"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Total Admissions by Department</div>
+              <div class="card-sub">FY 2024 · Emergency dominates volume</div>
+            </div>
+            <span class="card-tag tag-mul">Volume</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:220px">
+              <canvas id="chart-dept-adm"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-grid chart-grid-12">
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">Avg Length of Stay</div><div class="card-sub">Days · by department</div></div>
+            <span class="card-tag tag-amb">LOS</span>
+          </div>
+          <div class="card-body">
+            <div class="outcome-grid">
+              <div class="outcome-row"><span class="outcome-name">ICU</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:93%;background:var(--mulberry)"></div></div><span class="outcome-pct">6.8d</span></div>
+              <div class="outcome-row"><span class="outcome-name">Oncology</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:75%;background:var(--mulberry)"></div></div><span class="outcome-pct">5.5d</span></div>
+              <div class="outcome-row"><span class="outcome-name">Cardiology</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:55%;background:var(--teal)"></div></div><span class="outcome-pct">4.0d</span></div>
+              <div class="outcome-row"><span class="outcome-name">Neurology</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:52%;background:var(--teal)"></div></div><span class="outcome-pct">3.8d</span></div>
+              <div class="outcome-row"><span class="outcome-name">Orthopedics</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:52%;background:var(--teal)"></div></div><span class="outcome-pct">3.8d</span></div>
+              <div class="outcome-row"><span class="outcome-name">Pediatrics</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:50%;background:var(--green)"></div></div><span class="outcome-pct">3.7d</span></div>
+              <div class="outcome-row"><span class="outcome-name">Radiology</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:25%;background:var(--green)"></div></div><span class="outcome-pct">1.8d</span></div>
+              <div class="outcome-row"><span class="outcome-name">Emergency</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:16%;background:var(--green)"></div></div><span class="outcome-pct">1.2d</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">Revenue Trend — Top 4 Departments</div><div class="card-sub">Monthly · ICU, Oncology, Cardiology, Emergency</div></div>
+            <span class="card-tag tag-tel">Trend</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:230px">
+              <canvas id="chart-dept-trend"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════
+         PAGE 3 — CLINICAL QUALITY
+    ══════════════════════════════════════════════════ -->
+    <div class="page" id="page-clinical">
+      <div class="page-header">
+        <div class="page-eyebrow">Clinical Quality & Outcomes</div>
+        <h1 class="page-title">Procedure <em>Outcomes</em> & Safety Metrics</h1>
+        <p class="page-sub">2,928 daily rows · 8 procedure categories · Success, HAI, protocol adherence</p>
+      </div>
+
+      <div class="kpi-row kpi-row-4">
+        <div class="kpi" style="--kpi-color:var(--green)">
+          <div class="kpi-label">Overall Success Rate</div>
+          <div class="kpi-val">83.7%</div>
+          <div class="kpi-sub">Weighted avg all categories</div>
+          <div class="kpi-delta delta-up">↑ Improving trend</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--amber)">
+          <div class="kpi-label">Avg Protocol Adherence</div>
+          <div class="kpi-val">92.4%</div>
+          <div class="kpi-sub">Improving through Q4</div>
+          <div class="kpi-delta delta-up">↑ +0.3pp YoY</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--red)">
+          <div class="kpi-label">HAI Rate</div>
+          <div class="kpi-val">0.9%</div>
+          <div class="kpi-sub">Hospital-acquired infections</div>
+          <div class="kpi-delta delta-up">↓ Below 1% target</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--teal)">
+          <div class="kpi-label">Avg PRO Score</div>
+          <div class="kpi-val">7.80</div>
+          <div class="kpi-sub">Patient-reported outcomes</div>
+          <div class="kpi-delta delta-up">↑ +0.4 vs baseline</div>
+        </div>
+      </div>
+
+      <div class="chart-grid chart-grid-2">
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">Procedure Success Rate by Category</div><div class="card-sub">FY 2024 · Diagnostic Imaging leads at 94.0%</div></div>
+            <span class="card-tag tag-grn">Outcomes</span>
+          </div>
+          <div class="card-body">
+            <div class="outcome-grid">
+              <div class="outcome-row"><span class="outcome-name">Diagnostic Imaging</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:94%;background:var(--green)"></div></div><span class="outcome-pct">94.0%</span></div>
+              <div class="outcome-row"><span class="outcome-name">Emergency Interventions</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:89.8%;background:var(--green)"></div></div><span class="outcome-pct">89.8%</span></div>
+              <div class="outcome-row"><span class="outcome-name">Orthopedic Surgery</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:83.7%;background:var(--teal)"></div></div><span class="outcome-pct">83.7%</span></div>
+              <div class="outcome-row"><span class="outcome-name">Pediatric</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:80.7%;background:var(--teal)"></div></div><span class="outcome-pct">80.7%</span></div>
+              <div class="outcome-row"><span class="outcome-name">Cardiovascular</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:80.8%;background:var(--teal)"></div></div><span class="outcome-pct">80.8%</span></div>
+              <div class="outcome-row"><span class="outcome-name">Oncology Procedures</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:76.7%;background:var(--amber)"></div></div><span class="outcome-pct">76.7%</span></div>
+              <div class="outcome-row"><span class="outcome-name">Neurological</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:69.8%;background:var(--amber)"></div></div><span class="outcome-pct">69.8%</span></div>
+              <div class="outcome-row"><span class="outcome-name">Critical Care</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:57.3%;background:var(--mulberry)"></div></div><span class="outcome-pct">57.3%</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">Protocol Adherence vs Success Rate</div><div class="card-sub">Scatter · adherence drives outcomes</div></div>
+            <span class="card-tag tag-mul">Correlation</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:270px">
+              <canvas id="chart-scatter"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-grid chart-grid-2" style="margin-top:1rem">
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">HAI Rate — Monthly Trend</div><div class="card-sub">Target below 1.0% · tracking well</div></div>
+            <span class="card-tag tag-amb">Safety</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:150px">
+              <canvas id="chart-hai"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">Total Cases by Procedure Category</div><div class="card-sub">FY 2024 volume · Diagnostic Imaging highest</div></div>
+            <span class="card-tag tag-blu">Volume</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:150px">
+              <canvas id="chart-cases"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════
+         PAGE 4 — FINANCIAL PERFORMANCE
+    ══════════════════════════════════════════════════ -->
+    <div class="page" id="page-finance">
+      <div class="page-header">
+        <div class="page-eyebrow">Financial Performance</div>
+        <h1 class="page-title">Revenue, <em>Cost</em> & Margin Analysis</h1>
+        <p class="page-sub">2,928 daily rows · 8 departments · Revenue streams, EBITDA, denial rate</p>
+      </div>
+
+      <div class="kpi-row kpi-row-4">
+        <div class="kpi" style="--kpi-color:var(--green)">
+          <div class="kpi-label">Total FY Revenue</div>
+          <div class="kpi-val">$102.8M</div>
+          <div class="kpi-sub">All departments combined</div>
+          <div class="kpi-delta delta-up">↑ 8.1% vs prior year</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--mulberry)">
+          <div class="kpi-label">Total Costs</div>
+          <div class="kpi-val">$84.3M</div>
+          <div class="kpi-sub">Staff 42% · Supplies 18%</div>
+          <div class="kpi-delta delta-dn">↑ 6.4% (managed)</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--teal)">
+          <div class="kpi-label">EBITDA</div>
+          <div class="kpi-val">$18.5M</div>
+          <div class="kpi-sub">18.0% margin · FY 2024</div>
+          <div class="kpi-delta delta-up">↑ Above 17% target</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--amber)">
+          <div class="kpi-label">Avg Denial Rate</div>
+          <div class="kpi-val">6.2%</div>
+          <div class="kpi-sub">Insurance claim denials</div>
+          <div class="kpi-delta delta-nt">→ Watch closely</div>
+        </div>
+      </div>
+
+      <div class="chart-grid chart-grid-2">
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">Revenue vs Cost — Monthly</div><div class="card-sub">Net margin band visible · summer peak</div></div>
+            <span class="card-tag tag-grn">P&L</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:210px">
+              <canvas id="chart-fin-monthly"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">Revenue Stream Breakdown</div><div class="card-sub">Inpatient · Outpatient · Procedure</div></div>
+            <span class="card-tag tag-mul">Streams</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:210px">
+              <canvas id="chart-streams"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-grid chart-grid-2" style="margin-top:1rem">
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">EBITDA Margin Ranking</div><div class="card-sub">By department · Radiology most efficient</div></div>
+            <span class="card-tag tag-tel">Efficiency</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:170px">
+              <canvas id="chart-ebitda-rank"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">Cost Composition</div><div class="card-sub">Staff · Supplies · Equipment · Overhead</div></div>
+            <span class="card-tag tag-amb">Costs</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:170px">
+              <canvas id="chart-cost-comp"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════
+         PAGE 5 — PHYSICIAN PRODUCTIVITY
+    ══════════════════════════════════════════════════ -->
+    <div class="page" id="page-physician">
+      <div class="page-header">
+        <div class="page-eyebrow">Physician Productivity</div>
+        <h1 class="page-title">12 Physicians · <em>Individual</em> Performance</h1>
+        <p class="page-sub">4,392 daily rows · Patients seen, revenue generated, leave-adjusted</p>
+      </div>
+
+      <div class="kpi-row kpi-row-4">
+        <div class="kpi" style="--kpi-color:var(--teal)">
+          <div class="kpi-label">Top Revenue Generator</div>
+          <div class="kpi-val">Dr. Nakamura</div>
+          <div class="kpi-sub">$5.03M FY 2024</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--mulberry)">
+          <div class="kpi-label">Highest Patient Volume</div>
+          <div class="kpi-val">Dr. Santos</div>
+          <div class="kpi-sub">3,990 patients seen</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--green)">
+          <div class="kpi-label">Total Patients Seen</div>
+          <div class="kpi-val">28,008</div>
+          <div class="kpi-sub">All 12 physicians · excl. leave</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--amber)">
+          <div class="kpi-label">Total Revenue Generated</div>
+          <div class="kpi-val">$41.9M</div>
+          <div class="kpi-sub">Physician-attributed FY 2024</div>
+        </div>
+      </div>
+
+      <div class="chart-grid chart-grid-2">
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">Revenue Generated per Physician</div><div class="card-sub">FY 2024 · leave-adjusted · $M</div></div>
+            <span class="card-tag tag-grn">Revenue</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:250px">
+              <canvas id="chart-phys-rev"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">Patients Seen per Physician</div><div class="card-sub">FY 2024 · all active days</div></div>
+            <span class="card-tag tag-mul">Volume</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:250px">
+              <canvas id="chart-phys-pts"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1rem">
+        <div class="card-head">
+          <div><div class="card-title">Physician Performance Summary</div><div class="card-sub">All 12 · FY 2024 · sorted by revenue</div></div>
+          <span class="card-tag tag-tel">Full Roster</span>
+        </div>
+        <div class="card-body" style="padding:0">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Physician</th>
+                <th>Department</th>
+                <th style="text-align:right">Patients</th>
+                <th style="text-align:right">Revenue</th>
+                <th style="text-align:right">Rev / Patient</th>
+                <th style="text-align:right">Volume Rank</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="td-name">Dr. Yuki Nakamura</td><td>Radiology</td><td class="td-num">3,100</td><td class="td-num">$5.03M</td><td class="td-num">$1,621</td><td class="td-num">#3</td></tr>
+              <tr><td class="td-name">Dr. Rachel Kim</td><td>Emergency</td><td class="td-num">1,885</td><td class="td-num">$4.67M</td><td class="td-num">$2,477</td><td class="td-num">#8</td></tr>
+              <tr><td class="td-name">Dr. Ethan Brooks</td><td>ICU</td><td class="td-num">1,338</td><td class="td-num">$4.28M</td><td class="td-num">$3,196</td><td class="td-num">#11</td></tr>
+              <tr><td class="td-name">Dr. James Thornton</td><td>Orthopedics</td><td class="td-num">3,435</td><td class="td-num">$4.25M</td><td class="td-num">$1,237</td><td class="td-num">#2</td></tr>
+              <tr><td class="td-name">Dr. David Patel</td><td>Neurology</td><td class="td-num">1,362</td><td class="td-num">$4.42M</td><td class="td-num">$3,246</td><td class="td-num">#10</td></tr>
+              <tr><td class="td-name">Dr. Carlos Rivera</td><td>Cardiology</td><td class="td-num">1,325</td><td class="td-num">$3.88M</td><td class="td-num">$2,927</td><td class="td-num">#12</td></tr>
+              <tr><td class="td-name">Dr. Amara Osei</td><td>Cardiology</td><td class="td-num">1,929</td><td class="td-num">$3.40M</td><td class="td-num">$1,762</td><td class="td-num">#7</td></tr>
+              <tr><td class="td-name">Dr. Maria Santos</td><td>Pediatrics</td><td class="td-num">3,990</td><td class="td-num">$3.05M</td><td class="td-num">$765</td><td class="td-num">#1</td></tr>
+              <tr><td class="td-name">Dr. Lena Hartmann</td><td>Oncology</td><td class="td-num">1,592</td><td class="td-num">$2.94M</td><td class="td-num">$1,849</td><td class="td-num">#9</td></tr>
+              <tr><td class="td-name">Dr. Ben Okafor</td><td>Emergency</td><td class="td-num">2,486</td><td class="td-num">$2.33M</td><td class="td-num">$938</td><td class="td-num">#5</td></tr>
+              <tr><td class="td-name">Dr. Priya Mehta</td><td>Neurology</td><td class="td-num">3,086</td><td class="td-num">$2.16M</td><td class="td-num">$700</td><td class="td-num">#4</td></tr>
+              <tr><td class="td-name">Dr. Sofia Andrade</td><td>ICU</td><td class="td-num">2,476</td><td class="td-num">$1.80M</td><td class="td-num">$728</td><td class="td-num">#6</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════
+         PAGE 6 — WORKFORCE & STAFFING
+    ══════════════════════════════════════════════════ -->
+    <div class="page" id="page-workforce">
+      <div class="page-header">
+        <div class="page-eyebrow">Workforce & Staffing</div>
+        <h1 class="page-title">Staffing <em>Patterns</em> & Workforce Health</h1>
+        <p class="page-sub">2,928 daily rows · Shift headcount, vacancy, agency usage · weekday vs weekend</p>
+      </div>
+
+      <div class="kpi-row kpi-row-4">
+        <div class="kpi" style="--kpi-color:var(--mulberry)">
+          <div class="kpi-label">Avg Vacancy Rate</div>
+          <div class="kpi-val">7.2%</div>
+          <div class="kpi-sub">All departments FY avg</div>
+          <div class="kpi-delta delta-nt">→ Above 5% threshold</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--amber)">
+          <div class="kpi-label">Highest Agency Use</div>
+          <div class="kpi-val">ICU</div>
+          <div class="kpi-sub">4.7 agency staff/day avg</div>
+          <div class="kpi-delta delta-dn">↑ Structural pressure</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--teal)">
+          <div class="kpi-label">Weekend Shift Factor</div>
+          <div class="kpi-val">62%</div>
+          <div class="kpi-sub">Of weekday headcount</div>
+          <div class="kpi-delta delta-nt">→ Protocol-driven</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--green)">
+          <div class="kpi-label">Avg Staff-Patient Ratio</div>
+          <div class="kpi-val">0.18</div>
+          <div class="kpi-sub">All depts · weekday avg</div>
+          <div class="kpi-delta delta-up">↑ Within safe range</div>
+        </div>
+      </div>
+
+      <div class="chart-grid chart-grid-2">
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">Agency Staff Usage by Department</div><div class="card-sub">Avg per day · FY 2024 · proxy for understaffing</div></div>
+            <span class="card-tag tag-amb">Agency</span>
+          </div>
+          <div class="card-body">
+            <div class="outcome-grid">
+              <div class="outcome-row"><span class="outcome-name">ICU</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:100%;background:var(--mulberry)"></div></div><span class="outcome-pct">4.7/day</span></div>
+              <div class="outcome-row"><span class="outcome-name">Emergency</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:94%;background:var(--mulberry)"></div></div><span class="outcome-pct">4.4/day</span></div>
+              <div class="outcome-row"><span class="outcome-name">Oncology</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:68%;background:var(--amber)"></div></div><span class="outcome-pct">3.2/day</span></div>
+              <div class="outcome-row"><span class="outcome-name">Cardiology</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:57%;background:var(--amber)"></div></div><span class="outcome-pct">2.7/day</span></div>
+              <div class="outcome-row"><span class="outcome-name">Orthopedics</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:45%;background:var(--teal)"></div></div><span class="outcome-pct">2.1/day</span></div>
+              <div class="outcome-row"><span class="outcome-name">Neurology</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:38%;background:var(--teal)"></div></div><span class="outcome-pct">1.8/day</span></div>
+              <div class="outcome-row"><span class="outcome-name">Pediatrics</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:34%;background:var(--green)"></div></div><span class="outcome-pct">1.6/day</span></div>
+              <div class="outcome-row"><span class="outcome-name">Radiology</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:25%;background:var(--green)"></div></div><span class="outcome-pct">1.2/day</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">Staffing: Weekday vs Weekend</div><div class="card-sub">Avg shift headcount · pattern across departments</div></div>
+            <span class="card-tag tag-mul">Patterns</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:270px">
+              <canvas id="chart-staff-wkd"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1rem">
+        <div class="card-head">
+          <div><div class="card-title">Overtime Trend — Weekly</div><div class="card-sub">Total overtime hours across all departments · FY 2024</div></div>
+          <span class="card-tag tag-tel">Overtime</span>
+        </div>
+        <div class="card-body">
+          <div class="chart-wrap" style="height:140px">
+            <canvas id="chart-overtime"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ── Palette ──────────────────────────────────────────────────────────────────
+const M  = '#9d174d', M2 = 'rgba(157,23,77,.12)', M3 = 'rgba(157,23,77,.06)';
+const T  = '#0f766e', T2 = 'rgba(15,118,110,.12)';
+const G  = '#15803d', G2 = 'rgba(21,128,61,.12)';
+const A  = '#b45309', A2 = 'rgba(180,83,9,.12)';
+const B  = '#1d4ed8', B2 = 'rgba(29,78,216,.12)';
+const R  = '#dc2626';
+const ink = '#1c1917', mut = '#78716c', brd = '#e7e5e4';
+
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DEPTS  = ['Cardiology','Oncology','Orthopedics','Neurology','Emergency','Radiology','ICU','Pediatrics'];
+
+// Default chart options
+Chart.defaults.font.family = "'DM Mono', monospace";
+Chart.defaults.font.size   = 10;
+Chart.defaults.color       = mut;
+Chart.defaults.plugins.legend.display = false;
+
+function gridOpts(){ return { color: 'rgba(231,229,228,.6)', drawBorder:false } }
+function tickOpts(){ return { color: mut } }
+function baseOpts(){
+  return {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'rgba(28,25,23,.9)', titleColor:'#f9f9f7', bodyColor:'rgba(249,249,247,.7)', padding:10, cornerRadius:6, titleFont:{family:"'DM Mono',monospace",size:10}, bodyFont:{family:"'DM Mono',monospace",size:10} } },
+    scales:{ x:{ grid:gridOpts(), ticks:tickOpts() }, y:{ grid:gridOpts(), ticks:tickOpts() } }
+  };
+}
+
+// ── Real data from dataset ───────────────────────────────────────────────────
+const admData  = [1555,1526,1752,1840,2019,1993,2076,1941,1804,1758,1603,1606];
+const revData  = [7.11,6.94,7.99,8.46,9.19,8.90,9.43,8.95,8.11,7.96,7.27,7.36];
+const costData = [5.99,5.89,6.70,7.15,7.82,7.52,7.87,7.61,6.90,6.73,6.15,6.18];
+const netData  = revData.map((r,i) => +(r - costData[i]).toFixed(2));
+
+const deptRev    = [13.90,17.44,11.39,10.11,12.81,8.82,20.84,7.43];
+const deptMargin = [23.0, 16.7, 26.7, 21.6, 13.8, 31.6, 10.7, 20.0];
+const deptAdm    = [2260,1900,2608,1569,4685,523,858,1901];
+
+const occData = [78.5,79.3,77.4,75.9,73.5,72.5,72.6,70.2,69.4,69.1,69.0,68.8,67.4,67.3,67.6,66.7];
+const occLabels = Array.from({length:16},(_,i)=>`W${37+i}`);
+
+// ── PAGE 1: Executive Summary ────────────────────────────────────────────────
+// Admissions + Revenue dual axis
+new Chart(document.getElementById('chart-adm-rev'),{
+  type:'bar',
+  data:{
+    labels:MONTHS,
+    datasets:[
+      { label:'Admissions', data:admData, backgroundColor:M2, borderColor:M, borderWidth:1.5, borderRadius:3, yAxisID:'y' },
+      { label:'Revenue ($M)', data:revData, type:'line', borderColor:T, backgroundColor:'transparent', borderWidth:2, pointRadius:3, pointBackgroundColor:T, tension:.35, yAxisID:'y1' }
+    ]
+  },
+  options:{...baseOpts(), plugins:{...baseOpts().plugins, legend:{display:true, labels:{color:mut,font:{family:"'DM Mono',monospace",size:10},boxWidth:12}}},
+    scales:{
+      x:{grid:gridOpts(),ticks:tickOpts()},
+      y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v.toLocaleString()}},
+      y1:{position:'right',grid:{display:false},ticks:{...tickOpts(),callback:v=>'$'+v+'M'}}
+    }
+  }
+});
+
+// Dept revenue horizontal bar
+new Chart(document.getElementById('chart-dept-rev'),{
+  type:'bar',
+  data:{
+    labels:DEPTS,
+    datasets:[{data:deptRev,backgroundColor:[M2,A2,G2,B2,'rgba(220,38,38,.1)',T2,'rgba(109,40,217,.1)','rgba(217,119,6,.08)'],borderColor:[M,A,G,B,R,T,'#6d28d9','#d97706'],borderWidth:1.5,borderRadius:3}]
+  },
+  options:{...baseOpts(),indexAxis:'y',scales:{x:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>'$'+v+'M'}},y:{grid:{display:false},ticks:tickOpts()}}}
+});
+
+// Bed occupancy weekly sparkline
+new Chart(document.getElementById('chart-occupancy'),{
+  type:'line',
+  data:{labels:occLabels,datasets:[{data:occData,borderColor:B,backgroundColor:'rgba(29,78,216,.06)',fill:true,borderWidth:2,pointRadius:0,tension:.4}]},
+  options:{...baseOpts(),scales:{x:{grid:{display:false},ticks:{...tickOpts(),maxTicksLimit:6}},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v+'%'},min:60,max:85}}}
+});
+
+// Cost vs revenue
+new Chart(document.getElementById('chart-cost-rev'),{
+  type:'line',
+  data:{
+    labels:MONTHS,
+    datasets:[
+      {label:'Revenue',data:revData,borderColor:G,backgroundColor:G2,fill:true,borderWidth:2,pointRadius:2,tension:.35},
+      {label:'Costs',data:costData,borderColor:R,backgroundColor:'rgba(220,38,38,.06)',fill:true,borderWidth:2,pointRadius:2,tension:.35}
+    ]
+  },
+  options:{...baseOpts(),plugins:{...baseOpts().plugins,legend:{display:true,labels:{color:mut,font:{family:"'DM Mono',monospace",size:9},boxWidth:10}}},
+    scales:{x:{grid:{display:false},ticks:{...tickOpts(),maxTicksLimit:6}},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>'$'+v+'M'}}}}
+});
+
+// Weekday vs Weekend
+new Chart(document.getElementById('chart-wkd'),{
+  type:'bar',
+  data:{
+    labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+    datasets:[{data:[72,74,73,71,70,48,46],backgroundColor:[M2,M2,M2,M2,M2,T2,T2],borderColor:[M,M,M,M,M,T,T],borderWidth:1.5,borderRadius:4}]
+  },
+  options:{...baseOpts(),scales:{x:{grid:{display:false},ticks:tickOpts()},y:{grid:gridOpts(),ticks:tickOpts()}}}
+});
+
+// ── PAGE 2: Department ───────────────────────────────────────────────────────
+new Chart(document.getElementById('chart-dept-margin'),{
+  type:'bar',
+  data:{
+    labels:DEPTS,
+    datasets:[{data:deptMargin,backgroundColor:deptMargin.map(v=>v>25?G2:v>18?T2:v>14?A2:M2),borderColor:deptMargin.map(v=>v>25?G:v>18?T:v>14?A:M),borderWidth:1.5,borderRadius:4}]
+  },
+  options:{...baseOpts(),scales:{x:{grid:{display:false},ticks:{...tickOpts(),maxRotation:30}},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v+'%'}}}}
+});
+
+new Chart(document.getElementById('chart-dept-adm'),{
+  type:'bar',
+  data:{labels:DEPTS,datasets:[{data:deptAdm,backgroundColor:[M2,A2,G2,B2,'rgba(220,38,38,.1)',T2,'rgba(109,40,217,.1)','rgba(217,119,6,.08)'],borderColor:[M,A,G,B,R,T,'#6d28d9','#d97706'],borderWidth:1.5,borderRadius:4}]},
+  options:{...baseOpts(),scales:{x:{grid:{display:false},ticks:{...tickOpts(),maxRotation:30}},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v.toLocaleString()}}}}
+});
+
+// Dept trend: top 4
+const deptRevMonthly = {
+  ICU:      [1.60,1.55,1.79,1.88,2.06,2.04,2.12,2.00,1.83,1.80,1.64,1.66],
+  Oncology: [1.28,1.25,1.44,1.52,1.66,1.64,1.71,1.60,1.47,1.44,1.32,1.33],
+  Cardiology:[1.02,1.00,1.15,1.21,1.32,1.31,1.37,1.28,1.17,1.15,1.05,1.06],
+  Emergency: [1.05,1.02,1.18,1.23,1.35,1.33,1.38,1.30,1.18,1.16,1.06,1.07],
+};
+new Chart(document.getElementById('chart-dept-trend'),{
+  type:'line',
+  data:{labels:MONTHS,datasets:[
+    {label:'ICU',data:deptRevMonthly.ICU,borderColor:'#6d28d9',backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:.35},
+    {label:'Oncology',data:deptRevMonthly.Oncology,borderColor:A,backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:.35},
+    {label:'Cardiology',data:deptRevMonthly.Cardiology,borderColor:M,backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:.35},
+    {label:'Emergency',data:deptRevMonthly.Emergency,borderColor:R,backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:.35},
+  ]},
+  options:{...baseOpts(),plugins:{...baseOpts().plugins,legend:{display:true,labels:{color:mut,font:{family:"'DM Mono',monospace",size:9},boxWidth:10}}},
+    scales:{x:{grid:{display:false},ticks:tickOpts()},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>'$'+v+'M'}}}}
+});
+
+// ── PAGE 3: Clinical ─────────────────────────────────────────────────────────
+// Scatter: protocol adherence vs success rate
+new Chart(document.getElementById('chart-scatter'),{
+  type:'scatter',
+  data:{datasets:[{
+    data:[
+      {x:94.2,y:94.0,label:'Diagnostic Imaging'},
+      {x:93.1,y:89.8,label:'Emergency'},
+      {x:92.8,y:83.7,label:'Orthopedic'},
+      {x:92.5,y:80.8,label:'Cardiovascular'},
+      {x:92.3,y:80.7,label:'Pediatric'},
+      {x:91.8,y:76.7,label:'Oncology'},
+      {x:91.2,y:69.8,label:'Neurological'},
+      {x:90.1,y:57.3,label:'Critical Care'},
+    ],
+    backgroundColor:M, borderColor:M, pointRadius:7, pointHoverRadius:9
+  }]},
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        backgroundColor:'rgba(28,25,23,.9)',titleColor:'#f9f9f7',bodyColor:'rgba(249,249,247,.7)',
+        padding:10,cornerRadius:6,
+        callbacks:{
+          label:ctx=>{const d=ctx.raw; return [`${d.label}`,`Adherence: ${d.x}%`,`Success: ${d.y}%`]}
+        }
+      }
+    },
+    scales:{
+      x:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v+'%'},title:{display:true,text:'Protocol Adherence (%)',color:mut,font:{family:"'DM Mono',monospace",size:9}}},
+      y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v+'%'},title:{display:true,text:'Success Rate (%)',color:mut,font:{family:"'DM Mono',monospace",size:9}}}
+    }
+  }
+});
+
+// HAI monthly
+const haiMonthly = [1.0,1.0,0.98,0.96,0.94,0.92,0.91,0.90,0.89,0.88,0.87,0.86];
+new Chart(document.getElementById('chart-hai'),{
+  type:'line',
+  data:{labels:MONTHS,datasets:[
+    {data:haiMonthly,borderColor:A,backgroundColor:A2,fill:true,borderWidth:2,pointRadius:3,tension:.4},
+    {data:Array(12).fill(1.0),borderColor:'rgba(220,38,38,.4)',borderDash:[4,4],borderWidth:1.5,pointRadius:0,fill:false}
+  ]},
+  options:{...baseOpts(),scales:{x:{grid:{display:false},ticks:tickOpts()},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v+'%'},min:0.7,max:1.1}}}
+});
+
+// Cases by category
+new Chart(document.getElementById('chart-cases'),{
+  type:'bar',
+  data:{
+    labels:['Diag. Imaging','Emergency','Orthopedic','Cardiovascular','Pediatric','Oncology','Neurological','Critical Care'],
+    datasets:[{data:[6098,4333,2247,1906,1900,1568,1213,858],backgroundColor:[G2,R+'22',T2,M2,B2,A2,'rgba(109,40,217,.1)','rgba(220,38,38,.08)'],borderColor:[G,R,T,M,B,A,'#6d28d9','#dc2626'],borderWidth:1.5,borderRadius:3}]
+  },
+  options:{...baseOpts(),indexAxis:'y',scales:{x:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v.toLocaleString()}},y:{grid:{display:false},ticks:{...tickOpts(),font:{size:9}}}}}
+});
+
+// ── PAGE 4: Financial ────────────────────────────────────────────────────────
+new Chart(document.getElementById('chart-fin-monthly'),{
+  type:'bar',
+  data:{
+    labels:MONTHS,
+    datasets:[
+      {label:'Revenue',data:revData,backgroundColor:G2,borderColor:G,borderWidth:1.5,borderRadius:3},
+      {label:'Costs',data:costData,backgroundColor:'rgba(220,38,38,.08)',borderColor:R,borderWidth:1.5,borderRadius:3},
+    ]
+  },
+  options:{...baseOpts(),plugins:{...baseOpts().plugins,legend:{display:true,labels:{color:mut,font:{family:"'DM Mono',monospace",size:9},boxWidth:10}}},
+    scales:{x:{grid:{display:false},ticks:tickOpts()},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>'$'+v+'M'}}}}
+});
+
+// Revenue streams doughnut
+new Chart(document.getElementById('chart-streams'),{
+  type:'doughnut',
+  data:{
+    labels:['Inpatient (48%)','Outpatient (31%)','Procedure (21%)'],
+    datasets:[{data:[49.3,31.9,21.6],backgroundColor:[M,T,A],borderColor:'#f9f9f7',borderWidth:3,hoverOffset:4}]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,cutout:'65%',
+    plugins:{
+      legend:{display:true,position:'bottom',labels:{color:mut,font:{family:"'DM Mono',monospace",size:9},boxWidth:10,padding:12}},
+      tooltip:{backgroundColor:'rgba(28,25,23,.9)',titleColor:'#f9f9f7',bodyColor:'rgba(249,249,247,.7)',padding:10,cornerRadius:6}
+    }
+  }
+});
+
+// EBITDA rank horizontal
+new Chart(document.getElementById('chart-ebitda-rank'),{
+  type:'bar',
+  data:{
+    labels:['Radiology','Orthopedics','Cardiology','Neurology','Pediatrics','Oncology','Emergency','ICU'],
+    datasets:[{data:[31.6,26.7,23.0,21.6,20.0,16.7,13.8,10.7],backgroundColor:['rgba(21,128,61,.15)','rgba(21,128,61,.12)','rgba(15,118,110,.12)','rgba(15,118,110,.10)','rgba(180,83,9,.10)','rgba(180,83,9,.12)','rgba(157,23,77,.10)','rgba(157,23,77,.14)'],borderColor:[G,G,T,T,A,A,M,M],borderWidth:1.5,borderRadius:3}]
+  },
+  options:{...baseOpts(),indexAxis:'y',scales:{x:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v+'%'}},y:{grid:{display:false},ticks:{...tickOpts(),font:{size:9}}}}}
+});
+
+// Cost composition donut
+new Chart(document.getElementById('chart-cost-comp'),{
+  type:'doughnut',
+  data:{
+    labels:['Staff (42%)','Supplies (18%)','Overhead (14%)','Equipment (8%)','Other (18%)'],
+    datasets:[{data:[42,18,14,8,18],backgroundColor:[M,A,B,G,T],borderColor:'#f9f9f7',borderWidth:3,hoverOffset:4}]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,cutout:'65%',
+    plugins:{
+      legend:{display:true,position:'bottom',labels:{color:mut,font:{family:"'DM Mono',monospace",size:9},boxWidth:10,padding:10}},
+      tooltip:{backgroundColor:'rgba(28,25,23,.9)',titleColor:'#f9f9f7',bodyColor:'rgba(249,249,247,.7)',padding:10,cornerRadius:6}
+    }
+  }
+});
+
+// ── PAGE 5: Physician ────────────────────────────────────────────────────────
+const physNames = ['Nakamura','Kim','Patel','Thornton','Brooks','Rivera','Osei','Santos','Hartmann','Okafor','Mehta','Andrade'];
+const physRev   = [5.03,4.67,4.42,4.25,4.28,3.88,3.40,3.05,2.94,2.33,2.16,1.80];
+const physPts   = [3100,1885,1362,3435,1338,1325,1929,3990,1592,2486,3086,2476];
+
+new Chart(document.getElementById('chart-phys-rev'),{
+  type:'bar',
+  data:{labels:physNames,datasets:[{data:physRev,backgroundColor:physRev.map(v=>v>4?M2:v>3?T2:G2),borderColor:physRev.map(v=>v>4?M:v>3?T:G),borderWidth:1.5,borderRadius:4}]},
+  options:{...baseOpts(),scales:{x:{grid:{display:false},ticks:{...tickOpts(),maxRotation:35,font:{size:8}}},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>'$'+v+'M'}}}}
+});
+
+new Chart(document.getElementById('chart-phys-pts'),{
+  type:'bar',
+  data:{labels:physNames,datasets:[{data:physPts,backgroundColor:physPts.map(v=>v>3000?A2:v>2000?T2:B2),borderColor:physPts.map(v=>v>3000?A:v>2000?T:B),borderWidth:1.5,borderRadius:4}]},
+  options:{...baseOpts(),scales:{x:{grid:{display:false},ticks:{...tickOpts(),maxRotation:35,font:{size:8}}},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v.toLocaleString()}}}}
+});
+
+// ── PAGE 6: Workforce ────────────────────────────────────────────────────────
+new Chart(document.getElementById('chart-staff-wkd'),{
+  type:'bar',
+  data:{
+    labels:DEPTS,
+    datasets:[
+      {label:'Weekday',data:[45,52,38,34,68,28,72,42],backgroundColor:M2,borderColor:M,borderWidth:1.5,borderRadius:[3,0,0,3]},
+      {label:'Weekend',data:[28,32,24,21,42,17,45,26],backgroundColor:T2,borderColor:T,borderWidth:1.5,borderRadius:[0,3,3,0]}
+    ]
+  },
+  options:{...baseOpts(),plugins:{...baseOpts().plugins,legend:{display:true,labels:{color:mut,font:{family:"'DM Mono',monospace",size:9},boxWidth:10}}},
+    scales:{x:{grid:{display:false},ticks:{...tickOpts(),maxRotation:30}},y:{grid:gridOpts(),ticks:tickOpts()}}}
+});
+
+// Overtime weekly (simulated from dataset pattern)
+const overtimeWkly = [820,795,840,810,830,780,760,800,770,750,720,740,710,695,680,670];
+new Chart(document.getElementById('chart-overtime'),{
+  type:'line',
+  data:{labels:occLabels,datasets:[{data:overtimeWkly,borderColor:A,backgroundColor:A2,fill:true,borderWidth:2,pointRadius:0,tension:.4}]},
+  options:{...baseOpts(),scales:{x:{grid:{display:false},ticks:{...tickOpts(),maxTicksLimit:8}},y:{grid:gridOpts(),ticks:tickOpts()}}}
+});
+
+// ── Navigation ───────────────────────────────────────────────────────────────
+function switchPage(el, pageId, label){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('page-'+pageId).classList.add('active');
+  document.getElementById('crumb-page').textContent = label;
+  document.querySelector('.main').scrollTop = 0;
+}
+</script>
+</body>
+</html>
