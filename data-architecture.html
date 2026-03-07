@@ -663,7 +663,8 @@
         A dataset is not a spreadsheet. It is a set of decisions — about what matters,
         what to measure, and what story the numbers should be capable of telling.
         This page documents every choice made in constructing the operational data
-        behind the Power BI healthcare dashboard.
+        behind the Power BI healthcare dashboard — 20,130 rows of daily granularity
+        across 7 tables and a full leap year.
       </p>
 
       <div class="da-stat-bar">
@@ -672,16 +673,16 @@
           <div class="da-stat-label">Data Tables</div>
         </div>
         <div class="da-stat">
-          <div class="da-stat-num">660+</div>
-          <div class="da-stat-label">Data Rows</div>
+          <div class="da-stat-num">20,130</div>
+          <div class="da-stat-label">Total Data Rows</div>
         </div>
         <div class="da-stat">
           <div class="da-stat-num">110</div>
           <div class="da-stat-label">Distinct Fields</div>
         </div>
         <div class="da-stat">
-          <div class="da-stat-num">12</div>
-          <div class="da-stat-label">Months Covered</div>
+          <div class="da-stat-num">366</div>
+          <div class="da-stat-label">Days Covered</div>
         </div>
         <div class="da-stat">
           <div class="da-stat-num">8</div>
@@ -1175,10 +1176,10 @@
           </div>
         </div>
         <div class="da-decision">
-          <div class="da-decision-num">✕</div>
+          <div class="da-decision-num">✓</div>
           <div class="da-decision-body">
-            <h4>Weekly or Daily Granularity</h4>
-            <p>Daily data would surface noise as insight — a bad Tuesday in the ICU is not a management issue, it is variance. Monthly aggregation at department level produces data that is actionable at the cadence that operational decisions are actually made: in monthly reviews, quarterly planning sessions, and annual strategy cycles.</p>
+            <h4>Daily Granularity — Chosen Over Monthly Aggregates</h4>
+            <p>Monthly aggregation was the initial default. It was rejected. Daily data at 20,130 rows exposes patterns that monthly summaries structurally conceal: weekend staffing drops, winter admission surges peaking mid-week, equipment downtime clustering around specific days. These are not noise — they are the operational truth of a hospital. Power BI handles this volume natively, and the Day of Week, Week No., and Quarter fields built into every table make it trivial to aggregate up when a monthly view is needed. The granularity flows downward; it cannot be recovered if you start at the top.</p>
           </div>
         </div>
         <div class="da-decision">
