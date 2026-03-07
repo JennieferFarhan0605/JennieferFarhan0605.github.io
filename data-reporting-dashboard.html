@@ -47,10 +47,10 @@
       </p>
       <p class="project-desc">
         The dataset underpinning the dashboard was engineered from first principles —
-        <strong>seven interconnected tables</strong>, 660+ rows, and 110 distinct fields spanning
-        a full financial year. Rather than using a pre-packaged dataset, the data was constructed
-        with realistic seasonal variation, department-specific baselines, and the kinds of
-        controlled noise that make anomaly detection meaningful in practice.
+        <strong>seven interconnected tables</strong>, 20,130 daily rows, and 110 distinct fields
+        across a full leap year. Rather than using a pre-packaged dataset, the data was constructed
+        at daily granularity with realistic seasonal and weekly variation, department-specific
+        baselines, and controlled noise that makes anomaly detection meaningful in practice.
         <a href="data-architecture.html" style="color:var(--accent); font-weight:700;">
           See the full dataset rationale →
         </a>
@@ -68,13 +68,13 @@
           management team would interrogate.
         </p>
         <ul style="color:var(--text-muted); list-style:disc; padding-left:20px; line-height:1.9;">
-          <li><strong>Monthly KPIs</strong> — Hospital-wide pulse: admissions, bed occupancy, OR utilization, satisfaction, net margin</li>
-          <li><strong>Department Performance</strong> — 8 departments × 12 months: revenue, LOS, complications, margin</li>
-          <li><strong>Physician Productivity</strong> — 12 physicians × 12 months: patients seen, on-time start, peer review, revenue</li>
-          <li><strong>Patient Outcomes</strong> — Procedure-level success rates, HAI rate, protocol adherence, patient-reported outcomes</li>
-          <li><strong>Financial Summary</strong> — Revenue by stream, EBITDA, denial rate, days sales outstanding, cost per patient</li>
-          <li><strong>Equipment Utilization</strong> — 10 high-value assets: utilization rate, downtime, maintenance cost</li>
-          <li><strong>Staffing & Workforce</strong> — Vacancy, turnover, agency usage, staff-patient ratio by department</li>
+          <li><strong>Daily KPIs</strong> — 366 rows of hospital-wide pulse: admissions, bed occupancy, OR utilization, satisfaction, net margin</li>
+          <li><strong>Department Daily</strong> — 8 departments × 366 days (2,928 rows): revenue, LOS, complications, margin, weekend vs weekday patterns</li>
+          <li><strong>Physician Daily</strong> — 12 physicians × 366 days (4,392 rows): patients seen, on-time start, revenue, leave flags</li>
+          <li><strong>Patient Outcomes Daily</strong> — 8 procedure categories × 366 days (2,928 rows): success rates, HAI rate, protocol adherence, PRO scores</li>
+          <li><strong>Financial Daily</strong> — 8 departments × 366 days (2,928 rows): revenue by stream, EBITDA, denial rate, cost per patient</li>
+          <li><strong>Equipment Daily</strong> — 10 high-value assets × 366 days (3,660 rows): utilization rate, downtime, maintenance cost</li>
+          <li><strong>Staffing Daily</strong> — 8 departments × 366 days (2,928 rows): shift headcount, vacancy, agency usage, staff-patient ratio</li>
         </ul>
       </div>
 
@@ -83,10 +83,10 @@
           <a href="https://github.com/JennieferFarhan0605/JennieferFarhan0605.github.io/tree/main/assets"
              target="_blank" rel="noopener"
              style="color:var(--accent); font-weight:700; font-size:1rem;">
-            Healthcare_Operations_Dashboard_Dataset.xlsx
+            Healthcare_Operations_Daily_Dataset.xlsx
           </a>
           <p class="dataset-meta">
-            7 sheets · 660+ rows · 110 fields · FY 2024 (Jan–Dec) · Formatted for direct Power BI import
+            7 sheets · 20,130 daily rows · 110 fields · FY 2024 (366 days) · Formatted for direct Power BI import
           </p>
         </div>
       </div>
@@ -99,8 +99,10 @@
         <h3 class="h3">1. Data Modeling & Structuring</h3>
         <p class="project-desc">
           The dataset follows a <strong>denormalised star structure</strong> — each of the seven tables
-          shares <code>Month</code> and <code>Department</code> as join keys, enabling Power BI to
-          cross-filter across all dimensions simultaneously without requiring complex DAX relationships.
+          shares <code>Date</code> and <code>Department</code> as join keys, enabling Power BI to
+          cross-filter across all dimensions simultaneously. Built-in <code>Day of Week</code>,
+          <code>Week No.</code>, and <code>Quarter</code> fields make rolling aggregations trivial
+          without additional DAX date tables.
         </p>
         <p class="project-desc">
           Data integrity was verified at source: all values were engineered within published
@@ -119,7 +121,7 @@
           to match the analytical question each metric is answering:
         </p>
         <ul style="color: var(--text-muted); margin-bottom: 2rem; list-style: disc; padding-left: 20px;">
-          <li><strong>Trend Analysis:</strong> Line and area charts for performance trajectories — bed occupancy, admissions, revenue — over the 12-month period.</li>
+          <li><strong>Trend Analysis:</strong> Line and area charts for performance trajectories — bed occupancy, admissions, revenue — with daily resolution and 7-day rolling averages to smooth operational noise.</li>
           <li><strong>Departmental Comparison:</strong> Bar charts and heatmaps to surface which departments are outliers on margin, complications, or LOS.</li>
           <li><strong>Clinical Quality Matrix:</strong> Scatter plots pairing protocol adherence with outcome rates to identify the "high-adherence, poor-outcome" anomalies worth investigating.</li>
           <li><strong>KPI Cards:</strong> High-level "North Star" metrics positioned at the top for immediate executive visibility — total admissions, net margin, patient satisfaction, mortality rate.</li>
@@ -149,7 +151,7 @@
         <p style="margin-bottom: 0; color: var(--text-muted);">
           The seven-table structure means a leader can move from
           "ICU readmission rate is rising" → "ICU staff vacancy rate is at 11%" →
-          "ICU overtime hours are up 22% month-on-month" in a single dashboard session —
+          "ICU overtime hours are trending up on weekday night shifts" in a single dashboard session —
           connecting the clinical, operational, and workforce stories that are typically
           buried in separate systems.
         </p>
