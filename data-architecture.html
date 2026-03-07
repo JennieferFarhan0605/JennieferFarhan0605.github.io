@@ -1,0 +1,1237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Data Architecture | Jenniefer Farhan</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════════
+       DATA ARCHITECTURE PAGE — Unique page-scoped styles
+       Aesthetic direction: Clinical Lab Notebook × Medical Manifesto
+       Fonts: DM Serif Display (gravitas) + DM Mono (data precision)
+    ═══════════════════════════════════════════════════════════════ */
+
+    :root {
+      --da-ink:        #0e1117;
+      --da-paper:      #f8f6f1;
+      --da-rule:       #d4c9b8;
+      --da-mulberry:   #9d174d;
+      --da-mulberry-10: rgba(157, 23, 77, 0.08);
+      --da-mulberry-20: rgba(157, 23, 77, 0.18);
+      --da-teal:       #0f766e;
+      --da-teal-10:    rgba(15, 118, 110, 0.08);
+      --da-amber:      #b45309;
+      --da-amber-10:   rgba(180, 83, 9, 0.08);
+      --da-blue:       #1d4ed8;
+      --da-blue-10:    rgba(29, 78, 216, 0.08);
+      --da-green:      #15803d;
+      --da-green-10:   rgba(21, 128, 61, 0.08);
+      --da-purple:     #6d28d9;
+      --da-purple-10:  rgba(109, 40, 217, 0.08);
+      --da-muted:      #6b6457;
+      --da-serif:      'DM Serif Display', serif;
+      --da-mono:       'DM Mono', monospace;
+      --da-sans:       'Lato', sans-serif;
+    }
+
+    /* ── Base overrides for this page ─────────────────────────── */
+    body {
+      background-color: var(--da-paper);
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 27px,
+          rgba(212, 201, 184, 0.35) 27px,
+          rgba(212, 201, 184, 0.35) 28px
+        );
+      background-attachment: fixed;
+    }
+
+    /* ── Hero ─────────────────────────────────────────────────── */
+    .da-hero {
+      position: relative;
+      padding: 5rem 0 4rem;
+      overflow: hidden;
+    }
+
+    .da-hero::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -80px;
+      width: 520px; height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(157,23,77,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .da-hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--da-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      color: var(--da-mulberry);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .da-hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 32px; height: 1px;
+      background: var(--da-mulberry);
+    }
+
+    .da-hero-title {
+      font-family: var(--da-serif);
+      font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+      line-height: 1.08;
+      color: var(--da-ink);
+      margin-bottom: 0.5rem;
+      max-width: 18ch;
+    }
+
+    .da-hero-title em {
+      font-style: italic;
+      color: var(--da-mulberry);
+    }
+
+    .da-hero-sub {
+      font-family: var(--da-sans);
+      font-size: 1.1rem;
+      color: var(--da-muted);
+      font-weight: 300;
+      max-width: 58ch;
+      line-height: 1.7;
+      margin-top: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── Stat bar ──────────────────────────────────────────────── */
+    .da-stat-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      border: 1px solid var(--da-rule);
+      border-radius: 8px;
+      overflow: hidden;
+      background: white;
+      margin-bottom: 0;
+    }
+
+    .da-stat {
+      flex: 1;
+      min-width: 140px;
+      padding: 1.25rem 1.5rem;
+      border-right: 1px solid var(--da-rule);
+    }
+
+    .da-stat:last-child { border-right: none; }
+
+    .da-stat-num {
+      font-family: var(--da-serif);
+      font-size: 2rem;
+      color: var(--da-ink);
+      line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+
+    .da-stat-label {
+      font-family: var(--da-mono);
+      font-size: 0.68rem;
+      color: var(--da-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Section layout ────────────────────────────────────────── */
+    .da-section {
+      padding: 4rem 0;
+      border-top: 1px solid var(--da-rule);
+    }
+
+    .da-section-tag {
+      font-family: var(--da-mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      color: var(--da-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .da-section-tag::after {
+      content: '';
+      flex: 1;
+      max-width: 40px;
+      height: 1px;
+      background: var(--da-rule);
+    }
+
+    .da-section-title {
+      font-family: var(--da-serif);
+      font-size: 2rem;
+      color: var(--da-ink);
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .da-prose {
+      font-family: var(--da-sans);
+      font-size: 1.02rem;
+      color: var(--da-muted);
+      line-height: 1.78;
+      max-width: 68ch;
+      margin-bottom: 1.1rem;
+    }
+
+    .da-prose strong {
+      color: var(--da-ink);
+      font-weight: 700;
+    }
+
+    /* ── Vision block ──────────────────────────────────────────── */
+    .da-vision {
+      background: var(--da-ink);
+      border-radius: 10px;
+      padding: 2.5rem 2.75rem;
+      margin: 2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .da-vision::before {
+      content: '"';
+      position: absolute;
+      top: -20px; left: 20px;
+      font-family: var(--da-serif);
+      font-size: 12rem;
+      color: rgba(157,23,77,0.15);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .da-vision p {
+      font-family: var(--da-serif);
+      font-size: 1.4rem;
+      font-style: italic;
+      color: #f8f6f1;
+      line-height: 1.6;
+      max-width: 64ch;
+      position: relative;
+      z-index: 1;
+      margin: 0;
+    }
+
+    .da-vision-attr {
+      font-family: var(--da-mono);
+      font-size: 0.72rem;
+      color: rgba(248,246,241,0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 1rem;
+      display: block;
+    }
+
+    /* ── Sheet cards ───────────────────────────────────────────── */
+    .da-sheets-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    .da-sheet-card {
+      background: white;
+      border: 1px solid var(--da-rule);
+      border-radius: 10px;
+      padding: 1.5rem 1.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.22s ease;
+    }
+
+    .da-sheet-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--sheet-color, var(--da-mulberry));
+      border-radius: 10px 0 0 10px;
+    }
+
+    .da-sheet-card:hover {
+      box-shadow: 0 6px 24px rgba(14,17,23,0.08);
+      transform: translateY(-2px);
+      border-color: var(--sheet-color, var(--da-mulberry));
+    }
+
+    .da-sheet-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 0.85rem;
+    }
+
+    .da-sheet-name {
+      font-family: var(--da-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      background: var(--sheet-bg, var(--da-mulberry-10));
+      color: var(--sheet-color, var(--da-mulberry));
+      text-transform: uppercase;
+    }
+
+    .da-sheet-rows {
+      font-family: var(--da-mono);
+      font-size: 0.72rem;
+      color: var(--da-muted);
+    }
+
+    .da-sheet-title {
+      font-family: var(--da-serif);
+      font-size: 1.15rem;
+      color: var(--da-ink);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .da-sheet-desc {
+      font-family: var(--da-sans);
+      font-size: 0.88rem;
+      color: var(--da-muted);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .da-sheet-fields {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .da-field-pill {
+      font-family: var(--da-mono);
+      font-size: 0.68rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      background: var(--da-paper);
+      color: var(--da-muted);
+      border: 1px solid var(--da-rule);
+    }
+
+    /* ── Field rationale table ─────────────────────────────────── */
+    .da-rationale-block {
+      margin-top: 2.5rem;
+    }
+
+    .da-rationale-group {
+      margin-bottom: 2.5rem;
+    }
+
+    .da-rationale-group-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--group-color, var(--da-rule));
+    }
+
+    .da-group-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--group-color, var(--da-mulberry));
+      flex-shrink: 0;
+    }
+
+    .da-group-name {
+      font-family: var(--da-serif);
+      font-size: 1.25rem;
+      color: var(--da-ink);
+    }
+
+    .da-group-count {
+      font-family: var(--da-mono);
+      font-size: 0.7rem;
+      color: var(--da-muted);
+      letter-spacing: 0.08em;
+      margin-left: auto;
+    }
+
+    .da-field-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .da-field-row {
+      display: grid;
+      grid-template-columns: 220px 1fr auto;
+      gap: 1rem;
+      align-items: start;
+      padding: 0.85rem 1rem;
+      border-radius: 6px;
+      background: white;
+      border: 1px solid var(--da-rule);
+      transition: border-color 0.18s ease;
+    }
+
+    .da-field-row:hover {
+      border-color: var(--group-color, var(--da-mulberry));
+    }
+
+    .da-field-row-name {
+      font-family: var(--da-mono);
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--da-ink);
+    }
+
+    .da-field-row-why {
+      font-family: var(--da-sans);
+      font-size: 0.87rem;
+      color: var(--da-muted);
+      line-height: 1.55;
+    }
+
+    .da-field-row-why strong {
+      color: var(--da-ink);
+    }
+
+    .da-field-type {
+      font-family: var(--da-mono);
+      font-size: 0.65rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      white-space: nowrap;
+      align-self: center;
+    }
+
+    .type-pct  { background: var(--da-mulberry-10); color: var(--da-mulberry); }
+    .type-int  { background: var(--da-blue-10);     color: var(--da-blue); }
+    .type-usd  { background: var(--da-green-10);    color: var(--da-green); }
+    .type-dec  { background: var(--da-amber-10);    color: var(--da-amber); }
+    .type-score{ background: var(--da-purple-10);   color: var(--da-purple); }
+    .type-hrs  { background: var(--da-teal-10);     color: var(--da-teal); }
+
+    /* ── Design decisions ─────────────────────────────────────── */
+    .da-decision-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    .da-decision {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .da-decision-num {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--da-rule);
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--da-mono);
+      font-size: 0.75rem;
+      color: var(--da-mulberry);
+      font-weight: 500;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .da-decision-body h4 {
+      font-family: var(--da-serif);
+      font-size: 1.05rem;
+      color: var(--da-ink);
+      margin: 0 0 0.3rem;
+    }
+
+    .da-decision-body p {
+      font-family: var(--da-sans);
+      font-size: 0.9rem;
+      color: var(--da-muted);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ── Methodology timeline ─────────────────────────────────── */
+    .da-timeline {
+      position: relative;
+      margin-top: 2rem;
+      padding-left: 2rem;
+    }
+
+    .da-timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 8px;
+      width: 1px;
+      height: calc(100% - 16px);
+      background: linear-gradient(to bottom, var(--da-mulberry), var(--da-rule));
+    }
+
+    .da-tl-item {
+      position: relative;
+      margin-bottom: 2rem;
+      padding-left: 1.5rem;
+    }
+
+    .da-tl-item::before {
+      content: '';
+      position: absolute;
+      left: -2rem; top: 8px;
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid var(--da-mulberry);
+      z-index: 1;
+    }
+
+    .da-tl-item:last-child { margin-bottom: 0; }
+
+    .da-tl-label {
+      font-family: var(--da-mono);
+      font-size: 0.68rem;
+      color: var(--da-mulberry);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.3rem;
+    }
+
+    .da-tl-title {
+      font-family: var(--da-serif);
+      font-size: 1.1rem;
+      color: var(--da-ink);
+      margin-bottom: 0.35rem;
+    }
+
+    .da-tl-text {
+      font-family: var(--da-sans);
+      font-size: 0.88rem;
+      color: var(--da-muted);
+      line-height: 1.6;
+      max-width: 60ch;
+    }
+
+    /* ── Code specimen ────────────────────────────────────────── */
+    .da-code-block {
+      background: #0e1117;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+      border: 1px solid #1e2533;
+    }
+
+    .da-code-bar {
+      background: #161b25;
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #1e2533;
+    }
+
+    .da-code-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+
+    .da-code-filename {
+      font-family: var(--da-mono);
+      font-size: 0.72rem;
+      color: rgba(248,246,241,0.4);
+      margin-left: 4px;
+    }
+
+    .da-code-block pre {
+      margin: 0;
+      padding: 1.5rem;
+      overflow-x: auto;
+      font-family: var(--da-mono);
+      font-size: 0.82rem;
+      line-height: 1.75;
+      color: #c9d1d9;
+    }
+
+    .tok-kw    { color: #ff79c6; }
+    .tok-fn    { color: #8be9fd; }
+    .tok-str   { color: #f1fa8c; }
+    .tok-num   { color: #bd93f9; }
+    .tok-cmt   { color: #6272a4; font-style: italic; }
+    .tok-var   { color: #50fa7b; }
+
+    /* ── Download CTA ─────────────────────────────────────────── */
+    .da-cta-box {
+      background: white;
+      border: 1px solid var(--da-rule);
+      border-radius: 10px;
+      padding: 2rem 2.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .da-cta-left h3 {
+      font-family: var(--da-serif);
+      font-size: 1.3rem;
+      color: var(--da-ink);
+      margin: 0 0 0.3rem;
+    }
+
+    .da-cta-left p {
+      font-family: var(--da-sans);
+      font-size: 0.9rem;
+      color: var(--da-muted);
+      margin: 0;
+    }
+
+    .da-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--da-mulberry);
+      color: white;
+      font-family: var(--da-mono);
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .da-cta-btn:hover {
+      background: #7f0f3d;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(157,23,77,0.25);
+    }
+
+    .da-cta-btn svg {
+      width: 14px; height: 14px;
+      stroke: white;
+      fill: none;
+    }
+
+    /* ── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .da-sheets-grid { grid-template-columns: 1fr; }
+      .da-field-row   { grid-template-columns: 1fr; gap: 0.4rem; }
+      .da-field-type  { align-self: flex-start; }
+      .da-cta-box     { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 480px) {
+      .da-stat-bar { flex-direction: column; }
+      .da-stat     { border-right: none; border-bottom: 1px solid var(--da-rule); }
+      .da-stat:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav-wrap">
+    <a href="index.html" class="brand">Jenniefer <span>Farhan.</span></a>
+    <a href="data-reporting-dashboard.html" class="btn-link">← Back to Dashboard Project</a>
+  </nav>
+
+  <main class="container">
+
+    <!-- ── Hero ─────────────────────────────────────────────── -->
+    <header class="da-hero">
+      <div class="da-hero-eyebrow">Dataset Engineering</div>
+      <h1 class="da-hero-title">The <em>Anatomy</em> of a Healthcare Dataset</h1>
+      <p class="da-hero-sub">
+        A dataset is not a spreadsheet. It is a set of decisions — about what matters,
+        what to measure, and what story the numbers should be capable of telling.
+        This page documents every choice made in constructing the operational data
+        behind the Power BI healthcare dashboard.
+      </p>
+
+      <div class="da-stat-bar">
+        <div class="da-stat">
+          <div class="da-stat-num">7</div>
+          <div class="da-stat-label">Data Tables</div>
+        </div>
+        <div class="da-stat">
+          <div class="da-stat-num">660+</div>
+          <div class="da-stat-label">Data Rows</div>
+        </div>
+        <div class="da-stat">
+          <div class="da-stat-num">110</div>
+          <div class="da-stat-label">Distinct Fields</div>
+        </div>
+        <div class="da-stat">
+          <div class="da-stat-num">12</div>
+          <div class="da-stat-label">Months Covered</div>
+        </div>
+        <div class="da-stat">
+          <div class="da-stat-num">8</div>
+          <div class="da-stat-label">Departments</div>
+        </div>
+        <div class="da-stat">
+          <div class="da-stat-num">0</div>
+          <div class="da-stat-label">Formula Errors</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── Vision ────────────────────────────────────────────── -->
+    <section class="da-section">
+      <div class="da-section-tag">The Why</div>
+      <h2 class="da-section-title">A Case for Visible Medicine</h2>
+      <p class="da-prose">
+        Healthcare generates more operational data than almost any other industry —
+        yet most of it lives in siloed EMRs, billing systems, and disconnected department trackers,
+        never synthesised into a picture that allows leaders to act with clarity.
+        The gap between <strong>what happens in a hospital</strong> and
+        <strong>what management can actually see</strong> is, in many cases, a patient safety issue.
+      </p>
+      <p class="da-prose">
+        This dataset was built around a single pragmatic premise: if a department head
+        sat down on the first Monday of each month, what twelve numbers would tell them
+        whether their department was performing, struggling, or about to tip into crisis?
+        Then: what would the CFO need alongside that? The clinical quality lead? The equipment
+        manager running half-million-dollar MRI assets?
+      </p>
+
+      <div class="da-vision">
+        <p>
+          The most powerful thing you can do with healthcare data is not predict disease —
+          it is make the ordinary, operational truth of a hospital legible enough
+          that a manager can do something about it before it becomes extraordinary.
+        </p>
+        <span class="da-vision-attr">Design rationale — Jenniefer Farhan</span>
+      </div>
+
+      <p class="da-prose">
+        Every field in this dataset was chosen because it is either a
+        <strong>leading indicator</strong> (it tells you where you are going),
+        a <strong>lagging indicator</strong> (it confirms what just happened), or a
+        <strong>diagnostic bridge</strong> (it explains <em>why</em> a headline metric moved).
+        No field exists merely because it was available.
+      </p>
+    </section>
+
+    <!-- ── Methodology Timeline ───────────────────────────────── -->
+    <section class="da-section">
+      <div class="da-section-tag">Construction Method</div>
+      <h2 class="da-section-title">How the Dataset Was Built</h2>
+      <p class="da-prose">
+        The data was generated programmatically in Python using <strong>openpyxl</strong>,
+        with mathematical realism baked into every value. The goal was not random noise —
+        it was <em>structured verisimilitude</em>: patterns that behave the way a real hospital
+        would over a calendar year.
+      </p>
+
+      <div class="da-timeline">
+        <div class="da-tl-item">
+          <div class="da-tl-label">Step 01 — Domain Mapping</div>
+          <div class="da-tl-title">Identify the operational questions worth answering</div>
+          <p class="da-tl-text">
+            Before writing a single line of Python, the six domains of hospital operations
+            were mapped: patient flow, clinical quality, finance, physician performance,
+            equipment assets, and workforce. Each domain became its own table. This mirrors
+            the star-schema logic Power BI expects for efficient DAX calculations.
+          </p>
+        </div>
+        <div class="da-tl-item">
+          <div class="da-tl-label">Step 02 — Baseline Research</div>
+          <div class="da-tl-title">Anchor every metric to published NHS / CMS benchmarks</div>
+          <p class="da-tl-text">
+            Each base value — bed occupancy at 78%, 30-day readmission around 11.2%,
+            ICU mortality near 8.5% — was calibrated to published ranges from
+            CMS Hospital Compare, NHS England operational standards, and AHRQ quality indicators.
+            The numbers are not real, but they are <em>plausible</em>.
+          </p>
+        </div>
+        <div class="da-tl-item">
+          <div class="da-tl-label">Step 03 — Temporal Realism</div>
+          <div class="da-tl-title">Add seasonal variation and year-on-year growth curves</div>
+          <p class="da-tl-text">
+            A sinusoidal seasonal function models the well-documented winter surge in
+            emergency admissions and elective surgery troughs in summer. A compounding
+            growth function layered on top creates the drift you would expect from a
+            hospital incrementally improving its throughput across a year.
+          </p>
+        </div>
+        <div class="da-tl-item">
+          <div class="da-tl-label">Step 04 — Controlled Noise</div>
+          <div class="da-tl-title">Apply department-specific jitter so no two rows are identical</div>
+          <p class="da-tl-text">
+            Each cell is perturbed by ±3–15% random noise (tighter for stable metrics
+            like mortality, wider for volatile ones like overtime hours). This prevents
+            Power BI trend lines from being artificially smooth and makes anomaly detection
+            actually meaningful.
+          </p>
+        </div>
+        <div class="da-tl-item">
+          <div class="da-tl-label">Step 05 — Formatting & Validation</div>
+          <div class="da-tl-title">Colour-code, format, and verify zero formula errors</div>
+          <p class="da-tl-text">
+            All sheets are formatted with the portfolio's mulberry and charcoal palette,
+            alternating row shading by department for readability, and a frozen header row.
+            LibreOffice recalculation was run as a final pass — confirmed zero formula errors
+            across all 18 Excel formulas in the totals row.
+          </p>
+        </div>
+      </div>
+
+      <div class="da-code-block">
+        <div class="da-code-bar">
+          <div class="da-code-dot" style="background:#ff5f57"></div>
+          <div class="da-code-dot" style="background:#ffbd2e"></div>
+          <div class="da-code-dot" style="background:#28c840"></div>
+          <span class="da-code-filename">build_dataset.py — temporal realism functions</span>
+        </div>
+        <pre><span class="tok-kw">import</span> math, random
+
+<span class="tok-cmt"># Seasonal amplitude: mirrors winter admissions surge, summer elective trough</span>
+<span class="tok-kw">def</span> <span class="tok-fn">seasonal</span>(<span class="tok-var">month</span>, <span class="tok-var">amp</span>=<span class="tok-num">0.12</span>):
+    <span class="tok-kw">return</span> <span class="tok-num">1</span> + <span class="tok-var">amp</span> * math.sin(<span class="tok-num">2</span> * math.pi * (<span class="tok-var">month</span> - <span class="tok-num">3</span>) / <span class="tok-num">12</span>)
+
+<span class="tok-cmt"># Monotonic growth: models gradual operational improvement across the year</span>
+<span class="tok-kw">def</span> <span class="tok-fn">grow</span>(<span class="tok-var">month</span>, <span class="tok-var">total</span>=<span class="tok-num">12</span>, <span class="tok-var">rate</span>=<span class="tok-num">0.08</span>):
+    <span class="tok-kw">return</span> <span class="tok-num">1</span> + <span class="tok-var">rate</span> * (<span class="tok-var">month</span> - <span class="tok-num">1</span>) / (<span class="tok-var">total</span> - <span class="tok-num">1</span>)
+
+<span class="tok-cmt"># Controlled noise: ±pct perturbation so real patterns remain detectable</span>
+<span class="tok-kw">def</span> <span class="tok-fn">jitter</span>(<span class="tok-var">val</span>, <span class="tok-var">pct</span>=<span class="tok-num">0.05</span>):
+    <span class="tok-kw">return</span> <span class="tok-var">val</span> * (<span class="tok-num">1</span> + random.uniform(-<span class="tok-var">pct</span>, +<span class="tok-var">pct</span>))
+
+<span class="tok-cmt"># Usage: winter bed occupancy for a high-volume department</span>
+<span class="tok-var">month</span> = <span class="tok-num">12</span>  <span class="tok-cmt"># December</span>
+<span class="tok-var">occupancy</span> = <span class="tok-fn">jitter</span>(<span class="tok-num">0.78</span> * <span class="tok-fn">seasonal</span>(<span class="tok-var">month</span>), <span class="tok-num">0.03</span>)
+<span class="tok-cmt"># → ~0.867  (realistic winter surge from baseline 78%)</span></pre>
+      </div>
+    </section>
+
+    <!-- ── Sheet Architecture ─────────────────────────────────── -->
+    <section class="da-section">
+      <div class="da-section-tag">Table Architecture</div>
+      <h2 class="da-section-title">Seven Tables, One System</h2>
+      <p class="da-prose">
+        The dataset follows a <strong>denormalised star structure</strong> — each table can stand alone
+        for single-domain analysis, but they share the <code>Month</code> and <code>Department</code>
+        keys so Power BI can cross-filter across all seven simultaneously.
+      </p>
+
+      <div class="da-sheets-grid">
+
+        <div class="da-sheet-card" style="--sheet-color:#9d174d; --sheet-bg:rgba(157,23,77,0.08)">
+          <div class="da-sheet-header">
+            <span class="da-sheet-name">Monthly_KPIs</span>
+            <span class="da-sheet-rows">12 rows</span>
+          </div>
+          <div class="da-sheet-title">Hospital-Wide Pulse</div>
+          <div class="da-sheet-desc">
+            The single row per month that gives leadership the full-hospital picture —
+            the "north star" sheet that all other tables contextualise. Designed to power
+            executive summary cards and YTD trend lines.
+          </div>
+          <div class="da-sheet-fields">
+            <span class="da-field-pill">Admissions</span>
+            <span class="da-field-pill">Bed Occupancy</span>
+            <span class="da-field-pill">OR Utilization</span>
+            <span class="da-field-pill">Readmission Rate</span>
+            <span class="da-field-pill">Net Margin</span>
+            <span class="da-field-pill">Satisfaction</span>
+            <span class="da-field-pill">+13 more</span>
+          </div>
+        </div>
+
+        <div class="da-sheet-card" style="--sheet-color:#b45309; --sheet-bg:rgba(180,83,9,0.08)">
+          <div class="da-sheet-header">
+            <span class="da-sheet-name">Department_Performance</span>
+            <span class="da-sheet-rows">96 rows</span>
+          </div>
+          <div class="da-sheet-title">The Departmental Breakdown</div>
+          <div class="da-sheet-desc">
+            Eight departments × twelve months. Enables the most important clinical
+            comparison: why are two departments with similar volumes producing
+            different outcomes? The foundation for heatmap and small-multiples visuals.
+          </div>
+          <div class="da-sheet-fields">
+            <span class="da-field-pill">Revenue</span>
+            <span class="da-field-pill">LOS</span>
+            <span class="da-field-pill">Mortality</span>
+            <span class="da-field-pill">Margin %</span>
+            <span class="da-field-pill">Complications</span>
+            <span class="da-field-pill">+11 more</span>
+          </div>
+        </div>
+
+        <div class="da-sheet-card" style="--sheet-color:#0f766e; --sheet-bg:rgba(15,118,110,0.08)">
+          <div class="da-sheet-header">
+            <span class="da-sheet-name">Physician_Productivity</span>
+            <span class="da-sheet-rows">144 rows</span>
+          </div>
+          <div class="da-sheet-title">The Individual Contributor Layer</div>
+          <div class="da-sheet-desc">
+            Twelve physicians tracked monthly. Bridges clinical outcomes to individual
+            accountability — essential for understanding whether department-level
+            metrics are driven by a systemic issue or a specific practitioner's performance.
+          </div>
+          <div class="da-sheet-fields">
+            <span class="da-field-pill">Patients Seen</span>
+            <span class="da-field-pill">Revenue Generated</span>
+            <span class="da-field-pill">On-Time Start</span>
+            <span class="da-field-pill">Peer Review</span>
+            <span class="da-field-pill">Overtime</span>
+            <span class="da-field-pill">+9 more</span>
+          </div>
+        </div>
+
+        <div class="da-sheet-card" style="--sheet-color:#15803d; --sheet-bg:rgba(21,128,61,0.08)">
+          <div class="da-sheet-header">
+            <span class="da-sheet-name">Patient_Outcomes</span>
+            <span class="da-sheet-rows">96 rows</span>
+          </div>
+          <div class="da-sheet-title">The Clinical Truth Table</div>
+          <div class="da-sheet-desc">
+            The most ethically serious table. Eight procedure categories tracked against
+            success rates, HAI rates, protocol adherence, and patient-reported outcomes.
+            The distinction between procedure-level and patient-level data is
+            deliberately maintained here.
+          </div>
+          <div class="da-sheet-fields">
+            <span class="da-field-pill">Success Rate</span>
+            <span class="da-field-pill">HAI Rate</span>
+            <span class="da-field-pill">Protocol Adherence</span>
+            <span class="da-field-pill">PRO Score</span>
+            <span class="da-field-pill">Recovery Days</span>
+            <span class="da-field-pill">+12 more</span>
+          </div>
+        </div>
+
+        <div class="da-sheet-card" style="--sheet-color:#d97706; --sheet-bg:rgba(217,119,6,0.08)">
+          <div class="da-sheet-header">
+            <span class="da-sheet-name">Financial_Summary</span>
+            <span class="da-sheet-rows">96 rows</span>
+          </div>
+          <div class="da-sheet-title">Where Money Moves</div>
+          <div class="da-sheet-desc">
+            Revenue is decomposed into inpatient, outpatient, and procedure streams.
+            Costs broken into four categories. The denial rate and days-sales-outstanding
+            fields make this table genuinely useful to a revenue cycle team,
+            not just a finance controller.
+          </div>
+          <div class="da-sheet-fields">
+            <span class="da-field-pill">EBITDA</span>
+            <span class="da-field-pill">DSO</span>
+            <span class="da-field-pill">Denial Rate</span>
+            <span class="da-field-pill">Revenue by Stream</span>
+            <span class="da-field-pill">Cost per Patient</span>
+            <span class="da-field-pill">+13 more</span>
+          </div>
+        </div>
+
+        <div class="da-sheet-card" style="--sheet-color:#1d4ed8; --sheet-bg:rgba(29,78,216,0.08)">
+          <div class="da-sheet-header">
+            <span class="da-sheet-name">Equipment_Utilization</span>
+            <span class="da-sheet-rows">120 rows</span>
+          </div>
+          <div class="da-sheet-title">The Asset Intelligence Layer</div>
+          <div class="da-sheet-desc">
+            Ten high-value assets tracked monthly. Unplanned downtime and maintenance cost
+            are paired intentionally — a £15k/month MRI with 40 downtime hours tells a
+            very different story than one with 4 hours. This table enables genuine
+            capital allocation analysis.
+          </div>
+          <div class="da-sheet-fields">
+            <span class="da-field-pill">Utilization Rate</span>
+            <span class="da-field-pill">Downtime</span>
+            <span class="da-field-pill">Maintenance Cost</span>
+            <span class="da-field-pill">Revenue Generated</span>
+            <span class="da-field-pill">Asset Age</span>
+            <span class="da-field-pill">+8 more</span>
+          </div>
+        </div>
+
+        <div class="da-sheet-card" style="--sheet-color:#6d28d9; --sheet-bg:rgba(109,40,217,0.08); grid-column: 1 / -1;">
+          <div class="da-sheet-header">
+            <span class="da-sheet-name">Staffing_Workforce</span>
+            <span class="da-sheet-rows">96 rows</span>
+          </div>
+          <div class="da-sheet-title">The Human Infrastructure</div>
+          <div class="da-sheet-desc">
+            Staff are the largest single cost in a hospital and the hardest thing to optimise.
+            This table pairs financial cost data with operational signals — vacancy rate,
+            turnover, agency usage — that together reveal whether a department is
+            understaffed by choice, by attrition, or by structural underfunding.
+          </div>
+          <div class="da-sheet-fields">
+            <span class="da-field-pill">Headcount</span>
+            <span class="da-field-pill">Vacancy Rate</span>
+            <span class="da-field-pill">Turnover Rate</span>
+            <span class="da-field-pill">Agency Staff</span>
+            <span class="da-field-pill">Overtime</span>
+            <span class="da-field-pill">Training Hours</span>
+            <span class="da-field-pill">Staff-Patient Ratio</span>
+            <span class="da-field-pill">+8 more</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Field Rationale ────────────────────────────────────── -->
+    <section class="da-section">
+      <div class="da-section-tag">Field Rationale</div>
+      <h2 class="da-section-title">Why Each Metric Earns Its Column</h2>
+      <p class="da-prose">
+        The following documents the reasoning behind every key metric category.
+        Fields without a clear decision-support purpose were excluded during scoping.
+      </p>
+
+      <div class="da-rationale-block">
+
+        <!-- Clinical Quality -->
+        <div class="da-rationale-group" style="--group-color:#9d174d">
+          <div class="da-rationale-group-header">
+            <div class="da-group-dot"></div>
+            <div class="da-group-name">Clinical Quality & Safety</div>
+            <div class="da-group-count">6 fields</div>
+          </div>
+          <div class="da-field-rows">
+            <div class="da-field-row">
+              <div class="da-field-row-name">30-Day Readmission Rate</div>
+              <div class="da-field-row-why">The single most widely used indicator of discharge quality. A readmission within 30 days is the system admitting it sent someone home before they were ready. CMS uses it directly as a penalty trigger — so it belongs in any dashboard with real stakes.</div>
+              <div class="da-field-type type-pct">% Rate</div>
+            </div>
+            <div class="da-field-row">
+              <div class="da-field-row-name">Hospital-Acquired Infection Rate</div>
+              <div class="da-field-row-why">HAIs are the clearest signal of <strong>environmental and procedural discipline</strong>. They are preventable, they are costly, and a rising HAI rate gives infection control teams weeks of actionable lead time if it's visible. A dashboard without it is incomplete.</div>
+              <div class="da-field-type type-pct">% Rate</div>
+            </div>
+            <div class="da-field-row">
+              <div class="da-field-row-name">Protocol Adherence Rate</div>
+              <div class="da-field-row-why">Outcome metrics tell you what happened. Protocol adherence tells you <strong>whether the system was followed</strong>. It is the leading indicator to outcome's lagging. A department with low adherence and currently-good outcomes is an accident waiting to happen.</div>
+              <div class="da-field-type type-pct">% Rate</div>
+            </div>
+            <div class="da-field-row">
+              <div class="da-field-row-name">Patient Reported Outcomes Score</div>
+              <div class="da-field-row-why">PROs capture what clinicians and administrators cannot see from inside the system: whether the <strong>patient felt better</strong>. They are the primary measure of value from the payer's perspective in value-based care models and increasingly from regulators.</div>
+              <div class="da-field-type type-score">Score /10</div>
+            </div>
+            <div class="da-field-row">
+              <div class="da-field-row-name">In-Hospital Mortality Rate</div>
+              <div class="da-field-row-why">Not included to sensationalise, but because <strong>risk-adjusted mortality</strong> is the ultimate lagging indicator for a clinical environment. Its slow, low-noise movement over time is precisely the kind of trend that gets invisible without monthly tracking.</div>
+              <div class="da-field-type type-pct">% Rate</div>
+            </div>
+            <div class="da-field-row">
+              <div class="da-field-row-name">Complication Rate</div>
+              <div class="da-field-row-why">An intermediate outcome sitting between adherence and mortality. It is the metric most sensitive to surgeon skill variation and equipment quality — making it invaluable for identifying which departments or physicians are driving anomalies.</div>
+              <div class="da-field-type type-pct">% Rate</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Operational Flow -->
+        <div class="da-rationale-group" style="--group-color:#b45309">
+          <div class="da-rationale-group-header">
+            <div class="da-group-dot"></div>
+            <div class="da-group-name">Operational Flow & Capacity</div>
+            <div class="da-group-count">5 fields</div>
+          </div>
+          <div class="da-field-rows">
+            <div class="da-field-row">
+              <div class="da-field-row-name">Bed Occupancy Rate</div>
+              <div class="da-field-row-why">The most fundamental capacity metric. Below 75% suggests waste; above 92% correlates with infection risk and delayed discharges. The 78% baseline here represents efficient steady-state, with seasonal peaks deliberately reaching 87–89% in winter months.</div>
+              <div class="da-field-type type-pct">% Rate</div>
+            </div>
+            <div class="da-field-row">
+              <div class="da-field-row-name">Average Length of Stay</div>
+              <div class="da-field-row-why">LOS is a proxy for <strong>everything</strong>: clinical acuity, discharge planning efficiency, bed pressure, and cost. A 0.5-day reduction in LOS across a 250-bed hospital is worth millions in freed capacity annually. It deserves monthly tracking at department level.</div>
+              <div class="da-field-type type-dec">Days</div>
+            </div>
+            <div class="da-field-row">
+              <div class="da-field-row-name">OR Utilization Rate</div>
+              <div class="da-field-row-why">Operating theatres are among the most expensive assets in a hospital. Underutilisation at 65% wastes capital; over 95% means no buffer for emergencies. The target band of 80–88% reflects clinical safety guidelines. A dashboard that misses this misses the hospital's engine room.</div>
+              <div class="da-field-type type-pct">% Rate</div>
+            </div>
+            <div class="da-field-row">
+              <div class="da-field-row-name">Average Wait Time</div>
+              <div class="da-field-row-why">Patient experience, regulatory compliance, and emergency triage quality all converge here. It is the field most visible to <strong>patients themselves</strong>, which makes it politically significant — and in emergency departments, clinically significant too.</div>
+              <div class="da-field-type type-hrs">Hours</div>
+            </div>
+            <div class="da-field-row">
+              <div class="da-field-row-name">Staff-Patient Ratio</div>
+              <div class="da-field-row-why">Understaffing is the single most consistent predictor of adverse patient events across the published literature. This ratio, tracked monthly by department, becomes the connective tissue between the financial story (staff cost) and the clinical story (outcomes).</div>
+              <div class="da-field-type type-dec">Ratio</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Financial -->
+        <div class="da-rationale-group" style="--group-color:#15803d">
+          <div class="da-rationale-group-header">
+            <div class="da-group-dot"></div>
+            <div class="da-group-name">Financial Performance</div>
+            <div class="da-group-count">5 fields</div>
+          </div>
+          <div class="da-field-rows">
+            <div class="da-field-row">
+              <div class="da-field-row-name">EBITDA & EBITDA Margin</div>
+              <div class="da-field-row-why">Revenue without context is meaningless. EBITDA by department separates the <strong>operationally efficient</strong> from the operationally subsidised. Oncology and ICU carry high margins in absolute terms but different margin percentages — the split reveals where true profitability lives.</div>
+              <div class="da-field-type type-usd">$ / %</div>
+            </div>
+            <div class="da-field-row">
+              <div class="da-field-row-name">Insurance Denial Rate</div>
+              <div class="da-field-row-why">A denial rate above 5% signals a <strong>revenue cycle problem</strong> that no amount of clinical excellence can compensate for. It is one of the least-reported but highest-impact financial metrics in US hospital operations, making it critical for any realistic financial dashboard.</div>
+              <div class="da-field-type type-pct">% Rate</div>
+            </div>
+            <div class="da-field-row">
+              <div class="da-field-row-name">Days Sales Outstanding</div>
+              <div class="da-field-row-why">Cash flow, not revenue, keeps hospitals solvent. DSO of 38 days (industry median) means over a month of earned revenue is sitting as receivables. A rising DSO combined with high denial rates is the early signature of a liquidity crisis in the making.</div>
+              <div class="da-field-type type-dec">Days</div>
+            </div>
+            <div class="da-field-row">
+              <div class="da-field-row-name">Cost per Patient</div>
+              <div class="da-field-row-why">Normalises cost data against volume so that high-cost departments are evaluated fairly. An ICU with £18,000 cost-per-patient is not necessarily inefficient — but one that is trending upward without an acuity explanation is a management issue.</div>
+              <div class="da-field-type type-usd">$</div>
+            </div>
+            <div class="da-field-row">
+              <div class="da-field-row-name">Revenue by Stream (Inpatient / Outpatient / Procedure)</div>
+              <div class="da-field-row-why">Aggregate revenue conceals strategic risk. A department where 70% of revenue is procedure-based is vulnerable to elective surgery cancellations in ways that an inpatient-heavy department is not. Stream decomposition enables scenario planning that aggregate numbers cannot.</div>
+              <div class="da-field-type type-usd">$</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Workforce -->
+        <div class="da-rationale-group" style="--group-color:#6d28d9">
+          <div class="da-rationale-group-header">
+            <div class="da-group-dot"></div>
+            <div class="da-group-name">Workforce Intelligence</div>
+            <div class="da-group-count">4 fields</div>
+          </div>
+          <div class="da-field-rows">
+            <div class="da-field-row">
+              <div class="da-field-row-name">Vacancy Rate</div>
+              <div class="da-field-row-why">A vacancy rate above 8% in a clinical department is not an HR issue — it is a patient safety issue. Unfilled positions mean existing staff work above safe ratios. Tracking it monthly at department level reveals which teams are structurally fragile.</div>
+              <div class="da-field-type type-pct">% Rate</div>
+            </div>
+            <div class="da-field-row">
+              <div class="da-field-row-name">Agency Staff Usage</div>
+              <div class="da-field-row-why">Agency staff cost 30–60% more per hour than substantive staff and carry <strong>continuity and familiarity risks</strong>. High agency usage alongside a high vacancy rate is the fingerprint of a retention problem masquerading as a recruitment problem.</div>
+              <div class="da-field-type type-int">Count</div>
+            </div>
+            <div class="da-field-row">
+              <div class="da-field-row-name">Turnover Rate</div>
+              <div class="da-field-row-why">Nurse turnover costs an estimated $40,000–$65,000 per departure when accounting for recruitment, onboarding, and productivity loss. Monthly tracking at department level gives HR and department leads the granularity to intervene before experienced staff reach resignation.</div>
+              <div class="da-field-type type-pct">% Rate</div>
+            </div>
+            <div class="da-field-row">
+              <div class="da-field-row-name">Training Hours</div>
+              <div class="da-field-row-why">Included as a leading indicator for protocol adherence and complication rate — departments that invest in structured training consistently outperform on both. It also signals organisational health: a team under acute staffing pressure typically defunds training first.</div>
+              <div class="da-field-type type-hrs">Hours</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Design Decisions ───────────────────────────────────── -->
+    <section class="da-section">
+      <div class="da-section-tag">Design Decisions</div>
+      <h2 class="da-section-title">What Was Deliberately Left Out</h2>
+      <p class="da-prose">
+        Dataset design is as much about exclusion as inclusion. Several fields were
+        considered and removed. The reasoning matters as much as the choices themselves.
+      </p>
+
+      <div class="da-decision-list">
+        <div class="da-decision">
+          <div class="da-decision-num">✕</div>
+          <div class="da-decision-body">
+            <h4>Individual Patient Records</h4>
+            <p>Patient-level data would have enabled more sophisticated analysis but would require HIPAA/GDPR compliance architecture even for synthetic data — and would shift the dashboard from operational intelligence to clinical surveillance, a fundamentally different use case. The aggregate was the correct scope.</p>
+          </div>
+        </div>
+        <div class="da-decision">
+          <div class="da-decision-num">✕</div>
+          <div class="da-decision-body">
+            <h4>Diagnostic Code Frequency (ICD-10)</h4>
+            <p>Diagnosis distribution data would have added analytical richness but creates complexity in Power BI's data model that goes beyond what an operational dashboard warrants. Condition mix belongs in a clinical analytics tool, not an operational one. The procedure categories here serve as a sufficient proxy.</p>
+          </div>
+        </div>
+        <div class="da-decision">
+          <div class="da-decision-num">✕</div>
+          <div class="da-decision-body">
+            <h4>Weekly or Daily Granularity</h4>
+            <p>Daily data would surface noise as insight — a bad Tuesday in the ICU is not a management issue, it is variance. Monthly aggregation at department level produces data that is actionable at the cadence that operational decisions are actually made: in monthly reviews, quarterly planning sessions, and annual strategy cycles.</p>
+          </div>
+        </div>
+        <div class="da-decision">
+          <div class="da-decision-num">✕</div>
+          <div class="da-decision-body">
+            <h4>External Benchmark Comparisons</h4>
+            <p>CMS or NHS peer-group benchmarks were considered as additional columns. They were excluded because embedding them in the dataset would conflate the operational data layer with the analytical layer — a distinction Power BI is well-suited to handle at the report level via reference lines and targets, not in the source data.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Download CTA ───────────────────────────────────────── -->
+    <section class="da-section">
+      <div class="da-section-tag">Access the Data</div>
+      <h2 class="da-section-title">Download the Dataset</h2>
+      <p class="da-prose">
+        The complete Excel workbook is available in the project repository.
+        All seven tables are pre-formatted, with a full data dictionary sheet
+        and a verified-zero-error totals row on the KPI summary.
+      </p>
+
+      <div class="da-cta-box">
+        <div class="da-cta-left">
+          <h3>Healthcare_Operations_Dashboard_Dataset.xlsx</h3>
+          <p>7 sheets · 660+ rows · 110 fields · FY 2024 · OpenXML format</p>
+        </div>
+        <a class="da-cta-btn"
+           href="https://github.com/JennieferFarhan0605/JennieferFarhan0605.github.io/tree/main/assets"
+           target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" stroke-width="2">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          View on GitHub
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Jenniefer Farhan · Business Intelligence & Analytics Portfolio</p>
+    <p><a href="data-reporting-dashboard.html" style="color:var(--accent)">← Return to Dashboard Project</a></p>
+  </footer>
+
+</body>
+</html>
