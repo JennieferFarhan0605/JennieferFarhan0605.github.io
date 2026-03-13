@@ -2,237 +2,170 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Power BI Build Process | Jenniefer Farhan</title>
+  <title>Power BI Build Guide | Jenniefer Farhan</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* ── Page-scoped styles ─────────────────────────────────── */
     code {
       font-family: 'Courier New', monospace;
       font-size: 0.82rem;
-      background: var(--border);
-      padding: .15rem .4rem;
+      background: #f0eeec;
+      padding: .15rem .45rem;
       border-radius: 3px;
       color: var(--accent);
     }
-
-    /* ── Overview stat strip ─────────────────────────────────── */
     .stat-strip {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 1px;
       background: var(--border);
       border: 1px solid var(--border);
       border-radius: 8px;
       overflow: hidden;
-      margin: 2.5rem 0;
+      margin: 2rem 0 2.5rem;
     }
-    .stat-cell {
-      background: #fff;
-      padding: 1.5rem 1.25rem;
-      text-align: center;
-    }
-    .stat-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.2rem;
-      color: var(--accent);
-      line-height: 1;
-      margin-bottom: .3rem;
-    }
-    .stat-label {
-      font-size: .75rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-
-    /* ── Phase header ────────────────────────────────────────── */
-    .phase-header {
+    .stat-cell { background: #fff; padding: 1.25rem 1rem; text-align: center; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--accent); line-height: 1; margin-bottom: .3rem; }
+    .stat-lbl { font-size: .7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; }
+    .tab-nav {
       display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin: 3rem 0 1.25rem;
-      padding-bottom: .75rem;
       border-bottom: 2px solid var(--border);
-    }
-    .phase-badge {
-      font-size: .65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      color: #fff;
-      background: var(--accent);
-      padding: .3rem .75rem;
-      border-radius: 99px;
-      white-space: nowrap;
-    }
-    .phase-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.25rem;
-      color: var(--text-main);
-    }
-
-    /* ── Step card ───────────────────────────────────────────── */
-    .step-card {
-      display: grid;
-      grid-template-columns: 48px 1fr;
-      gap: 0;
-      margin-bottom: .75rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      transition: border-color .18s, box-shadow .18s;
-    }
-    .step-card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 4px 18px rgba(157,23,77,.06);
-    }
-    .step-num {
-      background: var(--accent);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem;
-      min-height: 64px;
-      flex-shrink: 0;
-    }
-    .step-body {
-      padding: 1rem 1.25rem;
-      background: #fff;
-    }
-    .step-title {
-      font-weight: 700;
-      font-size: .9rem;
-      color: var(--text-main);
-      margin-bottom: .3rem;
-    }
-    .step-desc {
-      font-size: .82rem;
-      color: var(--text-muted);
-      line-height: 1.65;
-      margin: 0;
-    }
-    .step-substeps {
-      margin: .6rem 0 0 0;
-      padding: 0;
-      list-style: none;
-    }
-    .step-substeps li {
-      font-size: .8rem;
-      color: var(--text-muted);
-      padding: .2rem 0 .2rem 1rem;
-      border-left: 2px solid var(--border);
-      margin-bottom: .25rem;
-      line-height: 1.5;
-    }
-    .step-substeps li:last-child { margin-bottom: 0; }
-
-    /* ── DAX snippet ─────────────────────────────────────────── */
-    .dax-block {
-      background: #faf9f7;
-      border-left: 3px solid var(--accent);
-      border-radius: 0 6px 6px 0;
-      padding: .75rem 1rem;
-      margin: .6rem 0 0;
-      font-family: 'Courier New', monospace;
-      font-size: .78rem;
-      color: var(--text-main);
-      line-height: 1.7;
+      margin-bottom: 2.5rem;
       overflow-x: auto;
+      scrollbar-width: none;
     }
-    .dax-kw { color: var(--accent); font-weight: 700; }
-    .dax-fn { color: #0f766e; }
-    .dax-cm { color: #a8a29e; font-style: italic; }
-
-    /* ── Download section ────────────────────────────────────── */
-    .download-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-      margin: 2rem 0;
+    .tab-nav::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      padding: .85rem 1.4rem;
+      font-size: .8rem;
+      font-weight: 700;
+      font-family: 'Lato', sans-serif;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all .18s;
     }
-    .download-card {
+    .tab-btn:hover { color: var(--accent); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .phase-intro {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .phase-intro h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--text-main); margin-bottom: .4rem; }
+    .phase-intro p { font-size: .85rem; color: var(--text-muted); margin: 0; line-height: 1.65; }
+    .step {
+      margin-bottom: 2rem;
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 1.75rem;
+      overflow: hidden;
       background: #fff;
-      display: flex;
-      flex-direction: column;
-      gap: .75rem;
       transition: border-color .18s, box-shadow .18s;
     }
-    .download-card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 6px 24px rgba(157,23,77,.07);
-    }
-    .download-icon {
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-    .download-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.05rem;
-      color: var(--text-main);
-    }
-    .download-meta {
-      font-size: .78rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-    .download-btn {
-      display: inline-flex;
+    .step:hover { border-color: rgba(157,23,77,.3); box-shadow: 0 4px 20px rgba(157,23,77,.05); }
+    .step-header {
+      display: flex;
       align-items: center;
-      gap: .4rem;
-      margin-top: auto;
-      font-size: .82rem;
-      font-weight: 700;
-      color: var(--accent);
-      border-bottom: 2px solid var(--accent);
-      padding-bottom: 2px;
-      width: fit-content;
-      transition: opacity .15s;
-      text-decoration: none;
-    }
-    .download-btn:hover { opacity: .7; }
-
-    /* ── Key decision callout ────────────────────────────────── */
-    .decision-strip {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
       gap: 1rem;
-      margin: 2rem 0;
+      padding: 1rem 1.5rem;
+      background: #faf9f7;
+      border-bottom: 1px solid var(--border);
     }
-    .decision-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-top: 3px solid var(--accent);
-      border-radius: 0 0 8px 8px;
-      padding: 1.25rem;
+    .step-n {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif; font-size: 1rem; flex-shrink: 0;
     }
-    .decision-label {
-      font-size: .65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      color: var(--accent);
-      margin-bottom: .4rem;
+    .step-title { font-weight: 700; font-size: .95rem; color: var(--text-main); }
+    .step-tag {
+      margin-left: auto; font-size: .62rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      padding: .2rem .6rem; border-radius: 99px; white-space: nowrap;
     }
-    .decision-text {
-      font-size: .82rem;
-      color: var(--text-muted);
-      line-height: 1.65;
-      margin: 0;
+    .tag-setup { background: #dbeafe; color: #1d4ed8; }
+    .tag-measure { background: #f3e8ee; color: #9d174d; }
+    .tag-visual { background: #d1fae5; color: #15803d; }
+    .tag-fix { background: #fef3c7; color: #b45309; }
+    .tag-format { background: #ede9fe; color: #6d28d9; }
+    .step-body { padding: 1.25rem 1.5rem; }
+    .step-body p { font-size: .85rem; color: var(--text-muted); line-height: 1.7; margin: 0 0 .75rem; }
+    .step-body p:last-child { margin-bottom: 0; }
+    .inst-list { list-style: none; padding: 0; margin: .75rem 0; }
+    .inst-list li {
+      display: flex; gap: .75rem; align-items: flex-start;
+      font-size: .85rem; color: var(--text-main);
+      padding: .45rem 0; border-bottom: 1px solid #f5f3f1; line-height: 1.6;
     }
-
-    /* ── Responsive ─────────────────────────────────────────── */
+    .inst-list li:last-child { border-bottom: none; }
+    .inst-list li::before { content: '→'; color: var(--accent); font-weight: 700; flex-shrink: 0; margin-top: .05rem; }
+    .troubleshoot {
+      background: #fffbeb; border: 1px solid #fde68a;
+      border-left: 4px solid #b45309; border-radius: 0 6px 6px 0;
+      padding: 1rem 1.25rem; margin: 1rem 0;
+    }
+    .troubleshoot-label { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #b45309; margin-bottom: .4rem; }
+    .troubleshoot p { font-size: .83rem; color: #78350f; margin: 0 0 .5rem; line-height: 1.65; }
+    .troubleshoot p:last-child { margin-bottom: 0; }
+    .error-msg {
+      font-family: 'Courier New', monospace; font-size: .78rem;
+      background: #fef3c7; padding: .4rem .75rem; border-radius: 4px;
+      margin: .4rem 0; color: #92400e; display: block;
+    }
+    .note {
+      background: #f0f9ff; border: 1px solid #bae6fd;
+      border-left: 4px solid #0284c7; border-radius: 0 6px 6px 0;
+      padding: .85rem 1.1rem; margin: .75rem 0;
+      font-size: .83rem; color: #0c4a6e; line-height: 1.65;
+    }
+    .note strong { color: #0369a1; }
+    .dax {
+      background: #faf9f7; border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0; padding: .85rem 1.1rem; margin: .75rem 0;
+      font-family: 'Courier New', monospace; font-size: .82rem;
+      line-height: 1.85; overflow-x: auto;
+    }
+    .dax .kw { color: var(--accent); font-weight: 700; }
+    .dax .fn { color: #0f766e; }
+    .dax .cm { color: #a8a29e; font-style: italic; }
+    .fmt-table { width: 100%; border-collapse: collapse; font-size: .82rem; margin: .75rem 0; }
+    .fmt-table th { background: var(--accent); color: #fff; padding: .5rem .85rem; text-align: left; font-weight: 700; font-size: .75rem; letter-spacing: .04em; }
+    .fmt-table td { padding: .5rem .85rem; border-bottom: 1px solid var(--border); color: var(--text-main); vertical-align: top; }
+    .fmt-table tbody tr:nth-child(even) td { background: #faf9f7; }
+    .fmt-table tbody tr:last-child td { border-bottom: none; }
+    .swatch { display: inline-flex; align-items: center; gap: .4rem; font-family: 'Courier New', monospace; font-size: .78rem; }
+    .swatch-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; border: 1px solid rgba(0,0,0,.1); }
+    .val-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .75rem; margin: 1rem 0; }
+    .val-cell { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 1rem; text-align: center; }
+    .val-num { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #15803d; display: block; margin-bottom: .2rem; }
+    .val-lbl { font-size: .72rem; color: #166534; }
+    .dl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.5rem 0; }
+    .dl-card {
+      border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem;
+      background: #fff; display: flex; flex-direction: column; gap: .6rem;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    .dl-card:hover { border-color: var(--accent); box-shadow: 0 4px 18px rgba(157,23,77,.06); }
+    .dl-icon { font-size: 1.4rem; }
+    .dl-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text-main); }
+    .dl-meta { font-size: .78rem; color: var(--text-muted); line-height: 1.6; }
+    .dl-btn { display: inline-block; margin-top: auto; font-size: .82rem; font-weight: 700; color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 2px; text-decoration: none; width: fit-content; transition: opacity .15s; }
+    .dl-btn:hover { opacity: .7; }
     @media (max-width: 640px) {
-      .stat-strip { grid-template-columns: repeat(2, 1fr); }
-      .download-grid { grid-template-columns: 1fr; }
-      .decision-strip { grid-template-columns: 1fr; }
+      .stat-strip { grid-template-columns: repeat(3,1fr); }
+      .val-grid { grid-template-columns: repeat(2,1fr); }
+      .dl-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -245,385 +178,553 @@
 
   <main class="container">
 
-    <!-- ── Header ──────────────────────────────────────────── -->
     <header style="padding: 4rem 0 2rem;">
-      <span class="label">Power BI · Build Documentation</span>
-      <h1 class="h1">How the Dashboard<br><em style="font-style:italic; color:var(--accent)">Was Built</em></h1>
-      <p class="subtitle">
-        A complete record of the Power BI Desktop build — from raw Excel import
-        to a 6-page production dashboard across 20,130 daily rows.
-      </p>
+      <span class="label">Power BI Desktop · Complete Build Documentation</span>
+      <h1 class="h1">Building the Healthcare<br><em style="font-style:italic;color:var(--accent)">Operations Dashboard</em></h1>
+      <p class="subtitle">Every step documented in full — including every real problem encountered and exactly how it was resolved. This is not a polished tutorial. It is a true record of the build.</p>
     </header>
 
-    <!-- ── Nav links ───────────────────────────────────────── -->
-    <div style="display:flex; gap:2.5rem; flex-wrap:wrap; padding-bottom:3rem;">
+    <div style="display:flex;gap:2.5rem;flex-wrap:wrap;padding-bottom:2rem;">
       <a href="data-reporting-dashboard.html" class="btn-link">← Project Overview</a>
       <a href="power-bi_dashboard_mockup.html" class="btn-link">View Dashboard Mockup →</a>
       <a href="data-architecture.html" class="btn-link">Dataset Architecture →</a>
     </div>
 
-    <!-- ── Stats ───────────────────────────────────────────── -->
     <div class="stat-strip">
-      <div class="stat-cell">
-        <div class="stat-num">6</div>
-        <div class="stat-label">Dashboard Pages</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-num">45+</div>
-        <div class="stat-label">DAX Measures</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-num">7</div>
-        <div class="stat-label">Connected Tables</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-num">19</div>
-        <div class="stat-label">Build Steps</div>
-      </div>
+      <div class="stat-cell"><div class="stat-num">6</div><div class="stat-lbl">Dashboard Pages</div></div>
+      <div class="stat-cell"><div class="stat-num">45+</div><div class="stat-lbl">DAX Measures</div></div>
+      <div class="stat-cell"><div class="stat-num">7</div><div class="stat-lbl">Connected Tables</div></div>
+      <div class="stat-cell"><div class="stat-num">20,130</div><div class="stat-lbl">Daily Rows</div></div>
+      <div class="stat-cell"><div class="stat-num">5</div><div class="stat-lbl">Build Phases</div></div>
     </div>
 
-    <!-- ── Overview ────────────────────────────────────────── -->
-    <div class="section">
-      <h2 class="h2">Project Overview</h2>
-      <p class="project-desc">
-        This page documents the complete technical build of the Healthcare Operations Dashboard
-        in <strong>Microsoft Power BI Desktop</strong>. The dashboard connects seven Excel tables
-        into a unified star schema, with a dedicated DAX measures library driving all 6 pages.
-      </p>
-      <p class="project-desc">
-        The build followed a deliberate sequence: data model first, measures second, visuals last.
-        This order matters — visuals built before measures are correctly defined produce misleading
-        results that are hard to diagnose later.
-      </p>
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab(this,'p1')">Phase 1 · Connect Data</button>
+      <button class="tab-btn" onclick="switchTab(this,'p2')">Phase 2 · Build Measures</button>
+      <button class="tab-btn" onclick="switchTab(this,'p3')">Phase 3 · Canvas &amp; Theme</button>
+      <button class="tab-btn" onclick="switchTab(this,'p4')">Phase 4 · Build Pages</button>
+      <button class="tab-btn" onclick="switchTab(this,'p5')">Phase 5 · Sync &amp; Publish</button>
+    </div>
 
-      <!-- Key decisions -->
-      <div class="decision-strip">
-        <div class="decision-card">
-          <div class="decision-label">Data Model Decision</div>
-          <p class="decision-text">Daily_KPIs acts as the fact spine. All 6 detail tables connect to it via Date — many-to-one, both-direction cross-filtering. Department is a shared dimension across 4 tables.</p>
-        </div>
-        <div class="decision-card">
-          <div class="decision-label">Measures Decision</div>
-          <p class="decision-text">All 45+ DAX measures live in a single <code>_Measures</code> table, separated from source data. The underscore prefix sorts it to the top of the Data pane for easy access.</p>
-        </div>
-        <div class="decision-card">
-          <div class="decision-label">Physician Filter Decision</div>
-          <p class="decision-text">On Leave = N is applied as a permanent page-level filter on the Physician page — not inside every measure. This ensures leave days never inflate patient or revenue totals.</p>
+    <!-- PHASE 1 -->
+    <div class="tab-panel active" id="p1">
+      <div class="phase-intro">
+        <h3>Phase 1 — Connect &amp; Prepare the Data</h3>
+        <p>Before a single visual is built, the data model must be correct. This phase covers importing the Excel dataset, fixing column headers and data types in Power Query, and defining the 6 relationships that allow all 7 tables to cross-filter. Several real problems are documented here — duplicate header rows, the relationship direction error, and a hidden OK button that required a keyboard workaround.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">1</div><div class="step-title">Open Power BI Desktop</div><span class="step-tag tag-setup">Setup</span></div>
+        <div class="step-body">
+          <p>Launch Power BI Desktop and close the splash screen. Confirm three icons are visible on the left sidebar:</p>
+          <ul class="inst-list">
+            <li><strong>Report</strong> (bar chart icon) — where all visuals are built. Start here.</li>
+            <li><strong>Data</strong> (table icon) — browse raw imported data.</li>
+            <li><strong>Model</strong> (diagram icon) — define relationships between tables.</li>
+          </ul>
+          <div class="note"><strong>Don't have Power BI Desktop?</strong> Download it free from <strong>microsoft.com/en-us/power-bi/desktop</strong>. Windows only. Mac users need a Windows virtual machine.</div>
         </div>
       </div>
-    </div>
 
-    <!-- ══════════════════════════════════════════════════════
-         PHASE 1
-    ══════════════════════════════════════════════════════ -->
-    <div class="phase-header">
-      <span class="phase-badge">Phase 1</span>
-      <span class="phase-title">Connect & Prepare the Data</span>
-    </div>
-
-    <div class="step-card">
-      <div class="step-num">1</div>
-      <div class="step-body">
-        <div class="step-title">Open Power BI Desktop</div>
-        <p class="step-desc">Launch Power BI Desktop and close the splash screen. Confirm the three left-panel icons are visible: Report, Data, and Model. Start in Report view.</p>
+      <div class="step">
+        <div class="step-header"><div class="step-n">2</div><div class="step-title">Import the Excel Dataset</div><span class="step-tag tag-setup">Setup</span></div>
+        <div class="step-body">
+          <p><strong>Home ribbon → Get Data → Excel Workbook.</strong> Navigate to <code>Healthcare_Operations_Daily_Dataset.xlsx</code> and open it. In the Navigator window, check all 7 sheets:</p>
+          <ul class="inst-list">
+            <li>Daily_KPIs</li>
+            <li>Department_Daily</li>
+            <li>Physician_Daily</li>
+            <li>Patient_Outcomes_Daily</li>
+            <li>Financial_Daily</li>
+            <li>Equipment_Daily</li>
+            <li>Staffing_Daily</li>
+          </ul>
+          <div class="note">⚠️ Click <strong>Transform Data</strong> — not Load. Transform Data opens Power Query Editor where column types and headers are fixed before the data is loaded. Clicking Load skips this and imports broken data that is very difficult to fix after the fact.</div>
+        </div>
       </div>
-    </div>
 
-    <div class="step-card">
-      <div class="step-num">2</div>
-      <div class="step-body">
-        <div class="step-title">Import the Excel Dataset</div>
-        <p class="step-desc">Home → Get Data → Excel Workbook → navigate to <code>Healthcare_Operations_Daily_Dataset.xlsx</code>. In the Navigator, check all 7 sheets. Click <strong>Transform Data</strong> — not Load.</p>
-        <ul class="step-substeps">
-          <li>Daily_KPIs · Department_Daily · Physician_Daily · Patient_Outcomes_Daily</li>
-          <li>Financial_Daily · Equipment_Daily · Staffing_Daily</li>
-        </ul>
+      <div class="step">
+        <div class="step-header"><div class="step-n">3</div><div class="step-title">Fix Headers &amp; Column Types in Power Query</div><span class="step-tag tag-fix">Troubleshoot</span></div>
+        <div class="step-body">
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem — Date column threw an error immediately</div>
+            <p>Attempting to change the Date column type caused an error: column not found. The dataset has a coloured title banner row (e.g. "DEPARTMENT PERFORMANCE — DAILY…") sitting above the real column headers. Power Query treated the banner as row 1, so "Date" did not yet exist as a column name.</p>
+            <p><strong>Fix — apply these steps in this exact order for each table:</strong></p>
+            <ul class="inst-list">
+              <li><strong>Home → Remove Top Rows → 1 → OK</strong> — removes the title banner row (Daily_KPIs only needed Use First Row as Headers, as it had one fewer extra row)</li>
+              <li><strong>Home → Use First Row as Headers</strong> — promotes the real column names (Date, Department etc.) to headers</li>
+              <li>Now set column types by clicking the icon left of each column header</li>
+            </ul>
+          </div>
+          <table class="fmt-table">
+            <thead><tr><th>Column</th><th>Type</th><th>Note</th></tr></thead>
+            <tbody>
+              <tr><td><code>Date</code></td><td>Date</td><td>Key join field — must be Date not Date/Time</td></tr>
+              <tr><td><code>Department</code>, <code>Day of Week</code>, <code>Quarter</code>, <code>Day Type</code>, <code>On Leave</code></td><td>Text</td><td>Categorical fields</td></tr>
+              <tr><td><code>Week No.</code></td><td>Whole Number</td><td>ISO week 1–53</td></tr>
+              <tr><td>All columns ending <code>($)</code></td><td>Fixed Decimal Number</td><td>Revenue, cost columns</td></tr>
+              <tr><td>All columns ending <code>(%)</code></td><td>Decimal Number</td><td>Stored as 0.0–1.0 decimals</td></tr>
+            </tbody>
+          </table>
+          <p>When all 7 tables are fixed: <strong>Home → Close &amp; Apply</strong>. Power BI loads all 20,130 rows.</p>
+        </div>
       </div>
-    </div>
 
-    <div class="step-card">
-      <div class="step-num">3</div>
-      <div class="step-body">
-        <div class="step-title">Fix Headers & Column Types in Power Query</div>
-        <p class="step-desc">Each table has a title banner row above the real headers. For every table: remove top row → promote headers → set column types.</p>
-        <ul class="step-substeps">
-          <li>Home → Remove Top Rows → 1, then Use First Row as Headers</li>
-          <li>Date columns → <strong>Date</strong> · Department, Day of Week, Quarter, Day Type, On Leave → <strong>Text</strong></li>
-          <li>Week No. → <strong>Whole Number</strong> · All ($) columns → <strong>Fixed Decimal</strong> · All (%) columns → <strong>Decimal Number</strong></li>
-          <li>When done: Home → Close & Apply</li>
-        </ul>
-      </div>
-    </div>
+      <div class="step">
+        <div class="step-header"><div class="step-n">4</div><div class="step-title">Define the 6 Relationships in Model View</div><span class="step-tag tag-fix">Troubleshoot</span></div>
+        <div class="step-body">
+          <p>Click the <strong>Model icon</strong> on the left sidebar. Go to <strong>Home → Manage Relationships → New</strong> for each relationship. All 6 connect through the <code>Date</code> field.</p>
 
-    <div class="step-card">
-      <div class="step-num">4</div>
-      <div class="step-body">
-        <div class="step-title">Define Relationships in Model View</div>
-        <p class="step-desc">Click the Model icon. Use Home → Manage Relationships → New to create 6 relationships. Detail table always on the From side, Daily_KPIs always on the To side.</p>
-        <ul class="step-substeps">
-          <li>From: Department_Daily[Date] → To: Daily_KPIs[Date]</li>
-          <li>From: Physician_Daily[Date] → To: Daily_KPIs[Date]</li>
-          <li>From: Patient_Outcomes_Daily[Date] → To: Daily_KPIs[Date]</li>
-          <li>From: Financial_Daily[Date] → To: Daily_KPIs[Date]</li>
-          <li>From: Equipment_Daily[Date] → To: Daily_KPIs[Date]</li>
-          <li>From: Staffing_Daily[Date] → To: Daily_KPIs[Date]</li>
-          <li>Each: Cardinality = Many to one · Make this relationship active ✓ · Tab + Enter to confirm</li>
-        </ul>
-      </div>
-    </div>
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem 1 — Duplicate value error</div>
+            <p>Setting Daily_KPIs on the From side caused:</p>
+            <span class="error-msg">Column "Date" in Table 'Department_Daily' contains a duplicate value '1/3/2024' and this is not allowed for columns on the one side of a many-to-one relationship.</span>
+            <p><strong>Why:</strong> Department_Daily has 8 rows per date (one per department), so its Date is not unique. The "one" side of a many-to-one must be unique. Daily_KPIs has exactly one row per date — it belongs on the To (one) side.</p>
+            <p><strong>Fix:</strong> Detail table always in the <strong>From</strong> field. Daily_KPIs always in the <strong>To</strong> field.</p>
+          </div>
 
-    <!-- ══════════════════════════════════════════════════════
-         PHASE 2
-    ══════════════════════════════════════════════════════ -->
-    <div class="phase-header">
-      <span class="phase-badge">Phase 2</span>
-      <span class="phase-title">Build the Measures Library</span>
-    </div>
+          <table class="fmt-table">
+            <thead><tr><th>From (many side)</th><th>To (one side)</th></tr></thead>
+            <tbody>
+              <tr><td>Department_Daily [Date]</td><td>Daily_KPIs [Date]</td></tr>
+              <tr><td>Physician_Daily [Date]</td><td>Daily_KPIs [Date]</td></tr>
+              <tr><td>Patient_Outcomes_Daily [Date]</td><td>Daily_KPIs [Date]</td></tr>
+              <tr><td>Financial_Daily [Date]</td><td>Daily_KPIs [Date]</td></tr>
+              <tr><td>Equipment_Daily [Date]</td><td>Daily_KPIs [Date]</td></tr>
+              <tr><td>Staffing_Daily [Date]</td><td>Daily_KPIs [Date]</td></tr>
+            </tbody>
+          </table>
 
-    <div class="step-card">
-      <div class="step-num">5</div>
-      <div class="step-body">
-        <div class="step-title">Create the _Measures Table</div>
-        <p class="step-desc">Home → Enter Data. Name the table <code>_Measures</code>, add a Placeholder column with value 0. Click Load. All DAX measures go here — never inside source tables.</p>
-      </div>
-    </div>
+          <p>In each dialog also set: Cardinality → <strong>Many to one (*:1)</strong> · ✅ Make this relationship active</p>
 
-    <div class="step-card">
-      <div class="step-num">6</div>
-      <div class="step-body">
-        <div class="step-title">Write Core Executive Measures</div>
-        <p class="step-desc">Select _Measures → Table Tools → New Measure. Enter each formula and set format immediately after committing.</p>
-        <div class="dax-block">
-<span class="dax-kw">Total Admissions</span> = <span class="dax-fn">SUM</span> ( Daily_KPIs[Total Admissions] )<br>
-<span class="dax-kw">Total Revenue</span> = <span class="dax-fn">SUM</span> ( Financial_Daily[Total Revenue ($)] )<br>
-<span class="dax-kw">Total Costs</span> = <span class="dax-fn">SUM</span> ( Financial_Daily[Total Costs ($)] )<br>
-<span class="dax-kw">EBITDA</span> = [Total Revenue] - [Total Costs]<br>
-<span class="dax-kw">EBITDA Margin %</span> = <span class="dax-fn">DIVIDE</span> ( [EBITDA], [Total Revenue], 0 )<br>
-<span class="dax-kw">Avg Bed Occupancy %</span> = <span class="dax-fn">AVERAGE</span> ( Daily_KPIs[Bed Occupancy (%)] )<br>
-<span class="dax-kw">Avg Patient Satisfaction</span> = <span class="dax-fn">AVERAGE</span> ( Daily_KPIs[Patient Satisfaction (/10)] )<br>
-<span class="dax-kw">Avg Mortality Rate %</span> = <span class="dax-fn">DIVIDE</span> ( <span class="dax-fn">SUM</span> ( Daily_KPIs[Mortality] ), <span class="dax-fn">SUM</span> ( Daily_KPIs[Total Admissions] ), 0 )
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem 2 — OK button not visible on screen</div>
+            <p>After filling in all settings, the OK / Save / Confirm button was not visible — it was rendered below the bottom of the screen, hidden behind the Windows taskbar. Scrolling, resizing, and moving the window all failed to reveal it.</p>
+            <p><strong>Fix:</strong> Press <strong>Tab</strong> repeatedly to cycle through all interactive elements in the dialog, then press <strong>Enter</strong> once the focus reaches the confirm button. This saves the relationship without needing to click it.</p>
+          </div>
+
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem 3 — Security filter error on 2nd relationship</div>
+            <span class="error-msg">Table 'Daily_KPIs' already has a relationship where Security Filtering Behavior is set to Both. Only one relationship per table with this setting is allowed.</span>
+            <p><strong>Fix:</strong> Leave "Apply security filters in both directions" <strong>unchecked</strong> for all 6 relationships. This setting relates to row-level security and is not needed for this dashboard.</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="step-card">
-      <div class="step-num">7</div>
-      <div class="step-body">
-        <div class="step-title">Write Department, Clinical & Financial Measures</div>
-        <div class="dax-block">
-<span class="dax-kw">Dept Total Revenue</span> = <span class="dax-fn">SUM</span> ( Department_Daily[Revenue ($)] )<br>
-<span class="dax-kw">Dept Total Admissions</span> = <span class="dax-fn">SUM</span> ( Department_Daily[Admissions] )<br>
-<span class="dax-kw">Dept EBITDA Margin %</span> = <span class="dax-fn">DIVIDE</span> ( <span class="dax-fn">SUM</span> ( Department_Daily[Net Margin ($)] ), <span class="dax-fn">SUM</span> ( Department_Daily[Revenue ($)] ), 0 )<br>
-<span class="dax-kw">Dept Avg LOS</span> = <span class="dax-fn">AVERAGE</span> ( Department_Daily[Avg LOS (days)] )<br>
-<span class="dax-kw">Overall Success Rate %</span> = <span class="dax-fn">DIVIDE</span> ( <span class="dax-fn">SUM</span> ( Patient_Outcomes_Daily[Successful Outcomes] ), <span class="dax-fn">SUM</span> ( Patient_Outcomes_Daily[Cases] ), 0 )<br>
-<span class="dax-kw">HAI Rate %</span> = <span class="dax-fn">AVERAGE</span> ( Patient_Outcomes_Daily[HAI Rate (%)] )<br>
-<span class="dax-kw">Avg Protocol Adherence %</span> = <span class="dax-fn">AVERAGEX</span> ( Patient_Outcomes_Daily, Patient_Outcomes_Daily[Protocol Adherence (%)] )<br>
-<span class="dax-kw">Avg Denial Rate %</span> = <span class="dax-fn">AVERAGE</span> ( Financial_Daily[Denial Rate (%)] )
+    <!-- PHASE 2 -->
+    <div class="tab-panel" id="p2">
+      <div class="phase-intro">
+        <h3>Phase 2 — Build the Measures Library</h3>
+        <p>All DAX measures are written before any visuals are built. They live in a single <code>_Measures</code> table. One measure required a formula correction during the build — the HAI Rate was returning 0.000% until the formula was changed to reference the pre-calculated column directly.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">5</div><div class="step-title">Create the _Measures Table</div><span class="step-tag tag-setup">Setup</span></div>
+        <div class="step-body">
+          <p><strong>Home ribbon → Enter Data.</strong> Name the table <code>_Measures</code>. Add a column named <code>Placeholder</code> with value <code>0</code>. Click Load.</p>
+          <p>To add a measure: click <code>_Measures</code> in the Data pane → <strong>Table Tools → New Measure</strong> → type the formula → press Enter → right-click the measure to set its number format.</p>
+          <div class="note">The underscore prefix in <code>_Measures</code> forces it to sort above all source tables in the Data pane, making it easy to find. This is a standard professional convention in Power BI development.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">6</div><div class="step-title">Core Executive Measures</div><span class="step-tag tag-measure">DAX</span></div>
+        <div class="step-body">
+          <div class="dax">
+<span class="kw">Total Admissions</span> = <span class="fn">SUM</span> ( Daily_KPIs[Total Admissions] )<br>
+<span class="kw">Total Revenue</span> = <span class="fn">SUM</span> ( Financial_Daily[Total Revenue ($)] )<br>
+<span class="kw">Total Costs</span> = <span class="fn">SUM</span> ( Financial_Daily[Total Costs ($)] )<br>
+<span class="kw">EBITDA</span> = [Total Revenue] - [Total Costs]<br>
+<span class="kw">EBITDA Margin %</span> = <span class="fn">DIVIDE</span> ( [EBITDA], [Total Revenue], 0 )<br>
+<span class="kw">Avg Bed Occupancy %</span> = <span class="fn">AVERAGE</span> ( Daily_KPIs[Bed Occupancy (%)] )<br>
+<span class="kw">Avg Patient Satisfaction</span> = <span class="fn">AVERAGE</span> ( Daily_KPIs[Patient Satisfaction (/10)] )<br>
+<span class="kw">Avg Mortality Rate %</span> = <span class="fn">DIVIDE</span> ( <span class="fn">SUM</span> ( Daily_KPIs[Mortality] ), <span class="fn">SUM</span> ( Daily_KPIs[Total Admissions] ), 0 )
+          </div>
+          <table class="fmt-table">
+            <thead><tr><th>Measure</th><th>Format</th><th>Display Units</th></tr></thead>
+            <tbody>
+              <tr><td>Total Admissions</td><td>Whole Number</td><td>None — full number e.g. 21,473</td></tr>
+              <tr><td>Total Revenue, Total Costs, EBITDA</td><td>Currency, 0 decimal</td><td>Millions on KPI card → $102.8M</td></tr>
+              <tr><td>EBITDA Margin %, Avg Bed Occupancy %, Avg Mortality Rate %</td><td>Percentage, 1 decimal</td><td>None</td></tr>
+              <tr><td>Avg Patient Satisfaction</td><td>Decimal, 1 place</td><td>None</td></tr>
+            </tbody>
+          </table>
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem — KPI card showing "21k" not "21,473"</div>
+            <p>Power BI defaulted to Auto display units, shortening 21,473 to "21k". Fix: Format visual pane → Callout value → Display units → change from <strong>Auto</strong> to <strong>None</strong>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">7</div><div class="step-title">Department Measures</div><span class="step-tag tag-measure">DAX</span></div>
+        <div class="step-body">
+          <div class="dax">
+<span class="kw">Dept Total Revenue</span> = <span class="fn">SUM</span> ( Department_Daily[Revenue ($)] )<br>
+<span class="kw">Dept Total Admissions</span> = <span class="fn">SUM</span> ( Department_Daily[Admissions] )<br>
+<span class="kw">Dept EBITDA Margin %</span> = <span class="fn">DIVIDE</span> ( <span class="fn">SUM</span> ( Department_Daily[Net Margin ($)] ), <span class="fn">SUM</span> ( Department_Daily[Revenue ($)] ), 0 )<br>
+<span class="kw">Dept Avg LOS</span> = <span class="fn">AVERAGE</span> ( Department_Daily[Avg LOS (days)] )
+          </div>
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem — All department bars showing the same value (21,473)</div>
+            <p>Using <code>Total Admissions</code> on the Department bar chart made every bar show 21,473 — the hospital-wide total. The measure has no department context because it sums from Daily_KPIs which has one row per day (not per department).</p>
+            <p><strong>Fix:</strong> <code>Dept Total Admissions</code> sums from Department_Daily which has one row per department per day — giving correctly different values per department (Emergency ~4,685, Orthopedics ~2,608 etc.).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">8</div><div class="step-title">Clinical Quality Measures</div><span class="step-tag tag-measure">DAX</span></div>
+        <div class="step-body">
+          <div class="dax">
+<span class="kw">Overall Success Rate %</span> = <span class="fn">DIVIDE</span> ( <span class="fn">SUM</span> ( Patient_Outcomes_Daily[Successful Outcomes] ), <span class="fn">SUM</span> ( Patient_Outcomes_Daily[Cases] ), 0 )<br>
+<span class="kw">Avg Protocol Adherence %</span> = <span class="fn">AVERAGEX</span> ( Patient_Outcomes_Daily, Patient_Outcomes_Daily[Protocol Adherence (%)] )<br>
+<span class="kw">Avg PRO Score</span> = <span class="fn">AVERAGE</span> ( Patient_Outcomes_Daily[PRO Score (/10)] )<br>
+<br>
+<span class="cm">-- Corrected formula — see troubleshoot below</span><br>
+<span class="kw">HAI Rate %</span> = <span class="fn">AVERAGE</span> ( Patient_Outcomes_Daily[HAI Rate (%)] )
+          </div>
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem — HAI Rate % showing 0.000%</div>
+            <p>The original formula was:</p>
+            <span class="error-msg">HAI Rate % = DIVIDE ( SUM ( Patient_Outcomes_Daily[HAI Cases] ), SUM ( Patient_Outcomes_Daily[Cases] ), 0 )</span>
+            <p><strong>Investigation:</strong> The HAI Rate (%) column already contains the pre-calculated rate as a decimal (0.0075, 0.009 etc.). The original formula was dividing a small HAI count by a large total case count — producing an even smaller decimal that showed as 0.000% even with 2 decimal formatting. The dataset values clearly show 0.7%–1.1% in the column.</p>
+            <p><strong>Fix:</strong> AVERAGE the pre-calculated column directly. No division needed — the work is already done. The corrected measure returns ~0.9% as expected.</p>
+            <p><strong>Chart Y-axis also needed fixing:</strong> Default 0–100% scale made the 0.7–1.1% variation invisible as a flat line. Fix: Format visual pane → Y-axis → Range → Minimum: <code>0.005</code>, Maximum: <code>0.015</code>. Set the constant target line to <code>0.01</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">9</div><div class="step-title">Financial Measures</div><span class="step-tag tag-measure">DAX</span></div>
+        <div class="step-body">
+          <div class="dax">
+<span class="kw">Avg Denial Rate %</span> = <span class="fn">AVERAGE</span> ( Financial_Daily[Denial Rate (%)] )<br>
+<span class="kw">Inpatient Revenue</span> = <span class="fn">SUM</span> ( Financial_Daily[Inpatient Revenue ($)] )<br>
+<span class="kw">Outpatient Revenue</span> = <span class="fn">SUM</span> ( Financial_Daily[Outpatient Revenue ($)] )<br>
+<span class="kw">Procedure Revenue</span> = <span class="fn">SUM</span> ( Financial_Daily[Procedure Revenue ($)] )<br>
+<span class="kw">Staff Costs</span> = <span class="fn">SUM</span> ( Financial_Daily[Staff Costs ($)] )<br>
+<span class="kw">Supply Costs</span> = <span class="fn">SUM</span> ( Financial_Daily[Supplies ($)] )<br>
+<span class="kw">Equipment Costs</span> = <span class="fn">SUM</span> ( Financial_Daily[Equipment ($)] )<br>
+<span class="kw">Overhead Costs</span> = <span class="fn">SUM</span> ( Financial_Daily[Overhead ($)] )
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">10</div><div class="step-title">Physician Measures</div><span class="step-tag tag-measure">DAX</span></div>
+        <div class="step-body">
+          <p>All physician measures filter <code>On Leave = "N"</code> inside the DAX to exclude leave days from every calculation.</p>
+          <div class="dax">
+<span class="kw">Physician Total Patients</span> = <span class="fn">CALCULATE</span> (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">SUM</span> ( Physician_Daily[Patients Seen] ),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Physician_Daily[On Leave] = "N"<br>
+)<br>
+<span class="kw">Physician Total Revenue</span> = <span class="fn">CALCULATE</span> (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">SUM</span> ( Physician_Daily[Revenue ($)] ),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Physician_Daily[On Leave] = "N"<br>
+)<br>
+<span class="kw">Revenue per Patient</span> = <span class="fn">DIVIDE</span> ( [Physician Total Revenue], [Physician Total Patients], 0 )<br>
+<span class="kw">Physician Avg Satisfaction</span> = <span class="fn">CALCULATE</span> (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">AVERAGE</span> ( Physician_Daily[Satisfaction (/10)] ),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Physician_Daily[On Leave] = "N"<br>
+)
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">11</div><div class="step-title">Staffing &amp; Workforce Measures</div><span class="step-tag tag-measure">DAX</span></div>
+        <div class="step-body">
+          <div class="dax">
+<span class="kw">Avg Vacancy Rate %</span> = <span class="fn">AVERAGE</span> ( Staffing_Daily[Vacancy Rate (%)] )<br>
+<span class="kw">Avg Agency Staff per Day</span> = <span class="fn">AVERAGE</span> ( Staffing_Daily[Agency Staff] )<br>
+<span class="kw">Total Overtime Hours</span> = <span class="fn">SUM</span> ( Staffing_Daily[Overtime Hours] )<br>
+<span class="kw">Avg Staff Patient Ratio</span> = <span class="fn">AVERAGE</span> ( Staffing_Daily[Staff-Patient Ratio] )<br>
+<span class="kw">Weekday Avg Headcount</span> = <span class="fn">CALCULATE</span> ( <span class="fn">AVERAGE</span> ( Staffing_Daily[Total Staff] ), Staffing_Daily[Day Type] = "Weekday" )<br>
+<span class="kw">Weekend Avg Headcount</span> = <span class="fn">CALCULATE</span> ( <span class="fn">AVERAGE</span> ( Staffing_Daily[Total Staff] ), Staffing_Daily[Day Type] = "Weekend" )
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="step-card">
-      <div class="step-num">8</div>
-      <div class="step-body">
-        <div class="step-title">Write Physician & Workforce Measures</div>
-        <p class="step-desc">Physician measures always filter On Leave = "N" to exclude leave days from calculations.</p>
-        <div class="dax-block">
-<span class="dax-kw">Physician Total Patients</span> = <span class="dax-fn">CALCULATE</span> ( <span class="dax-fn">SUM</span> ( Physician_Daily[Patients Seen] ), Physician_Daily[On Leave] = "N" )<br>
-<span class="dax-kw">Physician Total Revenue</span> = <span class="dax-fn">CALCULATE</span> ( <span class="dax-fn">SUM</span> ( Physician_Daily[Revenue ($)] ), Physician_Daily[On Leave] = "N" )<br>
-<span class="dax-kw">Revenue per Patient</span> = <span class="dax-fn">DIVIDE</span> ( [Physician Total Revenue], [Physician Total Patients], 0 )<br>
-<span class="dax-kw">Physician Avg Satisfaction</span> = <span class="dax-fn">CALCULATE</span> ( <span class="dax-fn">AVERAGE</span> ( Physician_Daily[Satisfaction (/10)] ), Physician_Daily[On Leave] = "N" )<br>
-<span class="dax-kw">Avg Vacancy Rate %</span> = <span class="dax-fn">AVERAGE</span> ( Staffing_Daily[Vacancy Rate (%)] )<br>
-<span class="dax-kw">Avg Agency Staff per Day</span> = <span class="dax-fn">AVERAGE</span> ( Staffing_Daily[Agency Staff] )<br>
-<span class="dax-kw">Total Overtime Hours</span> = <span class="dax-fn">SUM</span> ( Staffing_Daily[Overtime Hours] )<br>
-<span class="dax-kw">Weekday Avg Headcount</span> = <span class="dax-fn">CALCULATE</span> ( <span class="dax-fn">AVERAGE</span> ( Staffing_Daily[Total Staff] ), Staffing_Daily[Day Type] = "Weekday" )<br>
-<span class="dax-kw">Weekend Avg Headcount</span> = <span class="dax-fn">CALCULATE</span> ( <span class="dax-fn">AVERAGE</span> ( Staffing_Daily[Total Staff] ), Staffing_Daily[Day Type] = "Weekend" )
+    <!-- PHASE 3 -->
+    <div class="tab-panel" id="p3">
+      <div class="phase-intro">
+        <h3>Phase 3 — Canvas Setup &amp; Theme</h3>
+        <p>Set up all 6 pages with consistent canvas dimensions and import the custom colour theme before building any visuals. Two steps, under 5 minutes, but they affect every visual on every page.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">12</div><div class="step-title">Create &amp; Name the 6 Report Pages</div><span class="step-tag tag-setup">Setup</span></div>
+        <div class="step-body">
+          <p>Click <strong>+</strong> at the bottom of the canvas to add pages. Right-click each tab to rename:</p>
+          <ul class="inst-list">
+            <li>Executive Summary</li>
+            <li>Department Performance</li>
+            <li>Clinical Quality</li>
+            <li>Financial Performance</li>
+            <li>Physician Productivity</li>
+            <li>Workforce &amp; Staffing</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">13</div><div class="step-title">Set Canvas Size on All 6 Pages</div><span class="step-tag tag-setup">Setup</span></div>
+        <div class="step-body">
+          <p>Right-click any blank area of the canvas → <strong>Page settings</strong>. In the Format pane → Canvas Settings:</p>
+          <ul class="inst-list">
+            <li>Type → <strong>Custom</strong></li>
+            <li>Width → <strong>1280</strong></li>
+            <li>Height → <strong>720</strong></li>
+          </ul>
+          <p>Repeat for all 6 pages. This matches standard widescreen proportions and ensures consistent visual sizing.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">14</div><div class="step-title">Import the Custom Colour Theme</div><span class="step-tag tag-format">Format</span></div>
+        <div class="step-body">
+          <p>Save the JSON below as <code>healthcare-theme.json</code> then import via <strong>View → Themes → Browse for themes</strong>.</p>
+          <div class="dax" style="color:var(--text-main)">
+{<br>
+&nbsp;&nbsp;"name": "Healthcare Operations — Jenniefer Farhan",<br>
+&nbsp;&nbsp;"dataColors": ["#9D174D","#0F766E","#15803D","#B45309","#1D4ED8","#DC2626","#6D28D9","#D97706"],<br>
+&nbsp;&nbsp;"background": "#F9F9F7",<br>
+&nbsp;&nbsp;"foreground": "#1C1917",<br>
+&nbsp;&nbsp;"tableAccent": "#9D174D"<br>
+}
+          </div>
+          <table class="fmt-table">
+            <thead><tr><th>Colour</th><th>Hex</th><th>Used For</th></tr></thead>
+            <tbody>
+              <tr><td><span class="swatch"><span class="swatch-dot" style="background:#9D174D"></span>Mulberry</span></td><td><code>#9D174D</code></td><td>Primary bars, KPI accents, table headers</td></tr>
+              <tr><td><span class="swatch"><span class="swatch-dot" style="background:#0F766E"></span>Teal</span></td><td><code>#0F766E</code></td><td>Revenue lines, physician patients chart</td></tr>
+              <tr><td><span class="swatch"><span class="swatch-dot" style="background:#15803D"></span>Green</span></td><td><code>#15803D</code></td><td>Revenue bars, good performance indicator</td></tr>
+              <tr><td><span class="swatch"><span class="swatch-dot" style="background:#B45309"></span>Amber</span></td><td><code>#B45309</code></td><td>LOS bars, HAI trend line, agency usage</td></tr>
+              <tr><td><span class="swatch"><span class="swatch-dot" style="background:#1D4ED8"></span>Blue</span></td><td><code>#1D4ED8</code></td><td>Bed occupancy line, cases chart</td></tr>
+              <tr><td><span class="swatch"><span class="swatch-dot" style="background:#DC2626"></span>Red</span></td><td><code>#DC2626</code></td><td>Cost bars, target lines, low-margin conditional format</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════════════════════
-         PHASE 3
-    ══════════════════════════════════════════════════════ -->
-    <div class="phase-header">
-      <span class="phase-badge">Phase 3</span>
-      <span class="phase-title">Canvas Setup & Theme</span>
-    </div>
-
-    <div class="step-card">
-      <div class="step-num">9</div>
-      <div class="step-body">
-        <div class="step-title">Create & Name 6 Report Pages</div>
-        <p class="step-desc">Click + at the bottom to add pages. Right-click each tab to rename.</p>
-        <ul class="step-substeps">
-          <li>Page 1: Executive Summary · Page 2: Department Performance · Page 3: Clinical Quality</li>
-          <li>Page 4: Financial Performance · Page 5: Physician Productivity · Page 6: Workforce & Staffing</li>
-          <li>Each page: right-click canvas → Page settings → Canvas Settings → Custom → 1280 × 720</li>
-        </ul>
+    <!-- PHASE 4 -->
+    <div class="tab-panel" id="p4">
+      <div class="phase-intro">
+        <h3>Phase 4 — Build All 6 Pages</h3>
+        <p>Each page follows the same build order: slicers first, KPI cards second, charts last. Real problems documented here include the month ordering issue, day-of-week sort, the physician chart type switch, and conditional formatting dialog differences across Power BI versions.</p>
       </div>
-    </div>
 
-    <div class="step-card">
-      <div class="step-num">10</div>
-      <div class="step-body">
-        <div class="step-title">Import the Colour Theme</div>
-        <p class="step-desc">Save the JSON below as <code>healthcare-theme.json</code> then import via View → Themes → Browse for themes.</p>
-        <div class="dax-block" style="color: var(--text-main);">
-{ "name": "Healthcare Operations",<br>
-&nbsp;&nbsp;"dataColors": ["#9D174D","#0F766E","#15803D","#B45309","#1D4ED8","#DC2626"],<br>
-&nbsp;&nbsp;"background": "#F9F9F7", "foreground": "#1C1917", "tableAccent": "#9D174D" }
+      <div class="step">
+        <div class="step-header"><div class="step-n">15</div><div class="step-title">Page 1 — Executive Summary</div><span class="step-tag tag-visual">Visual</span></div>
+        <div class="step-body">
+          <p><strong>Slicer:</strong> Insert → Slicer → Date from Daily_KPIs → dropdown arrow → Between. Position top-right.</p>
+          <p><strong>6 KPI Cards — top row:</strong></p>
+          <table class="fmt-table">
+            <thead><tr><th>Measure</th><th>Label</th><th>Display Units</th><th>Expected</th></tr></thead>
+            <tbody>
+              <tr><td>Total Admissions</td><td>Total Admissions</td><td>None</td><td>21,473</td></tr>
+              <tr><td>Total Revenue</td><td>Total Revenue</td><td>Millions</td><td>$102.8M</td></tr>
+              <tr><td>EBITDA</td><td>EBITDA</td><td>Millions</td><td>$18.5M</td></tr>
+              <tr><td>Avg Patient Satisfaction</td><td>Patient Satisfaction</td><td>None</td><td>8.10</td></tr>
+              <tr><td>Avg Bed Occupancy %</td><td>Bed Occupancy</td><td>None</td><td>~74.8%</td></tr>
+              <tr><td>Avg Mortality Rate %</td><td>Mortality Rate</td><td>None</td><td>~1.9%</td></tr>
+            </tbody>
+          </table>
+
+          <p style="margin-top:.85rem;"><strong>Chart 1 — Monthly Admissions + Revenue (dual axis):</strong> Line and stacked column chart. Column Y-axis: Total Admissions. Line Y-axis: Total Revenue. X-axis: Date field → drill hierarchy to Month level. Bar colour: <span class="swatch"><span class="swatch-dot" style="background:#9D174D"></span>#9D174D</span>. Line colour: <span class="swatch"><span class="swatch-dot" style="background:#0F766E"></span>#0F766E</span>.</p>
+
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem — Months out of order, no Month column in dataset</div>
+            <p>Two approaches failed: creating a Month No column and sorting by it had no effect; creating a Month Label column with FORMAT() and Sort by Column also failed to order correctly in the chart.</p>
+            <p><strong>Working fix:</strong> Drag the <strong>Date</strong> field directly into the X-axis. Power BI creates a date hierarchy automatically. Click the drill-down arrow on the chart until it shows the Month level. The months sort Jan–Dec correctly because they are driven by underlying date values, not text labels.</p>
+          </div>
+
+          <p style="margin-top:.85rem;"><strong>Chart 2 — Revenue by Department (horizontal bar):</strong> Y-axis: Department. X-axis: Dept Total Revenue. Sort descending. Bar colour: <span class="swatch"><span class="swatch-dot" style="background:#9D174D"></span>#9D174D</span>. ICU at top ~$20.8M.</p>
+
+          <p style="margin-top:.85rem;"><strong>Chart 3 — Bed Occupancy Trend (line):</strong> X-axis: Date (Month). Y-axis: Avg Bed Occupancy %. Line colour: <span class="swatch"><span class="swatch-dot" style="background:#1D4ED8"></span>#1D4ED8</span>. Analytics pane → Constant Line → 0.88 → label "Target" → red.</p>
+
+          <p style="margin-top:.85rem;"><strong>Chart 4 — Admissions by Day of Week (column):</strong> X-axis: Day of Week. Y-axis: Total Admissions.</p>
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem — Days in alphabetical order (Friday, Monday, Saturday…)</div>
+            <p>Power BI sorted Day of Week alphabetically by default. Fix: create a numeric sort column on Daily_KPIs:</p>
+            <div class="dax"><span class="kw">Day No</span> = <span class="fn">WEEKDAY</span> ( Daily_KPIs[Date], 2 )</div>
+            <p>Then: click Day of Week column → Column Tools → Sort by Column → Day No. On the chart: ··· → Sort by → Day No → Sort ascending. Saturday and Sunday show visibly lower bars than weekdays.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">16</div><div class="step-title">Page 2 — Department Performance</div><span class="step-tag tag-visual">Visual</span></div>
+        <div class="step-body">
+          <p><strong>Slicers:</strong> Date (Between) + Department (Dropdown) from Department_Daily.</p>
+          <p><strong>Charts:</strong></p>
+          <ul class="inst-list">
+            <li><strong>EBITDA Margin by Department</strong> — horizontal bar · Y: Department · X: Dept EBITDA Margin % · sorted descending · conditional formatting applied (see below)</li>
+            <li><strong>Admissions by Department</strong> — horizontal bar · Y: Department · X: Dept Total Admissions · sorted descending · <span class="swatch"><span class="swatch-dot" style="background:#9D174D"></span>#9D174D</span></li>
+            <li><strong>Average Length of Stay</strong> — horizontal bar · Y: Department · X: Dept Avg LOS · sorted descending · <span class="swatch"><span class="swatch-dot" style="background:#B45309"></span>#B45309</span> · ICU ~6.8d, Emergency ~1.2d</li>
+            <li><strong>Revenue Trend — Top 4 Departments</strong> — line chart · X: Date (Month) · Y: Dept Total Revenue · Legend: Department · Filters pane → Top N → 4 → by Dept Total Revenue</li>
+          </ul>
+
+          <p style="margin-top:.85rem;"><strong>Conditional formatting — applied to EBITDA Margin and Success Rate charts:</strong></p>
+          <p>Format visual pane → Bars → <strong>fx</strong> next to Color → Format style: Rules → field: relevant measure → select <strong>Number</strong>:</p>
+          <table class="fmt-table">
+            <thead><tr><th>Rule</th><th>Min</th><th>Max</th><th>Colour</th></tr></thead>
+            <tbody>
+              <tr><td>Red — poor</td><td>≥ 0</td><td>&lt; 0.15</td><td><span class="swatch"><span class="swatch-dot" style="background:#DC2626"></span>#DC2626</span></td></tr>
+              <tr><td>Amber — watch</td><td>≥ 0.15</td><td>&lt; 0.22</td><td><span class="swatch"><span class="swatch-dot" style="background:#B45309"></span>#B45309</span></td></tr>
+              <tr><td>Green — good</td><td>≥ 0.22</td><td>&lt; 1</td><td><span class="swatch"><span class="swatch-dot" style="background:#15803D"></span>#15803D</span></td></tr>
+            </tbody>
+          </table>
+          <div class="note">Power BI versions differ in labelling — some say "Data colors", others say "Bars" or "Columns". The fx button is always present. Always choose <strong>Number</strong> when the dialog asks — measures are stored as decimals (0.22) not percentages even when displayed as 22%.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">17</div><div class="step-title">Page 3 — Clinical Quality</div><span class="step-tag tag-visual">Visual</span></div>
+        <div class="step-body">
+          <p><strong>Slicers:</strong> Date (Between) + Procedure Category (Dropdown) from Patient_Outcomes_Daily.</p>
+          <p><strong>4 KPI Cards:</strong> Overall Success Rate % · Avg Protocol Adherence % · HAI Rate % · Avg PRO Score</p>
+          <p><strong>Charts:</strong></p>
+          <ul class="inst-list">
+            <li><strong>Procedure Success Rate</strong> — horizontal bar · Y: Procedure Category · X: Overall Success Rate % · conditional formatting: &lt;0.70 red, 0.70–0.85 amber, &gt;0.85 green · Diagnostic Imaging at top ~94%, Critical Care at bottom ~57%</li>
+            <li><strong>Protocol Adherence vs Success Rate</strong> — scatter chart · X: Avg Protocol Adherence % · Y: Overall Success Rate % · Values (detail): Procedure Category · Size: SUM of Cases · 8 bubbles should appear with clear upward correlation</li>
+            <li><strong>HAI Rate Monthly Trend</strong> — line chart · X: Date (Month) · Y: HAI Rate % · Y-axis minimum 0.005, maximum 0.015 · constant line at 0.01 (red, label "Target") · colour: <span class="swatch"><span class="swatch-dot" style="background:#B45309"></span>#B45309</span></li>
+            <li><strong>Total Cases by Procedure Category</strong> — horizontal bar · Y: Procedure Category · X: SUM of Cases · colour: <span class="swatch"><span class="swatch-dot" style="background:#1D4ED8"></span>#1D4ED8</span> · Diagnostic Imaging at top ~6,098</li>
+          </ul>
+          <div class="note"><strong>Scatter chart labels:</strong> This version of Power BI uses "Category labels" not "Data labels". Overlapping labels can be improved by enabling Background under Category labels — adds a white box behind each label. Disabling labels entirely is also acceptable — the bubble positions convey the story without them.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">18</div><div class="step-title">Page 4 — Financial Performance</div><span class="step-tag tag-visual">Visual</span></div>
+        <div class="step-body">
+          <p><strong>Slicers:</strong> Date (Between) + Department (Dropdown) from Department_Daily.</p>
+          <p><strong>4 KPI Cards:</strong> Total Revenue · Total Costs · EBITDA · Avg Denial Rate %</p>
+          <p><strong>Charts:</strong></p>
+          <ul class="inst-list">
+            <li><strong>Revenue vs Costs — Monthly</strong> — clustered column · X: Date (Month) from Financial_Daily · Y: Total Revenue (<span class="swatch"><span class="swatch-dot" style="background:#15803D"></span>green</span>) + Total Costs (<span class="swatch"><span class="swatch-dot" style="background:#DC2626"></span>red</span>)</li>
+            <li><strong>Revenue Stream Breakdown</strong> — donut · Values: Inpatient Revenue + Outpatient Revenue + Procedure Revenue · colours: Inpatient <span class="swatch"><span class="swatch-dot" style="background:#9D174D"></span>#9D174D</span> · Outpatient <span class="swatch"><span class="swatch-dot" style="background:#0F766E"></span>#0F766E</span> · Procedure <span class="swatch"><span class="swatch-dot" style="background:#B45309"></span>#B45309</span> · expected: 48% / 31% / 21%</li>
+            <li><strong>EBITDA Margin by Department</strong> — horizontal bar · same conditional formatting as Page 2 · Radiology top in green ~31.6%, ICU bottom in red ~10.7%</li>
+            <li><strong>Cost Composition</strong> — donut · Values: Staff Costs + Supply Costs + Equipment Costs + Overhead Costs · Staff <span class="swatch"><span class="swatch-dot" style="background:#9D174D"></span>#9D174D</span> · Supplies <span class="swatch"><span class="swatch-dot" style="background:#B45309"></span>#B45309</span> · Equipment <span class="swatch"><span class="swatch-dot" style="background:#1D4ED8"></span>#1D4ED8</span> · Overhead <span class="swatch"><span class="swatch-dot" style="background:#0F766E"></span>#0F766E</span> · expected: 42% / 18% / 8% / 14%</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">19</div><div class="step-title">Page 5 — Physician Productivity</div><span class="step-tag tag-visual">Visual</span></div>
+        <div class="step-body">
+          <p><strong>Slicers:</strong> Date (Between) + Physician (Dropdown) from Physician_Daily.</p>
+          <p><strong>Permanent page filter — critical:</strong> Filters pane → Filters on this page → drag <code>On Leave</code> from Physician_Daily → set to <strong>is N</strong> → Apply filter. Leave days must never appear in any visual on this page.</p>
+          <p><strong>3 KPI Cards:</strong> Physician Total Patients · Physician Total Revenue · Revenue per Patient</p>
+          <p><strong>Charts:</strong></p>
+          <ul class="inst-list">
+            <li><strong>Revenue by Physician</strong> — horizontal bar · Y: Physician · X: Physician Total Revenue · sorted descending · <span class="swatch"><span class="swatch-dot" style="background:#9D174D"></span>#9D174D</span> · Dr. Nakamura at top ~$5.03M</li>
+            <li><strong>Patients Seen by Physician</strong> — horizontal bar · Y: Physician · X: Physician Total Patients · sorted descending · <span class="swatch"><span class="swatch-dot" style="background:#0F766E"></span>#0F766E</span> · Dr. Santos at top ~3,990</li>
+            <li><strong>Physician Performance Summary</strong> — table across the bottom · columns: Physician, Department, Physician Total Patients, Physician Total Revenue, Revenue per Patient, Physician Avg Satisfaction · header background: #9D174D · header font: white</li>
+          </ul>
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem — Physician names too long for vertical column chart X-axis</div>
+            <p>The first attempt used a vertical clustered column chart. Names like "Dr. Yuki Nakamura" were rotated 45°, truncated, and overlapping — completely unreadable.</p>
+            <p><strong>Fix:</strong> Switch to a <strong>horizontal bar chart</strong>. Physician names go on the Y-axis where there is unlimited horizontal space. This is always the correct chart type when category labels are long text strings. The chart immediately became clean and professional after switching.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">20</div><div class="step-title">Page 6 — Workforce &amp; Staffing</div><span class="step-tag tag-visual">Visual</span></div>
+        <div class="step-body">
+          <p><strong>Slicers:</strong> Date (Between) + Department (Dropdown) from Staffing_Daily.</p>
+          <p><strong>4 KPI Cards:</strong> Avg Vacancy Rate % · Avg Agency Staff per Day · Total Overtime Hours · Avg Staff Patient Ratio</p>
+          <p><strong>Charts:</strong></p>
+          <ul class="inst-list">
+            <li><strong>Agency Staff Usage by Department</strong> — horizontal bar · Y: Department · X: Avg Agency Staff per Day · sorted descending · <span class="swatch"><span class="swatch-dot" style="background:#B45309"></span>#B45309</span> · ICU at top ~4.7/day</li>
+            <li><strong>Weekday vs Weekend Staffing</strong> — clustered horizontal bar · Y: Department · X: Weekday Avg Headcount + Weekend Avg Headcount · Legend on · Weekday: <span class="swatch"><span class="swatch-dot" style="background:#9D174D"></span>#9D174D</span> · Weekend: <span class="swatch"><span class="swatch-dot" style="background:#0F766E"></span>#0F766E</span></li>
+            <li><strong>Overtime Hours — Monthly Trend</strong> — line chart · X: Month Label column (see below) · Y: Total Overtime Hours · <span class="swatch"><span class="swatch-dot" style="background:#B45309"></span>#B45309</span></li>
+          </ul>
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem — Date hierarchy drill-down not appearing on Staffing page</div>
+            <p>Dragging Date from Staffing_Daily into the chart X-axis did not show the drill-down arrows — the hierarchy was not being created. The Month Label column created on Daily_KPIs cannot be reused on Staffing_Daily.</p>
+            <p><strong>Fix:</strong> Create these two columns directly on Staffing_Daily:</p>
+            <div class="dax">
+<span class="kw">Month Label</span> = <span class="fn">FORMAT</span> ( Staffing_Daily[Date], "MMM" )<br>
+<span class="kw">Month No</span> = <span class="fn">MONTH</span> ( Staffing_Daily[Date] )
+            </div>
+            <p>Then: click Month Label → Column Tools → Sort by Column → Month No. Drag Month Label into the chart X-axis. Jan–Dec appear in the correct order.</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════════════════════
-         PHASE 4
-    ══════════════════════════════════════════════════════ -->
-    <div class="phase-header">
-      <span class="phase-badge">Phase 4</span>
-      <span class="phase-title">Build All 6 Pages</span>
-    </div>
-
-    <div class="step-card">
-      <div class="step-num">11</div>
-      <div class="step-body">
-        <div class="step-title">Page 1 — Executive Summary</div>
-        <p class="step-desc">6 KPI cards top row. Charts below: monthly admissions + revenue (line & stacked column, dual axis), revenue by department (horizontal bar), bed occupancy trend (line with 88% target), admissions by day of week (column).</p>
-        <ul class="step-substeps">
-          <li>Date hierarchy fix: New Column → <code>Month Label = FORMAT(Daily_KPIs[Date], "MMM")</code> + <code>Month No = MONTH(Daily_KPIs[Date])</code> → Sort by Column</li>
-          <li>Day order fix: New Column → <code>Day No = WEEKDAY(Daily_KPIs[Date], 2)</code> → Sort Day of Week by Day No</li>
-          <li>Revenue line colour: #0F766E · Admissions bars: #9D174D · Occupancy line: #1D4ED8</li>
-          <li>Analytics pane → Constant Line at 0.88 on occupancy chart → label "Target" → red</li>
-        </ul>
+    <!-- PHASE 5 -->
+    <div class="tab-panel" id="p5">
+      <div class="phase-intro">
+        <h3>Phase 5 — Sync Slicers, Validate &amp; Publish</h3>
+        <p>Connect all 6 pages via synced slicers, validate FY 2024 totals against known benchmarks, then save and export. Without slicer sync, each page filters independently — what looks like a dashboard is actually 6 separate reports.</p>
       </div>
-    </div>
 
-    <div class="step-card">
-      <div class="step-num">12</div>
-      <div class="step-body">
-        <div class="step-title">Page 2 — Department Performance</div>
-        <p class="step-desc">Slicers: Date + Department dropdown. Charts: EBITDA margin by dept (horizontal bar, conditional formatting), admissions by dept (horizontal bar), avg LOS by dept (horizontal bar), revenue trend top 4 depts (line, filtered to Top N by Dept Total Revenue).</p>
-        <ul class="step-substeps">
-          <li>Conditional formatting rules (Number): &lt;0.15 → #DC2626 · 0.15–0.22 → #B45309 · &gt;0.22 → #15803D</li>
-          <li>LOS bars: #B45309 · Admissions bars: #9D174D</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="step-card">
-      <div class="step-num">13</div>
-      <div class="step-body">
-        <div class="step-title">Page 3 — Clinical Quality</div>
-        <p class="step-desc">Slicers: Date + Procedure Category dropdown. 4 KPI cards. Charts: success rate by category (horizontal bar, conditional formatting), protocol adherence vs success rate (scatter), HAI rate monthly trend (line with 1% target), cases by category (horizontal bar).</p>
-        <ul class="step-substeps">
-          <li>Scatter fields: X = Avg Protocol Adherence % · Y = Overall Success Rate % · Values = Procedure Category · Size = Cases</li>
-          <li>HAI chart Y-axis: Minimum 0.005 · Maximum 0.015 · Constant line at 0.01</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="step-card">
-      <div class="step-num">14</div>
-      <div class="step-body">
-        <div class="step-title">Page 4 — Financial Performance</div>
-        <p class="step-desc">Slicers: Date + Department dropdown. 4 KPI cards. Charts: revenue vs costs monthly (clustered column, green + red), revenue stream breakdown (donut, 3 stream measures), EBITDA margin ranking (horizontal bar, conditional formatting), cost composition (donut, 4 cost measures).</p>
-        <ul class="step-substeps">
-          <li>Revenue streams: Inpatient #9D174D · Outpatient #0F766E · Procedure #B45309</li>
-          <li>Cost composition: Staff #9D174D · Supplies #B45309 · Equipment #1D4ED8 · Overhead #0F766E</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="step-card">
-      <div class="step-num">15</div>
-      <div class="step-body">
-        <div class="step-title">Page 5 — Physician Productivity</div>
-        <p class="step-desc">Slicers: Date + Physician dropdown. Permanent page filter: On Leave = N. 3 KPI cards. Charts: revenue by physician (horizontal bar, sorted desc), patients seen by physician (horizontal bar, teal). Full 12-row summary table with satisfaction column.</p>
-        <ul class="step-substeps">
-          <li>Filters pane → Filters on this page → On Leave → is N → Apply filter</li>
-          <li>Table columns: Physician · Department · Physician Total Patients · Physician Total Revenue · Revenue per Patient · Physician Avg Satisfaction</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="step-card">
-      <div class="step-num">16</div>
-      <div class="step-body">
-        <div class="step-title">Page 6 — Workforce & Staffing</div>
-        <p class="step-desc">Slicers: Date + Department dropdown. 4 KPI cards. Charts: agency staff by dept (horizontal bar, amber), weekday vs weekend staffing (grouped horizontal bar), overtime monthly trend (line).</p>
-        <ul class="step-substeps">
-          <li>Month Label for Staffing_Daily: New Column → <code>Month Label = FORMAT(Staffing_Daily[Date], "MMM")</code></li>
-          <li>Weekday bars: #9D174D · Weekend bars: #0F766E · Overtime line: #B45309</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════════════════════════
-         PHASE 5
-    ══════════════════════════════════════════════════════ -->
-    <div class="phase-header">
-      <span class="phase-badge">Phase 5</span>
-      <span class="phase-title">Sync, Validate & Publish</span>
-    </div>
-
-    <div class="step-card">
-      <div class="step-num">17</div>
-      <div class="step-body">
-        <div class="step-title">Sync Slicers Across Pages</div>
-        <p class="step-desc">Click the Date slicer on Page 1 → View ribbon → Sync Slicers. Tick both columns for all 6 pages. Sync the Department slicer across Pages 2, 4 and 6 only.</p>
-      </div>
-    </div>
-
-    <div class="step-card">
-      <div class="step-num">18</div>
-      <div class="step-body">
-        <div class="step-title">Validate FY 2024 Totals</div>
-        <p class="step-desc">Set date slicer to full year (1 Jan 2024 – 31 Dec 2024) on Executive Summary and verify:</p>
-        <ul class="step-substeps">
-          <li>Total Revenue → ~$102.8M · EBITDA → ~$18.5M (18.0% margin)</li>
-          <li>Total Admissions → ~21,473 · Avg Patient Satisfaction → ~8.10</li>
-          <li>Radiology EBITDA Margin → ~31.6% (highest) · ICU → ~10.7% (lowest)</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="step-card">
-      <div class="step-num">19</div>
-      <div class="step-body">
-        <div class="step-title">Save & Export</div>
-        <p class="step-desc">File → Save As → <code>Healthcare_Operations_Dashboard.pbix</code>. To share without Power BI Service: File → Export → Export to PDF captures all 6 pages as static images.</p>
-      </div>
-    </div>
-
-    <!-- ── Downloads ────────────────────────────────────────── -->
-    <div class="section" style="padding-bottom: 5rem;">
-      <h2 class="h2">Download the Files</h2>
-      <p class="project-desc">
-        Both the completed dashboard file and the full DAX measure library are available below.
-        The .pbix file requires Power BI Desktop to open — download it free from microsoft.com/power-bi/desktop.
-      </p>
-
-      <div class="download-grid">
-        <div class="download-card">
-          <div class="download-icon">📊</div>
-          <div class="download-name">Healthcare Operations Dashboard</div>
-          <p class="download-meta">
-            Power BI Desktop file · 6 pages · 45+ DAX measures · 20,130 rows<br>
-            Requires Power BI Desktop (free)
-          </p>
-          <a href="assets/Healthcare_Operations_Dashboard.pbix" download class="download-btn">
-            Download .pbix →
-          </a>
+      <div class="step">
+        <div class="step-header"><div class="step-n">21</div><div class="step-title">Sync Slicers Across All Pages</div><span class="step-tag tag-setup">Setup</span></div>
+        <div class="step-body">
+          <p>Click the <strong>Date slicer</strong> on Page 1. Go to <strong>View ribbon → Sync Slicers</strong>. A panel opens showing all 6 pages. Tick both columns (sync + visible) for all 6 pages.</p>
+          <p>Go to each of Pages 2, 4, and 6. Click the <strong>Department slicer</strong> on each → Sync Slicers → tick both columns for Pages 2, 4, and 6 only. Leave Clinical Quality and Physician Productivity unticked for the Department slicer — those pages have their own category-specific slicers.</p>
+          <div class="note">The sync column (chain icon) means the slicer reacts to changes elsewhere. The visible column (eye icon) means a slicer control appears physically on that page. Tick both for a fully connected experience where the user can filter from any page.</div>
         </div>
-        <div class="download-card">
-          <div class="download-icon">📄</div>
-          <div class="download-name">DAX Measure Library</div>
-          <p class="download-meta">
-            Word document · All 45+ measures with descriptions · Setup guide · Page build reference · Theme JSON
-          </p>
-          <a href="assets/PowerBI_DAX_Library.docx" download class="download-btn">
-            Download .docx →
-          </a>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">22</div><div class="step-title">Validate FY 2024 Totals</div><span class="step-tag tag-setup">Setup</span></div>
+        <div class="step-body">
+          <p>Set the date slicer to full year <strong>1 Jan 2024 – 31 Dec 2024</strong> on Executive Summary. Verify each value against these benchmarks. A significant discrepancy indicates a data type or measure formula issue.</p>
+          <div class="val-grid">
+            <div class="val-cell"><span class="val-num">$102.8M</span><span class="val-lbl">Total Revenue</span></div>
+            <div class="val-cell"><span class="val-num">$18.5M</span><span class="val-lbl">EBITDA (18.0%)</span></div>
+            <div class="val-cell"><span class="val-num">21,473</span><span class="val-lbl">Total Admissions</span></div>
+            <div class="val-cell"><span class="val-num">8.10</span><span class="val-lbl">Avg Satisfaction</span></div>
+            <div class="val-cell"><span class="val-num">31.6%</span><span class="val-lbl">Radiology Margin (highest)</span></div>
+            <div class="val-cell"><span class="val-num">10.7%</span><span class="val-lbl">ICU Margin (lowest)</span></div>
+          </div>
+          <p>On Physician Productivity with full year and On Leave = N active:</p>
+          <ul class="inst-list">
+            <li>Dr. Yuki Nakamura → highest revenue ~$5.03M</li>
+            <li>Dr. Maria Santos → highest volume ~3,990 patients</li>
+            <li>Total physician revenue all 12 → ~$41.9M</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">23</div><div class="step-title">Save &amp; Export</div><span class="step-tag tag-setup">Setup</span></div>
+        <div class="step-body">
+          <p><strong>Save:</strong> File → Save As → <code>Healthcare_Operations_Dashboard.pbix</code>.</p>
+          <ul class="inst-list">
+            <li><strong>Publish to Power BI Service:</strong> Home → Publish → select workspace. Requires Pro or PPU licence. Dashboard accessible at app.powerbi.com from any browser.</li>
+            <li><strong>Export to PDF (free):</strong> File → Export → Export to PDF. All 6 pages captured as high-resolution static images. No licence required. Best option for portfolio sharing and interviews.</li>
+            <li><strong>Export to PowerPoint:</strong> File → Export → Export to PowerPoint. Each page becomes a slide. Useful for board-level reporting.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section" style="padding-bottom:5rem;">
+        <h2 class="h2">Download the Files</h2>
+        <p class="project-desc">The completed dashboard file and the full DAX measure reference document are available to download below.</p>
+        <div class="dl-grid">
+          <div class="dl-card">
+            <div class="dl-icon">📊</div>
+            <div class="dl-name">Healthcare Operations Dashboard</div>
+            <p class="dl-meta">Power BI Desktop file (.pbix) · 6 pages · 45+ DAX measures · 7 connected tables · 20,130 daily rows · Requires Power BI Desktop (free)</p>
+            <a href="assets/Healthcare_Operations_Dashboard.pbix" download class="dl-btn">Download .pbix →</a>
+          </div>
+          <div class="dl-card">
+            <div class="dl-icon">📄</div>
+            <div class="dl-name">DAX Measure Library</div>
+            <p class="dl-meta">Word document (.docx) · All 45+ measures with descriptions · Full setup guide · Page-by-page visual reference · Theme JSON · Pre-publish checklist</p>
+            <a href="assets/PowerBI_DAX_Library.docx" download class="dl-btn">Download .docx →</a>
+          </div>
         </div>
       </div>
     </div>
@@ -631,8 +732,18 @@
   </main>
 
   <footer>
-    <p>Jenniefer Farhan · Business Intelligence & Analytics Portfolio</p>
+    <p>Jenniefer Farhan · Business Intelligence &amp; Analytics Portfolio</p>
   </footer>
+
+  <script>
+    function switchTab(btn, panelId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(panelId).classList.add('active');
+      window.scrollTo({ top: document.querySelector('.tab-nav').offsetTop - 80, behavior: 'smooth' });
+    }
+  </script>
 
 </body>
 </html>
