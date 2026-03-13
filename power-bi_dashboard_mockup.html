@@ -1,1271 +1,749 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Healthcare Operations Dashboard | Jenniefer Farhan</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-
-<style>
-/* ═══════════════════════════════════════════════════════════
-   HEALTHCARE OPERATIONS DASHBOARD MOCKUP
-   Aesthetic: Clinical Editorial — Mulberry & Warm Charcoal
-   Fonts: Instrument Serif (display) + DM Mono (data) + Lato (ui)
-═══════════════════════════════════════════════════════════ */
-:root {
-  --mulberry:     #9d174d;
-  --mulberry-d:   #7f0f3d;
-  --mulberry-10:  rgba(157,23,77,.08);
-  --mulberry-20:  rgba(157,23,77,.18);
-  --ink:          #1c1917;
-  --ink-60:       rgba(28,25,23,.6);
-  --paper:        #f9f9f7;
-  --white:        #ffffff;
-  --border:       #e7e5e4;
-  --border-soft:  #f0eeec;
-  --muted:        #78716c;
-  --teal:         #0f766e;
-  --teal-10:      rgba(15,118,110,.1);
-  --amber:        #b45309;
-  --amber-10:     rgba(180,83,9,.08);
-  --green:        #15803d;
-  --green-10:     rgba(21,128,61,.08);
-  --blue:         #1d4ed8;
-  --blue-10:      rgba(29,78,216,.08);
-  --red:          #dc2626;
-  --red-10:       rgba(220,38,38,.08);
-  --sidebar-w:    220px;
-  --topbar-h:     56px;
-  --serif:        'Instrument Serif', serif;
-  --mono:         'DM Mono', monospace;
-  --sans:         'Lato', sans-serif;
-}
-
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;font-family:var(--sans);background:var(--paper);color:var(--ink)}
-a{text-decoration:none;color:inherit}
-canvas{display:block}
-
-/* ── Shell ──────────────────────────────────────────────── */
-.shell{display:grid;grid-template-columns:var(--sidebar-w) 1fr;grid-template-rows:var(--topbar-h) 1fr;height:100vh;width:100vw}
-
-/* ── Top bar ────────────────────────────────────────────── */
-.topbar{
-  grid-column:1/-1;
-  background:var(--white);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 1.5rem;
-  z-index:100;
-}
-.topbar-brand{
-  display:flex;align-items:center;gap:10px;
-  font-family:var(--serif);font-size:1.15rem;color:var(--ink);
-}
-.topbar-brand-dot{
-  width:8px;height:8px;border-radius:50%;background:var(--mulberry);
-}
-.topbar-center{
-  display:flex;align-items:center;gap:0.25rem;
-  font-family:var(--mono);font-size:0.7rem;color:var(--muted);
-}
-.topbar-crumb-sep{opacity:.4;margin:0 2px}
-.topbar-crumb-active{color:var(--ink);font-weight:500}
-.topbar-right{display:flex;align-items:center;gap:1rem}
-.topbar-badge{
-  font-family:var(--mono);font-size:0.65rem;font-weight:500;
-  padding:.25rem .6rem;border-radius:99px;
-  background:var(--green-10);color:var(--green);
-  border:1px solid rgba(21,128,61,.2);
-}
-.topbar-date{font-family:var(--mono);font-size:0.7rem;color:var(--muted)}
-.topbar-avatar{
-  width:30px;height:30px;border-radius:50%;
-  background:var(--mulberry);color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  font-size:.7rem;font-weight:900;letter-spacing:.02em;
-  font-family:var(--sans);
-}
-
-/* ── Sidebar ────────────────────────────────────────────── */
-.sidebar{
-  background:var(--white);
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-  overflow:hidden;
-  padding-top:.75rem;
-}
-.sidebar-section-label{
-  font-family:var(--mono);font-size:.6rem;font-weight:500;
-  text-transform:uppercase;letter-spacing:.12em;
-  color:var(--muted);padding:.75rem 1.25rem .35rem;
-}
-.nav-item{
-  display:flex;align-items:center;gap:.65rem;
-  padding:.55rem 1.25rem;margin:1px .5rem;
-  border-radius:6px;cursor:pointer;
-  font-size:.82rem;font-weight:700;color:var(--muted);
-  transition:all .18s ease;
-  border:1px solid transparent;
-  font-family:var(--sans);
-}
-.nav-item:hover{background:var(--paper);color:var(--ink)}
-.nav-item.active{
-  background:var(--mulberry-10);color:var(--mulberry);
-  border-color:var(--mulberry-20);
-}
-.nav-icon{
-  width:16px;height:16px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:.85rem;opacity:.7;
-}
-.nav-item.active .nav-icon{opacity:1}
-.sidebar-footer{
-  margin-top:auto;padding:1rem 1.25rem;
-  border-top:1px solid var(--border-soft);
-  font-family:var(--mono);font-size:.65rem;color:var(--muted);
-  line-height:1.6;
-}
-.sidebar-footer strong{color:var(--ink);display:block;margin-bottom:.1rem}
-
-/* ── Main content ───────────────────────────────────────── */
-.main{
-  overflow-y:auto;
-  background:var(--paper);
-  scroll-behavior:smooth;
-}
-.page{display:none;padding:1.75rem 2rem 3rem;animation:fadeIn .22s ease}
-.page.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-
-/* ── Page header ────────────────────────────────────────── */
-.page-header{margin-bottom:1.5rem}
-.page-eyebrow{
-  font-family:var(--mono);font-size:.65rem;font-weight:500;
-  text-transform:uppercase;letter-spacing:.14em;
-  color:var(--mulberry);margin-bottom:.35rem;
-}
-.page-title{
-  font-family:var(--serif);font-size:1.75rem;color:var(--ink);
-  line-height:1.2;margin-bottom:.3rem;
-}
-.page-title em{font-style:italic;color:var(--mulberry)}
-.page-sub{font-size:.82rem;color:var(--muted);font-family:var(--sans)}
-
-/* ── Filter bar ─────────────────────────────────────────── */
-.filter-bar{
-  display:flex;align-items:center;gap:.75rem;
-  margin-bottom:1.5rem;flex-wrap:wrap;
-}
-.filter-chip{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:.3rem .75rem;border-radius:99px;
-  border:1px solid var(--border);background:var(--white);
-  font-family:var(--mono);font-size:.67rem;font-weight:500;color:var(--muted);
-  cursor:pointer;transition:all .15s;
-}
-.filter-chip.active{
-  background:var(--mulberry-10);border-color:var(--mulberry-20);color:var(--mulberry);
-}
-.filter-chip:hover{border-color:var(--mulberry);color:var(--mulberry)}
-.filter-sep{width:1px;height:18px;background:var(--border)}
-
-/* ── KPI row ────────────────────────────────────────────── */
-.kpi-row{display:grid;gap:1rem;margin-bottom:1.25rem}
-.kpi-row-4{grid-template-columns:repeat(4,1fr)}
-.kpi-row-6{grid-template-columns:repeat(6,1fr)}
-
-.kpi{
-  background:var(--white);border:1px solid var(--border);border-radius:10px;
-  padding:1.1rem 1.25rem;position:relative;overflow:hidden;
-  transition:all .2s ease;
-}
-.kpi:hover{border-color:var(--mulberry);box-shadow:0 4px 16px rgba(157,23,77,.07);transform:translateY(-1px)}
-.kpi::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:var(--kpi-color,var(--mulberry));opacity:0;transition:opacity .2s;
-}
-.kpi:hover::after{opacity:1}
-.kpi-label{
-  font-family:var(--mono);font-size:.62rem;font-weight:500;
-  text-transform:uppercase;letter-spacing:.1em;color:var(--muted);
-  margin-bottom:.4rem;
-}
-.kpi-val{
-  font-family:var(--serif);font-size:1.85rem;color:var(--ink);
-  line-height:1;margin-bottom:.25rem;
-}
-.kpi-sub{font-size:.72rem;color:var(--muted);font-family:var(--sans)}
-.kpi-delta{
-  display:inline-flex;align-items:center;gap:3px;
-  font-family:var(--mono);font-size:.67rem;font-weight:500;
-  padding:.15rem .4rem;border-radius:4px;margin-top:.3rem;
-}
-.delta-up{background:var(--green-10);color:var(--green)}
-.delta-dn{background:var(--red-10);color:var(--red)}
-.delta-nt{background:var(--amber-10);color:var(--amber)}
-
-/* ── Chart cards ────────────────────────────────────────── */
-.chart-grid{display:grid;gap:1rem;margin-bottom:1rem}
-.chart-grid-2{grid-template-columns:repeat(2,1fr)}
-.chart-grid-3{grid-template-columns:repeat(3,1fr)}
-.chart-grid-21{grid-template-columns:2fr 1fr}
-.chart-grid-12{grid-template-columns:1fr 2fr}
-
-.card{
-  background:var(--white);border:1px solid var(--border);border-radius:10px;
-  overflow:hidden;transition:border-color .2s;
-}
-.card:hover{border-color:rgba(157,23,77,.25)}
-.card-head{
-  padding:.9rem 1.25rem .6rem;
-  border-bottom:1px solid var(--border-soft);
-  display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;
-}
-.card-title{
-  font-family:var(--serif);font-size:1rem;color:var(--ink);line-height:1.3;
-}
-.card-sub{font-size:.72rem;color:var(--muted);margin-top:.15rem;font-family:var(--sans)}
-.card-tag{
-  font-family:var(--mono);font-size:.6rem;font-weight:500;
-  padding:.2rem .5rem;border-radius:4px;white-space:nowrap;align-self:flex-start;
-  flex-shrink:0;
-}
-.tag-mul{background:var(--mulberry-10);color:var(--mulberry)}
-.tag-tel{background:var(--teal-10);color:var(--teal)}
-.tag-amb{background:var(--amber-10);color:var(--amber)}
-.tag-grn{background:var(--green-10);color:var(--green)}
-.tag-blu{background:var(--blue-10);color:var(--blue)}
-.card-body{padding:1rem 1.25rem}
-.chart-wrap{position:relative}
-
-/* ── Table ──────────────────────────────────────────────── */
-.data-table{width:100%;border-collapse:collapse;font-size:.78rem}
-.data-table th{
-  font-family:var(--mono);font-size:.62rem;font-weight:500;
-  text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
-  padding:.5rem .75rem;text-align:left;
-  border-bottom:2px solid var(--border);background:var(--paper);
-}
-.data-table td{
-  padding:.55rem .75rem;border-bottom:1px solid var(--border-soft);
-  color:var(--ink);font-family:var(--sans);
-}
-.data-table tbody tr:hover{background:var(--paper)}
-.data-table tbody tr:last-child td{border-bottom:none}
-.td-num{font-family:var(--mono);font-size:.75rem;text-align:right}
-.td-name{font-weight:700}
-
-/* ── Mini bar ───────────────────────────────────────────── */
-.mini-bar-wrap{display:flex;align-items:center;gap:6px}
-.mini-bar-track{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
-.mini-bar-fill{height:100%;border-radius:3px;background:var(--mulberry)}
-.mini-bar-val{font-family:var(--mono);font-size:.67rem;color:var(--muted);white-space:nowrap}
-
-/* ── Outcome pills ──────────────────────────────────────── */
-.outcome-grid{display:flex;flex-direction:column;gap:.5rem}
-.outcome-row{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:.75rem;padding:.5rem .75rem;border-radius:6px;
-  background:var(--paper);
-}
-.outcome-name{font-size:.78rem;font-weight:700;color:var(--ink);font-family:var(--sans)}
-.outcome-bar-wrap{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
-.outcome-bar-fill{height:100%;border-radius:3px}
-.outcome-pct{font-family:var(--mono);font-size:.7rem;color:var(--muted);width:36px;text-align:right}
-
-/* ── Insight callout ────────────────────────────────────── */
-.insight-strip{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;
-  margin-bottom:1rem;
-}
-.insight{
-  background:var(--white);border:1px solid var(--border);border-radius:8px;
-  padding:.9rem 1rem;display:flex;gap:.75rem;align-items:flex-start;
-}
-.insight-icon{
-  width:34px;height:34px;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1rem;flex-shrink:0;
-}
-.insight-body h5{font-family:var(--serif);font-size:.9rem;color:var(--ink);margin-bottom:.15rem}
-.insight-body p{font-size:.75rem;color:var(--muted);line-height:1.5;margin:0;font-family:var(--sans)}
-.insight-metric{font-family:var(--mono);font-size:.8rem;font-weight:500;color:var(--mulberry);margin-top:.2rem}
-
-/* ── Scrollbar ──────────────────────────────────────────── */
-.main::-webkit-scrollbar{width:4px}
-.main::-webkit-scrollbar-track{background:transparent}
-.main::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-</style>
+  <meta charset="utf-8">
+  <title>Power BI Build Guide | Jenniefer Farhan</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    code {
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      background: #f0eeec;
+      padding: .15rem .45rem;
+      border-radius: 3px;
+      color: var(--accent);
+    }
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 2rem 0 2.5rem;
+    }
+    .stat-cell { background: #fff; padding: 1.25rem 1rem; text-align: center; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--accent); line-height: 1; margin-bottom: .3rem; }
+    .stat-lbl { font-size: .7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; }
+    .tab-nav {
+      display: flex;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 2.5rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tab-nav::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      padding: .85rem 1.4rem;
+      font-size: .8rem;
+      font-weight: 700;
+      font-family: 'Lato', sans-serif;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all .18s;
+    }
+    .tab-btn:hover { color: var(--accent); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .phase-intro {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .phase-intro h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--text-main); margin-bottom: .4rem; }
+    .phase-intro p { font-size: .85rem; color: var(--text-muted); margin: 0; line-height: 1.65; }
+    .step {
+      margin-bottom: 2rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    .step:hover { border-color: rgba(157,23,77,.3); box-shadow: 0 4px 20px rgba(157,23,77,.05); }
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      background: #faf9f7;
+      border-bottom: 1px solid var(--border);
+    }
+    .step-n {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif; font-size: 1rem; flex-shrink: 0;
+    }
+    .step-title { font-weight: 700; font-size: .95rem; color: var(--text-main); }
+    .step-tag {
+      margin-left: auto; font-size: .62rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      padding: .2rem .6rem; border-radius: 99px; white-space: nowrap;
+    }
+    .tag-setup { background: #dbeafe; color: #1d4ed8; }
+    .tag-measure { background: #f3e8ee; color: #9d174d; }
+    .tag-visual { background: #d1fae5; color: #15803d; }
+    .tag-fix { background: #fef3c7; color: #b45309; }
+    .tag-format { background: #ede9fe; color: #6d28d9; }
+    .step-body { padding: 1.25rem 1.5rem; }
+    .step-body p { font-size: .85rem; color: var(--text-muted); line-height: 1.7; margin: 0 0 .75rem; }
+    .step-body p:last-child { margin-bottom: 0; }
+    .inst-list { list-style: none; padding: 0; margin: .75rem 0; }
+    .inst-list li {
+      display: flex; gap: .75rem; align-items: flex-start;
+      font-size: .85rem; color: var(--text-main);
+      padding: .45rem 0; border-bottom: 1px solid #f5f3f1; line-height: 1.6;
+    }
+    .inst-list li:last-child { border-bottom: none; }
+    .inst-list li::before { content: '→'; color: var(--accent); font-weight: 700; flex-shrink: 0; margin-top: .05rem; }
+    .troubleshoot {
+      background: #fffbeb; border: 1px solid #fde68a;
+      border-left: 4px solid #b45309; border-radius: 0 6px 6px 0;
+      padding: 1rem 1.25rem; margin: 1rem 0;
+    }
+    .troubleshoot-label { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #b45309; margin-bottom: .4rem; }
+    .troubleshoot p { font-size: .83rem; color: #78350f; margin: 0 0 .5rem; line-height: 1.65; }
+    .troubleshoot p:last-child { margin-bottom: 0; }
+    .error-msg {
+      font-family: 'Courier New', monospace; font-size: .78rem;
+      background: #fef3c7; padding: .4rem .75rem; border-radius: 4px;
+      margin: .4rem 0; color: #92400e; display: block;
+    }
+    .note {
+      background: #f0f9ff; border: 1px solid #bae6fd;
+      border-left: 4px solid #0284c7; border-radius: 0 6px 6px 0;
+      padding: .85rem 1.1rem; margin: .75rem 0;
+      font-size: .83rem; color: #0c4a6e; line-height: 1.65;
+    }
+    .note strong { color: #0369a1; }
+    .dax {
+      background: #faf9f7; border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0; padding: .85rem 1.1rem; margin: .75rem 0;
+      font-family: 'Courier New', monospace; font-size: .82rem;
+      line-height: 1.85; overflow-x: auto;
+    }
+    .dax .kw { color: var(--accent); font-weight: 700; }
+    .dax .fn { color: #0f766e; }
+    .dax .cm { color: #a8a29e; font-style: italic; }
+    .fmt-table { width: 100%; border-collapse: collapse; font-size: .82rem; margin: .75rem 0; }
+    .fmt-table th { background: var(--accent); color: #fff; padding: .5rem .85rem; text-align: left; font-weight: 700; font-size: .75rem; letter-spacing: .04em; }
+    .fmt-table td { padding: .5rem .85rem; border-bottom: 1px solid var(--border); color: var(--text-main); vertical-align: top; }
+    .fmt-table tbody tr:nth-child(even) td { background: #faf9f7; }
+    .fmt-table tbody tr:last-child td { border-bottom: none; }
+    .swatch { display: inline-flex; align-items: center; gap: .4rem; font-family: 'Courier New', monospace; font-size: .78rem; }
+    .swatch-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; border: 1px solid rgba(0,0,0,.1); }
+    .val-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .75rem; margin: 1rem 0; }
+    .val-cell { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 1rem; text-align: center; }
+    .val-num { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #15803d; display: block; margin-bottom: .2rem; }
+    .val-lbl { font-size: .72rem; color: #166534; }
+    .dl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.5rem 0; }
+    .dl-card {
+      border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem;
+      background: #fff; display: flex; flex-direction: column; gap: .6rem;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    .dl-card:hover { border-color: var(--accent); box-shadow: 0 4px 18px rgba(157,23,77,.06); }
+    .dl-icon { font-size: 1.4rem; }
+    .dl-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text-main); }
+    .dl-meta { font-size: .78rem; color: var(--text-muted); line-height: 1.6; }
+    .dl-btn { display: inline-block; margin-top: auto; font-size: .82rem; font-weight: 700; color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 2px; text-decoration: none; width: fit-content; transition: opacity .15s; }
+    .dl-btn:hover { opacity: .7; }
+    @media (max-width: 640px) {
+      .stat-strip { grid-template-columns: repeat(3,1fr); }
+      .val-grid { grid-template-columns: repeat(2,1fr); }
+      .dl-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-<div class="shell">
 
-  <!-- TOP BAR -->
-  <header class="topbar">
-    <div class="topbar-brand">
-      <div class="topbar-brand-dot"></div>
-      Healthcare Operations
-    </div>
-    <div class="topbar-center">
-      <span>FY 2024</span>
-      <span class="topbar-crumb-sep">›</span>
-      <span id="crumb-page" class="topbar-crumb-active">Executive Summary</span>
-    </div>
-    <div class="topbar-right">
-      <span class="topbar-badge">● Live Dataset</span>
-      <span class="topbar-date">366 days · 20,130 rows</span>
-      <a href="data-reporting-dashboard.html" class="topbar-avatar" title="Go back to Operational Reporting &amp; Dashboard Development" style="cursor:pointer;text-decoration:none;position:relative;" onmouseenter="this.style.background='var(--mulberry-d)';this.querySelector('.avatar-tip').style.opacity='1';this.querySelector('.avatar-tip').style.transform='translateY(0)'" onmouseleave="this.style.background='var(--mulberry)';this.querySelector('.avatar-tip').style.opacity='0';this.querySelector('.avatar-tip').style.transform='translateY(4px)'">JF<span class="avatar-tip" style="position:absolute;top:calc(100% + 8px);right:0;background:rgba(28,25,23,.92);color:#f9f9f7;font-family:'DM Mono',monospace;font-size:.62rem;font-weight:500;white-space:nowrap;padding:.35rem .65rem;border-radius:5px;pointer-events:none;opacity:0;transform:translateY(4px);transition:all .18s ease;letter-spacing:.02em;">← Operational Reporting &amp; Dashboard Development</span></a>
-    </div>
-  </header>
-
-  <!-- SIDEBAR -->
-  <nav class="sidebar">
-    <div class="sidebar-section-label">Dashboard</div>
-    <div class="nav-item active" data-page="exec" onclick="switchPage(this,'exec','Executive Summary')">
-      <span class="nav-icon">◈</span> Executive Summary
-    </div>
-    <div class="nav-item" data-page="dept" onclick="switchPage(this,'dept','Department Performance')">
-      <span class="nav-icon">⊞</span> Department Performance
-    </div>
-    <div class="nav-item" data-page="clinical" onclick="switchPage(this,'clinical','Clinical Quality')">
-      <span class="nav-icon">✦</span> Clinical Quality
-    </div>
-    <div class="nav-item" data-page="finance" onclick="switchPage(this,'finance','Financial Performance')">
-      <span class="nav-icon">◎</span> Financial Performance
-    </div>
-    <div class="nav-item" data-page="physician" onclick="switchPage(this,'physician','Physician Productivity')">
-      <span class="nav-icon">⊹</span> Physician Productivity
-    </div>
-    <div class="nav-item" data-page="workforce" onclick="switchPage(this,'workforce','Workforce & Staffing')">
-      <span class="nav-icon">⬡</span> Workforce & Staffing
-    </div>
-
-    <div class="sidebar-footer">
-      <strong>Jenniefer Farhan</strong>
-      Power BI Mockup · FY 2024<br>
-      Healthcare Operations
-    </div>
+  <nav class="nav-wrap">
+    <a href="index.html" class="brand">Jenniefer <span>Farhan.</span></a>
+    <a href="data-reporting-dashboard.html" class="btn-link">← Back to Project</a>
   </nav>
 
-  <!-- MAIN -->
-  <main class="main">
+  <main class="container">
 
-    <!-- ══════════════════════════════════════════════════
-         PAGE 1 — EXECUTIVE SUMMARY
-    ══════════════════════════════════════════════════ -->
-    <div class="page active" id="page-exec">
-      <div class="page-header">
-        <div class="page-eyebrow">Executive Summary</div>
-        <h1 class="page-title">Hospital-Wide <em>Performance</em> Overview</h1>
-        <p class="page-sub">Full Year 2024 · 366 days · All departments combined</p>
-      </div>
+    <header style="padding: 4rem 0 2rem;">
+      <span class="label">Power BI Desktop · Complete Build Documentation</span>
+      <h1 class="h1">Building the Healthcare<br><em style="font-style:italic;color:var(--accent)">Operations Dashboard</em></h1>
+      <p class="subtitle">Every step documented in full — including every real problem encountered and exactly how it was resolved. This is not a polished tutorial. It is a true record of the build.</p>
+    </header>
 
-      <div class="filter-bar">
-        <div class="filter-chip active">All Departments</div>
-        <div class="filter-chip">Weekdays Only</div>
-        <div class="filter-chip">Q1 2024</div>
-        <div class="filter-chip">Q2 2024</div>
-        <div class="filter-chip">Q3 2024</div>
-        <div class="filter-chip">Q4 2024</div>
-        <div class="filter-sep"></div>
-        <div class="filter-chip">7-Day Rolling</div>
-        <div class="filter-chip">Monthly View</div>
-      </div>
-
-      <!-- KPI Row -->
-      <div class="kpi-row kpi-row-4" style="margin-bottom:1rem">
-        <div class="kpi" style="--kpi-color:var(--mulberry)">
-          <div class="kpi-label">Total Admissions</div>
-          <div class="kpi-val">21,473</div>
-          <div class="kpi-sub">FY 2024 · All departments</div>
-          <div class="kpi-delta delta-up">↑ 7.2% vs prior year</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--green)">
-          <div class="kpi-label">Total Revenue</div>
-          <div class="kpi-val">$102.8M</div>
-          <div class="kpi-sub">Across 8 departments</div>
-          <div class="kpi-delta delta-up">↑ 8.1% YoY</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--teal)">
-          <div class="kpi-label">EBITDA</div>
-          <div class="kpi-val">$18.5M</div>
-          <div class="kpi-sub">18.0% margin · FY 2024</div>
-          <div class="kpi-delta delta-up">↑ 1.4pp vs target</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--amber)">
-          <div class="kpi-label">Avg Patient Satisfaction</div>
-          <div class="kpi-val">8.10</div>
-          <div class="kpi-sub">HCAHPS-derived · out of 10</div>
-          <div class="kpi-delta delta-nt">→ Stable</div>
-        </div>
-      </div>
-
-      <div class="kpi-row kpi-row-4">
-        <div class="kpi" style="--kpi-color:var(--blue)">
-          <div class="kpi-label">Avg Bed Occupancy</div>
-          <div class="kpi-val">74.8%</div>
-          <div class="kpi-sub">Target: 75–88%</div>
-          <div class="kpi-delta delta-grn delta-up">↑ In target band</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--mulberry)">
-          <div class="kpi-label">Total Procedures</div>
-          <div class="kpi-val">27,002</div>
-          <div class="kpi-sub">Across all procedure types</div>
-          <div class="kpi-delta delta-up">↑ 6.4% YoY</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--red)">
-          <div class="kpi-label">Avg Mortality Rate</div>
-          <div class="kpi-val">1.9%</div>
-          <div class="kpi-sub">Risk-adjusted · in-hospital</div>
-          <div class="kpi-delta delta-up">↓ 0.2pp improvement</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--teal)">
-          <div class="kpi-label">Avg Wait Time</div>
-          <div class="kpi-val">3.8 hrs</div>
-          <div class="kpi-sub">All departments · FY avg</div>
-          <div class="kpi-delta delta-nt">→ Stable</div>
-        </div>
-      </div>
-
-      <!-- Charts Row 1 -->
-      <div class="chart-grid chart-grid-21" style="margin-top:1rem">
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <div class="card-title">Monthly Admissions & Revenue</div>
-              <div class="card-sub">Dual-axis · admissions (bars) + revenue trend (line)</div>
-            </div>
-            <span class="card-tag tag-mul">FY 2024</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:200px">
-              <canvas id="chart-adm-rev"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <div class="card-title">Revenue by Department</div>
-              <div class="card-sub">FY 2024 total · $M</div>
-            </div>
-            <span class="card-tag tag-grn">Full Year</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:200px">
-              <canvas id="chart-dept-rev"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Charts Row 2 -->
-      <div class="chart-grid chart-grid-3">
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <div class="card-title">Bed Occupancy — Daily Trend</div>
-              <div class="card-sub">Weekly averages · FY 2024</div>
-            </div>
-            <span class="card-tag tag-blu">Capacity</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:150px">
-              <canvas id="chart-occupancy"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <div class="card-title">Cost vs Revenue</div>
-              <div class="card-sub">Monthly · margin visible</div>
-            </div>
-            <span class="card-tag tag-amb">Finance</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:150px">
-              <canvas id="chart-cost-rev"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <div class="card-title">Admissions: Weekday vs Weekend</div>
-              <div class="card-sub">Avg daily · pattern analysis</div>
-            </div>
-            <span class="card-tag tag-tel">Pattern</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:150px">
-              <canvas id="chart-wkd"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div style="display:flex;gap:2.5rem;flex-wrap:wrap;padding-bottom:2rem;">
+      <a href="data-reporting-dashboard.html" class="btn-link">← Project Overview</a>
+      <a href="power-bi_dashboard_mockup.html" class="btn-link">View Dashboard Mockup →</a>
+      <a href="data-architecture.html" class="btn-link">Dataset Architecture →</a>
     </div>
 
-    <!-- ══════════════════════════════════════════════════
-         PAGE 2 — DEPARTMENT PERFORMANCE
-    ══════════════════════════════════════════════════ -->
-    <div class="page" id="page-dept">
-      <div class="page-header">
-        <div class="page-eyebrow">Department Performance</div>
-        <h1 class="page-title">8 Departments · <em>Comparative</em> Analysis</h1>
-        <p class="page-sub">2,928 daily rows · Revenue, margin, LOS, complications by department</p>
-      </div>
-
-      <div class="kpi-row kpi-row-4">
-        <div class="kpi" style="--kpi-color:var(--mulberry)">
-          <div class="kpi-label">Highest Revenue Dept</div>
-          <div class="kpi-val">ICU</div>
-          <div class="kpi-sub">$20.8M FY 2024</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--green)">
-          <div class="kpi-label">Best Margin</div>
-          <div class="kpi-val">Radiology</div>
-          <div class="kpi-sub">31.6% EBITDA margin</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--amber)">
-          <div class="kpi-label">Highest Volume</div>
-          <div class="kpi-val">Emergency</div>
-          <div class="kpi-sub">4,685 admissions FY2024</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--teal)">
-          <div class="kpi-label">Tightest Margin</div>
-          <div class="kpi-val">ICU</div>
-          <div class="kpi-sub">10.7% — cost-intensive care</div>
-        </div>
-      </div>
-
-      <div class="chart-grid chart-grid-2">
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <div class="card-title">EBITDA Margin by Department</div>
-              <div class="card-sub">FY 2024 full year %</div>
-            </div>
-            <span class="card-tag tag-grn">Margin</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:220px">
-              <canvas id="chart-dept-margin"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <div class="card-title">Total Admissions by Department</div>
-              <div class="card-sub">FY 2024 · Emergency dominates volume</div>
-            </div>
-            <span class="card-tag tag-mul">Volume</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:220px">
-              <canvas id="chart-dept-adm"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="chart-grid chart-grid-12">
-        <div class="card">
-          <div class="card-head">
-            <div><div class="card-title">Avg Length of Stay</div><div class="card-sub">Days · by department</div></div>
-            <span class="card-tag tag-amb">LOS</span>
-          </div>
-          <div class="card-body">
-            <div class="outcome-grid">
-              <div class="outcome-row"><span class="outcome-name">ICU</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:93%;background:var(--mulberry)"></div></div><span class="outcome-pct">6.8d</span></div>
-              <div class="outcome-row"><span class="outcome-name">Oncology</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:75%;background:var(--mulberry)"></div></div><span class="outcome-pct">5.5d</span></div>
-              <div class="outcome-row"><span class="outcome-name">Cardiology</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:55%;background:var(--teal)"></div></div><span class="outcome-pct">4.0d</span></div>
-              <div class="outcome-row"><span class="outcome-name">Neurology</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:52%;background:var(--teal)"></div></div><span class="outcome-pct">3.8d</span></div>
-              <div class="outcome-row"><span class="outcome-name">Orthopedics</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:52%;background:var(--teal)"></div></div><span class="outcome-pct">3.8d</span></div>
-              <div class="outcome-row"><span class="outcome-name">Pediatrics</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:50%;background:var(--green)"></div></div><span class="outcome-pct">3.7d</span></div>
-              <div class="outcome-row"><span class="outcome-name">Radiology</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:25%;background:var(--green)"></div></div><span class="outcome-pct">1.8d</span></div>
-              <div class="outcome-row"><span class="outcome-name">Emergency</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:16%;background:var(--green)"></div></div><span class="outcome-pct">1.2d</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head">
-            <div><div class="card-title">Revenue Trend — Top 4 Departments</div><div class="card-sub">Monthly · ICU, Oncology, Cardiology, Emergency</div></div>
-            <span class="card-tag tag-tel">Trend</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:230px">
-              <canvas id="chart-dept-trend"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="stat-strip">
+      <div class="stat-cell"><div class="stat-num">6</div><div class="stat-lbl">Dashboard Pages</div></div>
+      <div class="stat-cell"><div class="stat-num">45+</div><div class="stat-lbl">DAX Measures</div></div>
+      <div class="stat-cell"><div class="stat-num">7</div><div class="stat-lbl">Connected Tables</div></div>
+      <div class="stat-cell"><div class="stat-num">20,130</div><div class="stat-lbl">Daily Rows</div></div>
+      <div class="stat-cell"><div class="stat-num">5</div><div class="stat-lbl">Build Phases</div></div>
     </div>
 
-    <!-- ══════════════════════════════════════════════════
-         PAGE 3 — CLINICAL QUALITY
-    ══════════════════════════════════════════════════ -->
-    <div class="page" id="page-clinical">
-      <div class="page-header">
-        <div class="page-eyebrow">Clinical Quality & Outcomes</div>
-        <h1 class="page-title">Procedure <em>Outcomes</em> & Safety Metrics</h1>
-        <p class="page-sub">2,928 daily rows · 8 procedure categories · Success, HAI, protocol adherence</p>
-      </div>
-
-      <div class="kpi-row kpi-row-4">
-        <div class="kpi" style="--kpi-color:var(--green)">
-          <div class="kpi-label">Overall Success Rate</div>
-          <div class="kpi-val">83.7%</div>
-          <div class="kpi-sub">Weighted avg all categories</div>
-          <div class="kpi-delta delta-up">↑ Improving trend</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--amber)">
-          <div class="kpi-label">Avg Protocol Adherence</div>
-          <div class="kpi-val">92.4%</div>
-          <div class="kpi-sub">Improving through Q4</div>
-          <div class="kpi-delta delta-up">↑ +0.3pp YoY</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--red)">
-          <div class="kpi-label">HAI Rate</div>
-          <div class="kpi-val">0.9%</div>
-          <div class="kpi-sub">Hospital-acquired infections</div>
-          <div class="kpi-delta delta-up">↓ Below 1% target</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--teal)">
-          <div class="kpi-label">Avg PRO Score</div>
-          <div class="kpi-val">7.80</div>
-          <div class="kpi-sub">Patient-reported outcomes</div>
-          <div class="kpi-delta delta-up">↑ +0.4 vs baseline</div>
-        </div>
-      </div>
-
-      <div class="chart-grid chart-grid-2">
-        <div class="card">
-          <div class="card-head">
-            <div><div class="card-title">Procedure Success Rate by Category</div><div class="card-sub">FY 2024 · Diagnostic Imaging leads at 94.0%</div></div>
-            <span class="card-tag tag-grn">Outcomes</span>
-          </div>
-          <div class="card-body">
-            <div class="outcome-grid">
-              <div class="outcome-row"><span class="outcome-name">Diagnostic Imaging</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:94%;background:var(--green)"></div></div><span class="outcome-pct">94.0%</span></div>
-              <div class="outcome-row"><span class="outcome-name">Emergency Interventions</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:89.8%;background:var(--green)"></div></div><span class="outcome-pct">89.8%</span></div>
-              <div class="outcome-row"><span class="outcome-name">Orthopedic Surgery</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:83.7%;background:var(--teal)"></div></div><span class="outcome-pct">83.7%</span></div>
-              <div class="outcome-row"><span class="outcome-name">Pediatric</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:80.7%;background:var(--teal)"></div></div><span class="outcome-pct">80.7%</span></div>
-              <div class="outcome-row"><span class="outcome-name">Cardiovascular</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:80.8%;background:var(--teal)"></div></div><span class="outcome-pct">80.8%</span></div>
-              <div class="outcome-row"><span class="outcome-name">Oncology Procedures</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:76.7%;background:var(--amber)"></div></div><span class="outcome-pct">76.7%</span></div>
-              <div class="outcome-row"><span class="outcome-name">Neurological</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:69.8%;background:var(--amber)"></div></div><span class="outcome-pct">69.8%</span></div>
-              <div class="outcome-row"><span class="outcome-name">Critical Care</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:57.3%;background:var(--mulberry)"></div></div><span class="outcome-pct">57.3%</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head">
-            <div><div class="card-title">Protocol Adherence vs Success Rate</div><div class="card-sub">Scatter · adherence drives outcomes</div></div>
-            <span class="card-tag tag-mul">Correlation</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:270px">
-              <canvas id="chart-scatter"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="chart-grid chart-grid-2" style="margin-top:1rem">
-        <div class="card">
-          <div class="card-head">
-            <div><div class="card-title">HAI Rate — Monthly Trend</div><div class="card-sub">Target below 1.0% · tracking well</div></div>
-            <span class="card-tag tag-amb">Safety</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:150px">
-              <canvas id="chart-hai"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head">
-            <div><div class="card-title">Total Cases by Procedure Category</div><div class="card-sub">FY 2024 volume · Diagnostic Imaging highest</div></div>
-            <span class="card-tag tag-blu">Volume</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:150px">
-              <canvas id="chart-cases"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab(this,'p1')">Phase 1 · Connect Data</button>
+      <button class="tab-btn" onclick="switchTab(this,'p2')">Phase 2 · Build Measures</button>
+      <button class="tab-btn" onclick="switchTab(this,'p3')">Phase 3 · Canvas &amp; Theme</button>
+      <button class="tab-btn" onclick="switchTab(this,'p4')">Phase 4 · Build Pages</button>
+      <button class="tab-btn" onclick="switchTab(this,'p5')">Phase 5 · Sync &amp; Publish</button>
     </div>
 
-    <!-- ══════════════════════════════════════════════════
-         PAGE 4 — FINANCIAL PERFORMANCE
-    ══════════════════════════════════════════════════ -->
-    <div class="page" id="page-finance">
-      <div class="page-header">
-        <div class="page-eyebrow">Financial Performance</div>
-        <h1 class="page-title">Revenue, <em>Cost</em> & Margin Analysis</h1>
-        <p class="page-sub">2,928 daily rows · 8 departments · Revenue streams, EBITDA, denial rate</p>
+    <!-- PHASE 1 -->
+    <div class="tab-panel active" id="p1">
+      <div class="phase-intro">
+        <h3>Phase 1 — Connect &amp; Prepare the Data</h3>
+        <p>Before a single visual is built, the data model must be correct. This phase covers importing the Excel dataset, fixing column headers and data types in Power Query, and defining the 6 relationships that allow all 7 tables to cross-filter. Several real problems are documented here — duplicate header rows, the relationship direction error, and a hidden OK button that required a keyboard workaround.</p>
       </div>
 
-      <div class="kpi-row kpi-row-4">
-        <div class="kpi" style="--kpi-color:var(--green)">
-          <div class="kpi-label">Total FY Revenue</div>
-          <div class="kpi-val">$102.8M</div>
-          <div class="kpi-sub">All departments combined</div>
-          <div class="kpi-delta delta-up">↑ 8.1% vs prior year</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--mulberry)">
-          <div class="kpi-label">Total Costs</div>
-          <div class="kpi-val">$84.3M</div>
-          <div class="kpi-sub">Staff 42% · Supplies 18%</div>
-          <div class="kpi-delta delta-dn">↑ 6.4% (managed)</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--teal)">
-          <div class="kpi-label">EBITDA</div>
-          <div class="kpi-val">$18.5M</div>
-          <div class="kpi-sub">18.0% margin · FY 2024</div>
-          <div class="kpi-delta delta-up">↑ Above 17% target</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--amber)">
-          <div class="kpi-label">Avg Denial Rate</div>
-          <div class="kpi-val">6.2%</div>
-          <div class="kpi-sub">Insurance claim denials</div>
-          <div class="kpi-delta delta-nt">→ Watch closely</div>
+      <div class="step">
+        <div class="step-header"><div class="step-n">1</div><div class="step-title">Open Power BI Desktop</div><span class="step-tag tag-setup">Setup</span></div>
+        <div class="step-body">
+          <p>Launch Power BI Desktop and close the splash screen. Confirm three icons are visible on the left sidebar:</p>
+          <ul class="inst-list">
+            <li><strong>Report</strong> (bar chart icon) — where all visuals are built. Start here.</li>
+            <li><strong>Data</strong> (table icon) — browse raw imported data.</li>
+            <li><strong>Model</strong> (diagram icon) — define relationships between tables.</li>
+          </ul>
+          <div class="note"><strong>Don't have Power BI Desktop?</strong> Download it free from <strong>microsoft.com/en-us/power-bi/desktop</strong>. Windows only. Mac users need a Windows virtual machine.</div>
         </div>
       </div>
 
-      <div class="chart-grid chart-grid-2">
-        <div class="card">
-          <div class="card-head">
-            <div><div class="card-title">Revenue vs Cost — Monthly</div><div class="card-sub">Net margin band visible · summer peak</div></div>
-            <span class="card-tag tag-grn">P&L</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:210px">
-              <canvas id="chart-fin-monthly"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head">
-            <div><div class="card-title">Revenue Stream Breakdown</div><div class="card-sub">Inpatient · Outpatient · Procedure</div></div>
-            <span class="card-tag tag-mul">Streams</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:210px">
-              <canvas id="chart-streams"></canvas>
-            </div>
-          </div>
+      <div class="step">
+        <div class="step-header"><div class="step-n">2</div><div class="step-title">Import the Excel Dataset</div><span class="step-tag tag-setup">Setup</span></div>
+        <div class="step-body">
+          <p><strong>Home ribbon → Get Data → Excel Workbook.</strong> Navigate to <code>Healthcare_Operations_Daily_Dataset.xlsx</code> and open it. In the Navigator window, check all 7 sheets:</p>
+          <ul class="inst-list">
+            <li>Daily_KPIs</li>
+            <li>Department_Daily</li>
+            <li>Physician_Daily</li>
+            <li>Patient_Outcomes_Daily</li>
+            <li>Financial_Daily</li>
+            <li>Equipment_Daily</li>
+            <li>Staffing_Daily</li>
+          </ul>
+          <div class="note">⚠️ Click <strong>Transform Data</strong> — not Load. Transform Data opens Power Query Editor where column types and headers are fixed before the data is loaded. Clicking Load skips this and imports broken data that is very difficult to fix after the fact.</div>
         </div>
       </div>
 
-      <div class="chart-grid chart-grid-2" style="margin-top:1rem">
-        <div class="card">
-          <div class="card-head">
-            <div><div class="card-title">EBITDA Margin Ranking</div><div class="card-sub">By department · Radiology most efficient</div></div>
-            <span class="card-tag tag-tel">Efficiency</span>
+      <div class="step">
+        <div class="step-header"><div class="step-n">3</div><div class="step-title">Fix Headers &amp; Column Types in Power Query</div><span class="step-tag tag-fix">Troubleshoot</span></div>
+        <div class="step-body">
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem — Date column threw an error immediately</div>
+            <p>Attempting to change the Date column type caused an error: column not found. The dataset has a coloured title banner row (e.g. "DEPARTMENT PERFORMANCE — DAILY…") sitting above the real column headers. Power Query treated the banner as row 1, so "Date" did not yet exist as a column name.</p>
+            <p><strong>Fix — apply these steps in this exact order for each table:</strong></p>
+            <ul class="inst-list">
+              <li><strong>Home → Remove Top Rows → 1 → OK</strong> — removes the title banner row (Daily_KPIs only needed Use First Row as Headers, as it had one fewer extra row)</li>
+              <li><strong>Home → Use First Row as Headers</strong> — promotes the real column names (Date, Department etc.) to headers</li>
+              <li>Now set column types by clicking the icon left of each column header</li>
+            </ul>
           </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:170px">
-              <canvas id="chart-ebitda-rank"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head">
-            <div><div class="card-title">Cost Composition</div><div class="card-sub">Staff · Supplies · Equipment · Overhead</div></div>
-            <span class="card-tag tag-amb">Costs</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:170px">
-              <canvas id="chart-cost-comp"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════════════════════
-         PAGE 5 — PHYSICIAN PRODUCTIVITY
-    ══════════════════════════════════════════════════ -->
-    <div class="page" id="page-physician">
-      <div class="page-header">
-        <div class="page-eyebrow">Physician Productivity</div>
-        <h1 class="page-title">12 Physicians · <em>Individual</em> Performance</h1>
-        <p class="page-sub">4,392 daily rows · Patients seen, revenue generated, leave-adjusted</p>
-      </div>
-
-      <div class="kpi-row kpi-row-4">
-        <div class="kpi" style="--kpi-color:var(--teal)">
-          <div class="kpi-label">Top Revenue Generator</div>
-          <div class="kpi-val">Dr. Nakamura</div>
-          <div class="kpi-sub">$5.03M FY 2024</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--mulberry)">
-          <div class="kpi-label">Highest Patient Volume</div>
-          <div class="kpi-val">Dr. Santos</div>
-          <div class="kpi-sub">3,990 patients seen</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--green)">
-          <div class="kpi-label">Total Patients Seen</div>
-          <div class="kpi-val">28,008</div>
-          <div class="kpi-sub">All 12 physicians · excl. leave</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--amber)">
-          <div class="kpi-label">Total Revenue Generated</div>
-          <div class="kpi-val">$41.9M</div>
-          <div class="kpi-sub">Physician-attributed FY 2024</div>
-        </div>
-      </div>
-
-      <div class="chart-grid chart-grid-2">
-        <div class="card">
-          <div class="card-head">
-            <div><div class="card-title">Revenue Generated per Physician</div><div class="card-sub">FY 2024 · leave-adjusted · $M</div></div>
-            <span class="card-tag tag-grn">Revenue</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:250px">
-              <canvas id="chart-phys-rev"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head">
-            <div><div class="card-title">Patients Seen per Physician</div><div class="card-sub">FY 2024 · all active days</div></div>
-            <span class="card-tag tag-mul">Volume</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:250px">
-              <canvas id="chart-phys-pts"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:1rem">
-        <div class="card-head">
-          <div><div class="card-title">Physician Performance Summary</div><div class="card-sub">All 12 · FY 2024 · sorted by revenue</div></div>
-          <span class="card-tag tag-tel">Full Roster</span>
-        </div>
-        <div class="card-body" style="padding:0">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Physician</th>
-                <th>Department</th>
-                <th style="text-align:right">Patients</th>
-                <th style="text-align:right">Revenue</th>
-                <th style="text-align:right">Rev / Patient</th>
-                <th style="text-align:right">Volume Rank</th>
-              </tr>
-            </thead>
+          <table class="fmt-table">
+            <thead><tr><th>Column</th><th>Type</th><th>Note</th></tr></thead>
             <tbody>
-              <tr><td class="td-name">Dr. Yuki Nakamura</td><td>Radiology</td><td class="td-num">3,100</td><td class="td-num">$5.03M</td><td class="td-num">$1,621</td><td class="td-num">#3</td></tr>
-              <tr><td class="td-name">Dr. Rachel Kim</td><td>Emergency</td><td class="td-num">1,885</td><td class="td-num">$4.67M</td><td class="td-num">$2,477</td><td class="td-num">#8</td></tr>
-              <tr><td class="td-name">Dr. Ethan Brooks</td><td>ICU</td><td class="td-num">1,338</td><td class="td-num">$4.28M</td><td class="td-num">$3,196</td><td class="td-num">#11</td></tr>
-              <tr><td class="td-name">Dr. James Thornton</td><td>Orthopedics</td><td class="td-num">3,435</td><td class="td-num">$4.25M</td><td class="td-num">$1,237</td><td class="td-num">#2</td></tr>
-              <tr><td class="td-name">Dr. David Patel</td><td>Neurology</td><td class="td-num">1,362</td><td class="td-num">$4.42M</td><td class="td-num">$3,246</td><td class="td-num">#10</td></tr>
-              <tr><td class="td-name">Dr. Carlos Rivera</td><td>Cardiology</td><td class="td-num">1,325</td><td class="td-num">$3.88M</td><td class="td-num">$2,927</td><td class="td-num">#12</td></tr>
-              <tr><td class="td-name">Dr. Amara Osei</td><td>Cardiology</td><td class="td-num">1,929</td><td class="td-num">$3.40M</td><td class="td-num">$1,762</td><td class="td-num">#7</td></tr>
-              <tr><td class="td-name">Dr. Maria Santos</td><td>Pediatrics</td><td class="td-num">3,990</td><td class="td-num">$3.05M</td><td class="td-num">$765</td><td class="td-num">#1</td></tr>
-              <tr><td class="td-name">Dr. Lena Hartmann</td><td>Oncology</td><td class="td-num">1,592</td><td class="td-num">$2.94M</td><td class="td-num">$1,849</td><td class="td-num">#9</td></tr>
-              <tr><td class="td-name">Dr. Ben Okafor</td><td>Emergency</td><td class="td-num">2,486</td><td class="td-num">$2.33M</td><td class="td-num">$938</td><td class="td-num">#5</td></tr>
-              <tr><td class="td-name">Dr. Priya Mehta</td><td>Neurology</td><td class="td-num">3,086</td><td class="td-num">$2.16M</td><td class="td-num">$700</td><td class="td-num">#4</td></tr>
-              <tr><td class="td-name">Dr. Sofia Andrade</td><td>ICU</td><td class="td-num">2,476</td><td class="td-num">$1.80M</td><td class="td-num">$728</td><td class="td-num">#6</td></tr>
+              <tr><td><code>Date</code></td><td>Date</td><td>Key join field — must be Date not Date/Time</td></tr>
+              <tr><td><code>Department</code>, <code>Day of Week</code>, <code>Quarter</code>, <code>Day Type</code>, <code>On Leave</code></td><td>Text</td><td>Categorical fields</td></tr>
+              <tr><td><code>Week No.</code></td><td>Whole Number</td><td>ISO week 1–53</td></tr>
+              <tr><td>All columns ending <code>($)</code></td><td>Fixed Decimal Number</td><td>Revenue, cost columns</td></tr>
+              <tr><td>All columns ending <code>(%)</code></td><td>Decimal Number</td><td>Stored as 0.0–1.0 decimals</td></tr>
+            </tbody>
+          </table>
+          <p>When all 7 tables are fixed: <strong>Home → Close &amp; Apply</strong>. Power BI loads all 20,130 rows.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">4</div><div class="step-title">Define the 6 Relationships in Model View</div><span class="step-tag tag-fix">Troubleshoot</span></div>
+        <div class="step-body">
+          <p>Click the <strong>Model icon</strong> on the left sidebar. Go to <strong>Home → Manage Relationships → New</strong> for each relationship. All 6 connect through the <code>Date</code> field.</p>
+
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem 1 — Duplicate value error</div>
+            <p>Setting Daily_KPIs on the From side caused:</p>
+            <span class="error-msg">Column "Date" in Table 'Department_Daily' contains a duplicate value '1/3/2024' and this is not allowed for columns on the one side of a many-to-one relationship.</span>
+            <p><strong>Why:</strong> Department_Daily has 8 rows per date (one per department), so its Date is not unique. The "one" side of a many-to-one must be unique. Daily_KPIs has exactly one row per date — it belongs on the To (one) side.</p>
+            <p><strong>Fix:</strong> Detail table always in the <strong>From</strong> field. Daily_KPIs always in the <strong>To</strong> field.</p>
+          </div>
+
+          <table class="fmt-table">
+            <thead><tr><th>From (many side)</th><th>To (one side)</th></tr></thead>
+            <tbody>
+              <tr><td>Department_Daily [Date]</td><td>Daily_KPIs [Date]</td></tr>
+              <tr><td>Physician_Daily [Date]</td><td>Daily_KPIs [Date]</td></tr>
+              <tr><td>Patient_Outcomes_Daily [Date]</td><td>Daily_KPIs [Date]</td></tr>
+              <tr><td>Financial_Daily [Date]</td><td>Daily_KPIs [Date]</td></tr>
+              <tr><td>Equipment_Daily [Date]</td><td>Daily_KPIs [Date]</td></tr>
+              <tr><td>Staffing_Daily [Date]</td><td>Daily_KPIs [Date]</td></tr>
+            </tbody>
+          </table>
+
+          <p>In each dialog also set: Cardinality → <strong>Many to one (*:1)</strong> · ✅ Make this relationship active</p>
+
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem 2 — OK button not visible on screen</div>
+            <p>After filling in all settings, the OK / Save / Confirm button was not visible — it was rendered below the bottom of the screen, hidden behind the Windows taskbar. Scrolling, resizing, and moving the window all failed to reveal it.</p>
+            <p><strong>Fix:</strong> Press <strong>Tab</strong> repeatedly to cycle through all interactive elements in the dialog, then press <strong>Enter</strong> once the focus reaches the confirm button. This saves the relationship without needing to click it.</p>
+          </div>
+
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem 3 — Security filter error on 2nd relationship</div>
+            <span class="error-msg">Table 'Daily_KPIs' already has a relationship where Security Filtering Behavior is set to Both. Only one relationship per table with this setting is allowed.</span>
+            <p><strong>Fix:</strong> Leave "Apply security filters in both directions" <strong>unchecked</strong> for all 6 relationships. This setting relates to row-level security and is not needed for this dashboard.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="tab-panel" id="p2">
+      <div class="phase-intro">
+        <h3>Phase 2 — Build the Measures Library</h3>
+        <p>All DAX measures are written before any visuals are built. They live in a single <code>_Measures</code> table. One measure required a formula correction during the build — the HAI Rate was returning 0.000% until the formula was changed to reference the pre-calculated column directly.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">5</div><div class="step-title">Create the _Measures Table</div><span class="step-tag tag-setup">Setup</span></div>
+        <div class="step-body">
+          <p><strong>Home ribbon → Enter Data.</strong> Name the table <code>_Measures</code>. Add a column named <code>Placeholder</code> with value <code>0</code>. Click Load.</p>
+          <p>To add a measure: click <code>_Measures</code> in the Data pane → <strong>Table Tools → New Measure</strong> → type the formula → press Enter → right-click the measure to set its number format.</p>
+          <div class="note">The underscore prefix in <code>_Measures</code> forces it to sort above all source tables in the Data pane, making it easy to find. This is a standard professional convention in Power BI development.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">6</div><div class="step-title">Core Executive Measures</div><span class="step-tag tag-measure">DAX</span></div>
+        <div class="step-body">
+          <div class="dax">
+<span class="kw">Total Admissions</span> = <span class="fn">SUM</span> ( Daily_KPIs[Total Admissions] )<br>
+<span class="kw">Total Revenue</span> = <span class="fn">SUM</span> ( Financial_Daily[Total Revenue ($)] )<br>
+<span class="kw">Total Costs</span> = <span class="fn">SUM</span> ( Financial_Daily[Total Costs ($)] )<br>
+<span class="kw">EBITDA</span> = [Total Revenue] - [Total Costs]<br>
+<span class="kw">EBITDA Margin %</span> = <span class="fn">DIVIDE</span> ( [EBITDA], [Total Revenue], 0 )<br>
+<span class="kw">Avg Bed Occupancy %</span> = <span class="fn">AVERAGE</span> ( Daily_KPIs[Bed Occupancy (%)] )<br>
+<span class="kw">Avg Patient Satisfaction</span> = <span class="fn">AVERAGE</span> ( Daily_KPIs[Patient Satisfaction (/10)] )<br>
+<span class="kw">Avg Mortality Rate %</span> = <span class="fn">DIVIDE</span> ( <span class="fn">SUM</span> ( Daily_KPIs[Mortality] ), <span class="fn">SUM</span> ( Daily_KPIs[Total Admissions] ), 0 )
+          </div>
+          <table class="fmt-table">
+            <thead><tr><th>Measure</th><th>Format</th><th>Display Units</th></tr></thead>
+            <tbody>
+              <tr><td>Total Admissions</td><td>Whole Number</td><td>None — full number e.g. 21,473</td></tr>
+              <tr><td>Total Revenue, Total Costs, EBITDA</td><td>Currency, 0 decimal</td><td>Millions on KPI card → $102.8M</td></tr>
+              <tr><td>EBITDA Margin %, Avg Bed Occupancy %, Avg Mortality Rate %</td><td>Percentage, 1 decimal</td><td>None</td></tr>
+              <tr><td>Avg Patient Satisfaction</td><td>Decimal, 1 place</td><td>None</td></tr>
+            </tbody>
+          </table>
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem — KPI card showing "21k" not "21,473"</div>
+            <p>Power BI defaulted to Auto display units, shortening 21,473 to "21k". Fix: Format visual pane → Callout value → Display units → change from <strong>Auto</strong> to <strong>None</strong>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">7</div><div class="step-title">Department Measures</div><span class="step-tag tag-measure">DAX</span></div>
+        <div class="step-body">
+          <div class="dax">
+<span class="kw">Dept Total Revenue</span> = <span class="fn">SUM</span> ( Department_Daily[Revenue ($)] )<br>
+<span class="kw">Dept Total Admissions</span> = <span class="fn">SUM</span> ( Department_Daily[Admissions] )<br>
+<span class="kw">Dept EBITDA Margin %</span> = <span class="fn">DIVIDE</span> ( <span class="fn">SUM</span> ( Department_Daily[Net Margin ($)] ), <span class="fn">SUM</span> ( Department_Daily[Revenue ($)] ), 0 )<br>
+<span class="kw">Dept Avg LOS</span> = <span class="fn">AVERAGE</span> ( Department_Daily[Avg LOS (days)] )
+          </div>
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem — All department bars showing the same value (21,473)</div>
+            <p>Using <code>Total Admissions</code> on the Department bar chart made every bar show 21,473 — the hospital-wide total. The measure has no department context because it sums from Daily_KPIs which has one row per day (not per department).</p>
+            <p><strong>Fix:</strong> <code>Dept Total Admissions</code> sums from Department_Daily which has one row per department per day — giving correctly different values per department (Emergency ~4,685, Orthopedics ~2,608 etc.).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">8</div><div class="step-title">Clinical Quality Measures</div><span class="step-tag tag-measure">DAX</span></div>
+        <div class="step-body">
+          <div class="dax">
+<span class="kw">Overall Success Rate %</span> = <span class="fn">DIVIDE</span> ( <span class="fn">SUM</span> ( Patient_Outcomes_Daily[Successful Outcomes] ), <span class="fn">SUM</span> ( Patient_Outcomes_Daily[Cases] ), 0 )<br>
+<span class="kw">Avg Protocol Adherence %</span> = <span class="fn">AVERAGEX</span> ( Patient_Outcomes_Daily, Patient_Outcomes_Daily[Protocol Adherence (%)] )<br>
+<span class="kw">Avg PRO Score</span> = <span class="fn">AVERAGE</span> ( Patient_Outcomes_Daily[PRO Score (/10)] )<br>
+<br>
+<span class="cm">-- Corrected formula — see troubleshoot below</span><br>
+<span class="kw">HAI Rate %</span> = <span class="fn">AVERAGE</span> ( Patient_Outcomes_Daily[HAI Rate (%)] )
+          </div>
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem — HAI Rate % showing 0.000%</div>
+            <p>The original formula was:</p>
+            <span class="error-msg">HAI Rate % = DIVIDE ( SUM ( Patient_Outcomes_Daily[HAI Cases] ), SUM ( Patient_Outcomes_Daily[Cases] ), 0 )</span>
+            <p><strong>Investigation:</strong> The HAI Rate (%) column already contains the pre-calculated rate as a decimal (0.0075, 0.009 etc.). The original formula was dividing a small HAI count by a large total case count — producing an even smaller decimal that showed as 0.000% even with 2 decimal formatting. The dataset values clearly show 0.7%–1.1% in the column.</p>
+            <p><strong>Fix:</strong> AVERAGE the pre-calculated column directly. No division needed — the work is already done. The corrected measure returns ~0.9% as expected.</p>
+            <p><strong>Chart Y-axis also needed fixing:</strong> Default 0–100% scale made the 0.7–1.1% variation invisible as a flat line. Fix: Format visual pane → Y-axis → Range → Minimum: <code>0.005</code>, Maximum: <code>0.015</code>. Set the constant target line to <code>0.01</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">9</div><div class="step-title">Financial Measures</div><span class="step-tag tag-measure">DAX</span></div>
+        <div class="step-body">
+          <div class="dax">
+<span class="kw">Avg Denial Rate %</span> = <span class="fn">AVERAGE</span> ( Financial_Daily[Denial Rate (%)] )<br>
+<span class="kw">Inpatient Revenue</span> = <span class="fn">SUM</span> ( Financial_Daily[Inpatient Revenue ($)] )<br>
+<span class="kw">Outpatient Revenue</span> = <span class="fn">SUM</span> ( Financial_Daily[Outpatient Revenue ($)] )<br>
+<span class="kw">Procedure Revenue</span> = <span class="fn">SUM</span> ( Financial_Daily[Procedure Revenue ($)] )<br>
+<span class="kw">Staff Costs</span> = <span class="fn">SUM</span> ( Financial_Daily[Staff Costs ($)] )<br>
+<span class="kw">Supply Costs</span> = <span class="fn">SUM</span> ( Financial_Daily[Supplies ($)] )<br>
+<span class="kw">Equipment Costs</span> = <span class="fn">SUM</span> ( Financial_Daily[Equipment ($)] )<br>
+<span class="kw">Overhead Costs</span> = <span class="fn">SUM</span> ( Financial_Daily[Overhead ($)] )
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">10</div><div class="step-title">Physician Measures</div><span class="step-tag tag-measure">DAX</span></div>
+        <div class="step-body">
+          <p>All physician measures filter <code>On Leave = "N"</code> inside the DAX to exclude leave days from every calculation.</p>
+          <div class="dax">
+<span class="kw">Physician Total Patients</span> = <span class="fn">CALCULATE</span> (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">SUM</span> ( Physician_Daily[Patients Seen] ),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Physician_Daily[On Leave] = "N"<br>
+)<br>
+<span class="kw">Physician Total Revenue</span> = <span class="fn">CALCULATE</span> (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">SUM</span> ( Physician_Daily[Revenue ($)] ),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Physician_Daily[On Leave] = "N"<br>
+)<br>
+<span class="kw">Revenue per Patient</span> = <span class="fn">DIVIDE</span> ( [Physician Total Revenue], [Physician Total Patients], 0 )<br>
+<span class="kw">Physician Avg Satisfaction</span> = <span class="fn">CALCULATE</span> (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">AVERAGE</span> ( Physician_Daily[Satisfaction (/10)] ),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Physician_Daily[On Leave] = "N"<br>
+)
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">11</div><div class="step-title">Staffing &amp; Workforce Measures</div><span class="step-tag tag-measure">DAX</span></div>
+        <div class="step-body">
+          <div class="dax">
+<span class="kw">Avg Vacancy Rate %</span> = <span class="fn">AVERAGE</span> ( Staffing_Daily[Vacancy Rate (%)] )<br>
+<span class="kw">Avg Agency Staff per Day</span> = <span class="fn">AVERAGE</span> ( Staffing_Daily[Agency Staff] )<br>
+<span class="kw">Total Overtime Hours</span> = <span class="fn">SUM</span> ( Staffing_Daily[Overtime Hours] )<br>
+<span class="kw">Avg Staff Patient Ratio</span> = <span class="fn">AVERAGE</span> ( Staffing_Daily[Staff-Patient Ratio] )<br>
+<span class="kw">Weekday Avg Headcount</span> = <span class="fn">CALCULATE</span> ( <span class="fn">AVERAGE</span> ( Staffing_Daily[Total Staff] ), Staffing_Daily[Day Type] = "Weekday" )<br>
+<span class="kw">Weekend Avg Headcount</span> = <span class="fn">CALCULATE</span> ( <span class="fn">AVERAGE</span> ( Staffing_Daily[Total Staff] ), Staffing_Daily[Day Type] = "Weekend" )
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="tab-panel" id="p3">
+      <div class="phase-intro">
+        <h3>Phase 3 — Canvas Setup &amp; Theme</h3>
+        <p>Set up all 6 pages with consistent canvas dimensions and import the custom colour theme before building any visuals. Two steps, under 5 minutes, but they affect every visual on every page.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">12</div><div class="step-title">Create &amp; Name the 6 Report Pages</div><span class="step-tag tag-setup">Setup</span></div>
+        <div class="step-body">
+          <p>Click <strong>+</strong> at the bottom of the canvas to add pages. Right-click each tab to rename:</p>
+          <ul class="inst-list">
+            <li>Executive Summary</li>
+            <li>Department Performance</li>
+            <li>Clinical Quality</li>
+            <li>Financial Performance</li>
+            <li>Physician Productivity</li>
+            <li>Workforce &amp; Staffing</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">13</div><div class="step-title">Set Canvas Size on All 6 Pages</div><span class="step-tag tag-setup">Setup</span></div>
+        <div class="step-body">
+          <p>Right-click any blank area of the canvas → <strong>Page settings</strong>. In the Format pane → Canvas Settings:</p>
+          <ul class="inst-list">
+            <li>Type → <strong>Custom</strong></li>
+            <li>Width → <strong>1280</strong></li>
+            <li>Height → <strong>720</strong></li>
+          </ul>
+          <p>Repeat for all 6 pages. This matches standard widescreen proportions and ensures consistent visual sizing.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">14</div><div class="step-title">Import the Custom Colour Theme</div><span class="step-tag tag-format">Format</span></div>
+        <div class="step-body">
+          <p>Save the JSON below as <code>healthcare-theme.json</code> then import via <strong>View → Themes → Browse for themes</strong>.</p>
+          <div class="dax" style="color:var(--text-main)">
+{<br>
+&nbsp;&nbsp;"name": "Healthcare Operations — Jenniefer Farhan",<br>
+&nbsp;&nbsp;"dataColors": ["#9D174D","#0F766E","#15803D","#B45309","#1D4ED8","#DC2626","#6D28D9","#D97706"],<br>
+&nbsp;&nbsp;"background": "#F9F9F7",<br>
+&nbsp;&nbsp;"foreground": "#1C1917",<br>
+&nbsp;&nbsp;"tableAccent": "#9D174D"<br>
+}
+          </div>
+          <table class="fmt-table">
+            <thead><tr><th>Colour</th><th>Hex</th><th>Used For</th></tr></thead>
+            <tbody>
+              <tr><td><span class="swatch"><span class="swatch-dot" style="background:#9D174D"></span>Mulberry</span></td><td><code>#9D174D</code></td><td>Primary bars, KPI accents, table headers</td></tr>
+              <tr><td><span class="swatch"><span class="swatch-dot" style="background:#0F766E"></span>Teal</span></td><td><code>#0F766E</code></td><td>Revenue lines, physician patients chart</td></tr>
+              <tr><td><span class="swatch"><span class="swatch-dot" style="background:#15803D"></span>Green</span></td><td><code>#15803D</code></td><td>Revenue bars, good performance indicator</td></tr>
+              <tr><td><span class="swatch"><span class="swatch-dot" style="background:#B45309"></span>Amber</span></td><td><code>#B45309</code></td><td>LOS bars, HAI trend line, agency usage</td></tr>
+              <tr><td><span class="swatch"><span class="swatch-dot" style="background:#1D4ED8"></span>Blue</span></td><td><code>#1D4ED8</code></td><td>Bed occupancy line, cases chart</td></tr>
+              <tr><td><span class="swatch"><span class="swatch-dot" style="background:#DC2626"></span>Red</span></td><td><code>#DC2626</code></td><td>Cost bars, target lines, low-margin conditional format</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════════════════
-         PAGE 6 — WORKFORCE & STAFFING
-    ══════════════════════════════════════════════════ -->
-    <div class="page" id="page-workforce">
-      <div class="page-header">
-        <div class="page-eyebrow">Workforce & Staffing</div>
-        <h1 class="page-title">Staffing <em>Patterns</em> & Workforce Health</h1>
-        <p class="page-sub">2,928 daily rows · Shift headcount, vacancy, agency usage · weekday vs weekend</p>
+    <!-- PHASE 4 -->
+    <div class="tab-panel" id="p4">
+      <div class="phase-intro">
+        <h3>Phase 4 — Build All 6 Pages</h3>
+        <p>Each page follows the same build order: slicers first, KPI cards second, charts last. Real problems documented here include the month ordering issue, day-of-week sort, the physician chart type switch, and conditional formatting dialog differences across Power BI versions.</p>
       </div>
 
-      <div class="kpi-row kpi-row-4">
-        <div class="kpi" style="--kpi-color:var(--mulberry)">
-          <div class="kpi-label">Avg Vacancy Rate</div>
-          <div class="kpi-val">7.2%</div>
-          <div class="kpi-sub">All departments FY avg</div>
-          <div class="kpi-delta delta-nt">→ Above 5% threshold</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--amber)">
-          <div class="kpi-label">Highest Agency Use</div>
-          <div class="kpi-val">ICU</div>
-          <div class="kpi-sub">4.7 agency staff/day avg</div>
-          <div class="kpi-delta delta-dn">↑ Structural pressure</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--teal)">
-          <div class="kpi-label">Weekend Shift Factor</div>
-          <div class="kpi-val">62%</div>
-          <div class="kpi-sub">Of weekday headcount</div>
-          <div class="kpi-delta delta-nt">→ Protocol-driven</div>
-        </div>
-        <div class="kpi" style="--kpi-color:var(--green)">
-          <div class="kpi-label">Avg Staff-Patient Ratio</div>
-          <div class="kpi-val">0.18</div>
-          <div class="kpi-sub">All depts · weekday avg</div>
-          <div class="kpi-delta delta-up">↑ Within safe range</div>
-        </div>
-      </div>
+      <div class="step">
+        <div class="step-header"><div class="step-n">15</div><div class="step-title">Page 1 — Executive Summary</div><span class="step-tag tag-visual">Visual</span></div>
+        <div class="step-body">
+          <p><strong>Slicer:</strong> Insert → Slicer → Date from Daily_KPIs → dropdown arrow → Between. Position top-right.</p>
+          <p><strong>6 KPI Cards — top row:</strong></p>
+          <table class="fmt-table">
+            <thead><tr><th>Measure</th><th>Label</th><th>Display Units</th><th>Expected</th></tr></thead>
+            <tbody>
+              <tr><td>Total Admissions</td><td>Total Admissions</td><td>None</td><td>21,473</td></tr>
+              <tr><td>Total Revenue</td><td>Total Revenue</td><td>Millions</td><td>$102.8M</td></tr>
+              <tr><td>EBITDA</td><td>EBITDA</td><td>Millions</td><td>$18.5M</td></tr>
+              <tr><td>Avg Patient Satisfaction</td><td>Patient Satisfaction</td><td>None</td><td>8.10</td></tr>
+              <tr><td>Avg Bed Occupancy %</td><td>Bed Occupancy</td><td>None</td><td>~74.8%</td></tr>
+              <tr><td>Avg Mortality Rate %</td><td>Mortality Rate</td><td>None</td><td>~1.9%</td></tr>
+            </tbody>
+          </table>
 
-      <div class="chart-grid chart-grid-2">
-        <div class="card">
-          <div class="card-head">
-            <div><div class="card-title">Agency Staff Usage by Department</div><div class="card-sub">Avg per day · FY 2024 · proxy for understaffing</div></div>
-            <span class="card-tag tag-amb">Agency</span>
+          <p style="margin-top:.85rem;"><strong>Chart 1 — Monthly Admissions + Revenue (dual axis):</strong> Line and stacked column chart. Column Y-axis: Total Admissions. Line Y-axis: Total Revenue. X-axis: Date field → drill hierarchy to Month level. Bar colour: <span class="swatch"><span class="swatch-dot" style="background:#9D174D"></span>#9D174D</span>. Line colour: <span class="swatch"><span class="swatch-dot" style="background:#0F766E"></span>#0F766E</span>.</p>
+
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem — Months out of order, no Month column in dataset</div>
+            <p>Two approaches failed: creating a Month No column and sorting by it had no effect; creating a Month Label column with FORMAT() and Sort by Column also failed to order correctly in the chart.</p>
+            <p><strong>Working fix:</strong> Drag the <strong>Date</strong> field directly into the X-axis. Power BI creates a date hierarchy automatically. Click the drill-down arrow on the chart until it shows the Month level. The months sort Jan–Dec correctly because they are driven by underlying date values, not text labels.</p>
           </div>
-          <div class="card-body">
-            <div class="outcome-grid">
-              <div class="outcome-row"><span class="outcome-name">ICU</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:100%;background:var(--mulberry)"></div></div><span class="outcome-pct">4.7/day</span></div>
-              <div class="outcome-row"><span class="outcome-name">Emergency</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:94%;background:var(--mulberry)"></div></div><span class="outcome-pct">4.4/day</span></div>
-              <div class="outcome-row"><span class="outcome-name">Oncology</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:68%;background:var(--amber)"></div></div><span class="outcome-pct">3.2/day</span></div>
-              <div class="outcome-row"><span class="outcome-name">Cardiology</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:57%;background:var(--amber)"></div></div><span class="outcome-pct">2.7/day</span></div>
-              <div class="outcome-row"><span class="outcome-name">Orthopedics</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:45%;background:var(--teal)"></div></div><span class="outcome-pct">2.1/day</span></div>
-              <div class="outcome-row"><span class="outcome-name">Neurology</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:38%;background:var(--teal)"></div></div><span class="outcome-pct">1.8/day</span></div>
-              <div class="outcome-row"><span class="outcome-name">Pediatrics</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:34%;background:var(--green)"></div></div><span class="outcome-pct">1.6/day</span></div>
-              <div class="outcome-row"><span class="outcome-name">Radiology</span><div class="outcome-bar-wrap"><div class="outcome-bar-fill" style="width:25%;background:var(--green)"></div></div><span class="outcome-pct">1.2/day</span></div>
+
+          <p style="margin-top:.85rem;"><strong>Chart 2 — Revenue by Department (horizontal bar):</strong> Y-axis: Department. X-axis: Dept Total Revenue. Sort descending. Bar colour: <span class="swatch"><span class="swatch-dot" style="background:#9D174D"></span>#9D174D</span>. ICU at top ~$20.8M.</p>
+
+          <p style="margin-top:.85rem;"><strong>Chart 3 — Bed Occupancy Trend (line):</strong> X-axis: Date (Month). Y-axis: Avg Bed Occupancy %. Line colour: <span class="swatch"><span class="swatch-dot" style="background:#1D4ED8"></span>#1D4ED8</span>. Analytics pane → Constant Line → 0.88 → label "Target" → red.</p>
+
+          <p style="margin-top:.85rem;"><strong>Chart 4 — Admissions by Day of Week (column):</strong> X-axis: Day of Week. Y-axis: Total Admissions.</p>
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem — Days in alphabetical order (Friday, Monday, Saturday…)</div>
+            <p>Power BI sorted Day of Week alphabetically by default. Fix: create a numeric sort column on Daily_KPIs:</p>
+            <div class="dax"><span class="kw">Day No</span> = <span class="fn">WEEKDAY</span> ( Daily_KPIs[Date], 2 )</div>
+            <p>Then: click Day of Week column → Column Tools → Sort by Column → Day No. On the chart: ··· → Sort by → Day No → Sort ascending. Saturday and Sunday show visibly lower bars than weekdays.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">16</div><div class="step-title">Page 2 — Department Performance</div><span class="step-tag tag-visual">Visual</span></div>
+        <div class="step-body">
+          <p><strong>Slicers:</strong> Date (Between) + Department (Dropdown) from Department_Daily.</p>
+          <p><strong>Charts:</strong></p>
+          <ul class="inst-list">
+            <li><strong>EBITDA Margin by Department</strong> — horizontal bar · Y: Department · X: Dept EBITDA Margin % · sorted descending · conditional formatting applied (see below)</li>
+            <li><strong>Admissions by Department</strong> — horizontal bar · Y: Department · X: Dept Total Admissions · sorted descending · <span class="swatch"><span class="swatch-dot" style="background:#9D174D"></span>#9D174D</span></li>
+            <li><strong>Average Length of Stay</strong> — horizontal bar · Y: Department · X: Dept Avg LOS · sorted descending · <span class="swatch"><span class="swatch-dot" style="background:#B45309"></span>#B45309</span> · ICU ~6.8d, Emergency ~1.2d</li>
+            <li><strong>Revenue Trend — Top 4 Departments</strong> — line chart · X: Date (Month) · Y: Dept Total Revenue · Legend: Department · Filters pane → Top N → 4 → by Dept Total Revenue</li>
+          </ul>
+
+          <p style="margin-top:.85rem;"><strong>Conditional formatting — applied to EBITDA Margin and Success Rate charts:</strong></p>
+          <p>Format visual pane → Bars → <strong>fx</strong> next to Color → Format style: Rules → field: relevant measure → select <strong>Number</strong>:</p>
+          <table class="fmt-table">
+            <thead><tr><th>Rule</th><th>Min</th><th>Max</th><th>Colour</th></tr></thead>
+            <tbody>
+              <tr><td>Red — poor</td><td>≥ 0</td><td>&lt; 0.15</td><td><span class="swatch"><span class="swatch-dot" style="background:#DC2626"></span>#DC2626</span></td></tr>
+              <tr><td>Amber — watch</td><td>≥ 0.15</td><td>&lt; 0.22</td><td><span class="swatch"><span class="swatch-dot" style="background:#B45309"></span>#B45309</span></td></tr>
+              <tr><td>Green — good</td><td>≥ 0.22</td><td>&lt; 1</td><td><span class="swatch"><span class="swatch-dot" style="background:#15803D"></span>#15803D</span></td></tr>
+            </tbody>
+          </table>
+          <div class="note">Power BI versions differ in labelling — some say "Data colors", others say "Bars" or "Columns". The fx button is always present. Always choose <strong>Number</strong> when the dialog asks — measures are stored as decimals (0.22) not percentages even when displayed as 22%.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">17</div><div class="step-title">Page 3 — Clinical Quality</div><span class="step-tag tag-visual">Visual</span></div>
+        <div class="step-body">
+          <p><strong>Slicers:</strong> Date (Between) + Procedure Category (Dropdown) from Patient_Outcomes_Daily.</p>
+          <p><strong>4 KPI Cards:</strong> Overall Success Rate % · Avg Protocol Adherence % · HAI Rate % · Avg PRO Score</p>
+          <p><strong>Charts:</strong></p>
+          <ul class="inst-list">
+            <li><strong>Procedure Success Rate</strong> — horizontal bar · Y: Procedure Category · X: Overall Success Rate % · conditional formatting: &lt;0.70 red, 0.70–0.85 amber, &gt;0.85 green · Diagnostic Imaging at top ~94%, Critical Care at bottom ~57%</li>
+            <li><strong>Protocol Adherence vs Success Rate</strong> — scatter chart · X: Avg Protocol Adherence % · Y: Overall Success Rate % · Values (detail): Procedure Category · Size: SUM of Cases · 8 bubbles should appear with clear upward correlation</li>
+            <li><strong>HAI Rate Monthly Trend</strong> — line chart · X: Date (Month) · Y: HAI Rate % · Y-axis minimum 0.005, maximum 0.015 · constant line at 0.01 (red, label "Target") · colour: <span class="swatch"><span class="swatch-dot" style="background:#B45309"></span>#B45309</span></li>
+            <li><strong>Total Cases by Procedure Category</strong> — horizontal bar · Y: Procedure Category · X: SUM of Cases · colour: <span class="swatch"><span class="swatch-dot" style="background:#1D4ED8"></span>#1D4ED8</span> · Diagnostic Imaging at top ~6,098</li>
+          </ul>
+          <div class="note"><strong>Scatter chart labels:</strong> This version of Power BI uses "Category labels" not "Data labels". Overlapping labels can be improved by enabling Background under Category labels — adds a white box behind each label. Disabling labels entirely is also acceptable — the bubble positions convey the story without them.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">18</div><div class="step-title">Page 4 — Financial Performance</div><span class="step-tag tag-visual">Visual</span></div>
+        <div class="step-body">
+          <p><strong>Slicers:</strong> Date (Between) + Department (Dropdown) from Department_Daily.</p>
+          <p><strong>4 KPI Cards:</strong> Total Revenue · Total Costs · EBITDA · Avg Denial Rate %</p>
+          <p><strong>Charts:</strong></p>
+          <ul class="inst-list">
+            <li><strong>Revenue vs Costs — Monthly</strong> — clustered column · X: Date (Month) from Financial_Daily · Y: Total Revenue (<span class="swatch"><span class="swatch-dot" style="background:#15803D"></span>green</span>) + Total Costs (<span class="swatch"><span class="swatch-dot" style="background:#DC2626"></span>red</span>)</li>
+            <li><strong>Revenue Stream Breakdown</strong> — donut · Values: Inpatient Revenue + Outpatient Revenue + Procedure Revenue · colours: Inpatient <span class="swatch"><span class="swatch-dot" style="background:#9D174D"></span>#9D174D</span> · Outpatient <span class="swatch"><span class="swatch-dot" style="background:#0F766E"></span>#0F766E</span> · Procedure <span class="swatch"><span class="swatch-dot" style="background:#B45309"></span>#B45309</span> · expected: 48% / 31% / 21%</li>
+            <li><strong>EBITDA Margin by Department</strong> — horizontal bar · same conditional formatting as Page 2 · Radiology top in green ~31.6%, ICU bottom in red ~10.7%</li>
+            <li><strong>Cost Composition</strong> — donut · Values: Staff Costs + Supply Costs + Equipment Costs + Overhead Costs · Staff <span class="swatch"><span class="swatch-dot" style="background:#9D174D"></span>#9D174D</span> · Supplies <span class="swatch"><span class="swatch-dot" style="background:#B45309"></span>#B45309</span> · Equipment <span class="swatch"><span class="swatch-dot" style="background:#1D4ED8"></span>#1D4ED8</span> · Overhead <span class="swatch"><span class="swatch-dot" style="background:#0F766E"></span>#0F766E</span> · expected: 42% / 18% / 8% / 14%</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">19</div><div class="step-title">Page 5 — Physician Productivity</div><span class="step-tag tag-visual">Visual</span></div>
+        <div class="step-body">
+          <p><strong>Slicers:</strong> Date (Between) + Physician (Dropdown) from Physician_Daily.</p>
+          <p><strong>Permanent page filter — critical:</strong> Filters pane → Filters on this page → drag <code>On Leave</code> from Physician_Daily → set to <strong>is N</strong> → Apply filter. Leave days must never appear in any visual on this page.</p>
+          <p><strong>3 KPI Cards:</strong> Physician Total Patients · Physician Total Revenue · Revenue per Patient</p>
+          <p><strong>Charts:</strong></p>
+          <ul class="inst-list">
+            <li><strong>Revenue by Physician</strong> — horizontal bar · Y: Physician · X: Physician Total Revenue · sorted descending · <span class="swatch"><span class="swatch-dot" style="background:#9D174D"></span>#9D174D</span> · Dr. Nakamura at top ~$5.03M</li>
+            <li><strong>Patients Seen by Physician</strong> — horizontal bar · Y: Physician · X: Physician Total Patients · sorted descending · <span class="swatch"><span class="swatch-dot" style="background:#0F766E"></span>#0F766E</span> · Dr. Santos at top ~3,990</li>
+            <li><strong>Physician Performance Summary</strong> — table across the bottom · columns: Physician, Department, Physician Total Patients, Physician Total Revenue, Revenue per Patient, Physician Avg Satisfaction · header background: #9D174D · header font: white</li>
+          </ul>
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem — Physician names too long for vertical column chart X-axis</div>
+            <p>The first attempt used a vertical clustered column chart. Names like "Dr. Yuki Nakamura" were rotated 45°, truncated, and overlapping — completely unreadable.</p>
+            <p><strong>Fix:</strong> Switch to a <strong>horizontal bar chart</strong>. Physician names go on the Y-axis where there is unlimited horizontal space. This is always the correct chart type when category labels are long text strings. The chart immediately became clean and professional after switching.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">20</div><div class="step-title">Page 6 — Workforce &amp; Staffing</div><span class="step-tag tag-visual">Visual</span></div>
+        <div class="step-body">
+          <p><strong>Slicers:</strong> Date (Between) + Department (Dropdown) from Staffing_Daily.</p>
+          <p><strong>4 KPI Cards:</strong> Avg Vacancy Rate % · Avg Agency Staff per Day · Total Overtime Hours · Avg Staff Patient Ratio</p>
+          <p><strong>Charts:</strong></p>
+          <ul class="inst-list">
+            <li><strong>Agency Staff Usage by Department</strong> — horizontal bar · Y: Department · X: Avg Agency Staff per Day · sorted descending · <span class="swatch"><span class="swatch-dot" style="background:#B45309"></span>#B45309</span> · ICU at top ~4.7/day</li>
+            <li><strong>Weekday vs Weekend Staffing</strong> — clustered horizontal bar · Y: Department · X: Weekday Avg Headcount + Weekend Avg Headcount · Legend on · Weekday: <span class="swatch"><span class="swatch-dot" style="background:#9D174D"></span>#9D174D</span> · Weekend: <span class="swatch"><span class="swatch-dot" style="background:#0F766E"></span>#0F766E</span></li>
+            <li><strong>Overtime Hours — Monthly Trend</strong> — line chart · X: Month Label column (see below) · Y: Total Overtime Hours · <span class="swatch"><span class="swatch-dot" style="background:#B45309"></span>#B45309</span></li>
+          </ul>
+          <div class="troubleshoot">
+            <div class="troubleshoot-label">⚠ Real Problem — Date hierarchy drill-down not appearing on Staffing page</div>
+            <p>Dragging Date from Staffing_Daily into the chart X-axis did not show the drill-down arrows — the hierarchy was not being created. The Month Label column created on Daily_KPIs cannot be reused on Staffing_Daily.</p>
+            <p><strong>Fix:</strong> Create these two columns directly on Staffing_Daily:</p>
+            <div class="dax">
+<span class="kw">Month Label</span> = <span class="fn">FORMAT</span> ( Staffing_Daily[Date], "MMM" )<br>
+<span class="kw">Month No</span> = <span class="fn">MONTH</span> ( Staffing_Daily[Date] )
             </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head">
-            <div><div class="card-title">Staffing: Weekday vs Weekend</div><div class="card-sub">Avg shift headcount · pattern across departments</div></div>
-            <span class="card-tag tag-mul">Patterns</span>
-          </div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:270px">
-              <canvas id="chart-staff-wkd"></canvas>
-            </div>
+            <p>Then: click Month Label → Column Tools → Sort by Column → Month No. Drag Month Label into the chart X-axis. Jan–Dec appear in the correct order.</p>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="card" style="margin-top:1rem">
-        <div class="card-head">
-          <div><div class="card-title">Overtime Trend — Weekly</div><div class="card-sub">Total overtime hours across all departments · FY 2024</div></div>
-          <span class="card-tag tag-tel">Overtime</span>
+    <!-- PHASE 5 -->
+    <div class="tab-panel" id="p5">
+      <div class="phase-intro">
+        <h3>Phase 5 — Sync Slicers, Validate &amp; Publish</h3>
+        <p>Connect all 6 pages via synced slicers, validate FY 2024 totals against known benchmarks, then save and export. Without slicer sync, each page filters independently — what looks like a dashboard is actually 6 separate reports.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">21</div><div class="step-title">Sync Slicers Across All Pages</div><span class="step-tag tag-setup">Setup</span></div>
+        <div class="step-body">
+          <p>Click the <strong>Date slicer</strong> on Page 1. Go to <strong>View ribbon → Sync Slicers</strong>. A panel opens showing all 6 pages. Tick both columns (sync + visible) for all 6 pages.</p>
+          <p>Go to each of Pages 2, 4, and 6. Click the <strong>Department slicer</strong> on each → Sync Slicers → tick both columns for Pages 2, 4, and 6 only. Leave Clinical Quality and Physician Productivity unticked for the Department slicer — those pages have their own category-specific slicers.</p>
+          <div class="note">The sync column (chain icon) means the slicer reacts to changes elsewhere. The visible column (eye icon) means a slicer control appears physically on that page. Tick both for a fully connected experience where the user can filter from any page.</div>
         </div>
-        <div class="card-body">
-          <div class="chart-wrap" style="height:140px">
-            <canvas id="chart-overtime"></canvas>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">22</div><div class="step-title">Validate FY 2024 Totals</div><span class="step-tag tag-setup">Setup</span></div>
+        <div class="step-body">
+          <p>Set the date slicer to full year <strong>1 Jan 2024 – 31 Dec 2024</strong> on Executive Summary. Verify each value against these benchmarks. A significant discrepancy indicates a data type or measure formula issue.</p>
+          <div class="val-grid">
+            <div class="val-cell"><span class="val-num">$102.8M</span><span class="val-lbl">Total Revenue</span></div>
+            <div class="val-cell"><span class="val-num">$18.5M</span><span class="val-lbl">EBITDA (18.0%)</span></div>
+            <div class="val-cell"><span class="val-num">21,473</span><span class="val-lbl">Total Admissions</span></div>
+            <div class="val-cell"><span class="val-num">8.10</span><span class="val-lbl">Avg Satisfaction</span></div>
+            <div class="val-cell"><span class="val-num">31.6%</span><span class="val-lbl">Radiology Margin (highest)</span></div>
+            <div class="val-cell"><span class="val-num">10.7%</span><span class="val-lbl">ICU Margin (lowest)</span></div>
+          </div>
+          <p>On Physician Productivity with full year and On Leave = N active:</p>
+          <ul class="inst-list">
+            <li>Dr. Yuki Nakamura → highest revenue ~$5.03M</li>
+            <li>Dr. Maria Santos → highest volume ~3,990 patients</li>
+            <li>Total physician revenue all 12 → ~$41.9M</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><div class="step-n">23</div><div class="step-title">Save &amp; Export</div><span class="step-tag tag-setup">Setup</span></div>
+        <div class="step-body">
+          <p><strong>Save:</strong> File → Save As → <code>Healthcare_Operations_Dashboard.pbix</code>.</p>
+          <ul class="inst-list">
+            <li><strong>Publish to Power BI Service:</strong> Home → Publish → select workspace. Requires Pro or PPU licence. Dashboard accessible at app.powerbi.com from any browser.</li>
+            <li><strong>Export to PDF (free):</strong> File → Export → Export to PDF. All 6 pages captured as high-resolution static images. No licence required. Best option for portfolio sharing and interviews.</li>
+            <li><strong>Export to PowerPoint:</strong> File → Export → Export to PowerPoint. Each page becomes a slide. Useful for board-level reporting.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section" style="padding-bottom:5rem;">
+        <h2 class="h2">Download the Files</h2>
+        <p class="project-desc">The completed dashboard file and the full DAX measure reference document are available to download below.</p>
+        <div class="dl-grid">
+          <div class="dl-card">
+            <div class="dl-icon">📊</div>
+            <div class="dl-name">Healthcare Operations Dashboard</div>
+            <p class="dl-meta">Power BI Desktop file (.pbix) · 6 pages · 45+ DAX measures · 7 connected tables · 20,130 daily rows · Requires Power BI Desktop (free)</p>
+            <a href="assets/Healthcare_Operations_Dashboard.pbix" download class="dl-btn">Download .pbix →</a>
+          </div>
+          <div class="dl-card">
+            <div class="dl-icon">📄</div>
+            <div class="dl-name">DAX Measure Library</div>
+            <p class="dl-meta">Word document (.docx) · All 45+ measures with descriptions · Full setup guide · Page-by-page visual reference · Theme JSON · Pre-publish checklist</p>
+            <a href="assets/PowerBI_DAX_Library.docx" download class="dl-btn">Download .docx →</a>
           </div>
         </div>
       </div>
     </div>
 
   </main>
-</div>
 
-<script>
-// ── Palette ──────────────────────────────────────────────────────────────────
-const M  = '#9d174d', M2 = 'rgba(157,23,77,.12)', M3 = 'rgba(157,23,77,.06)';
-const T  = '#0f766e', T2 = 'rgba(15,118,110,.12)';
-const G  = '#15803d', G2 = 'rgba(21,128,61,.12)';
-const A  = '#b45309', A2 = 'rgba(180,83,9,.12)';
-const B  = '#1d4ed8', B2 = 'rgba(29,78,216,.12)';
-const R  = '#dc2626';
-const ink = '#1c1917', mut = '#78716c', brd = '#e7e5e4';
+  <footer>
+    <p>Jenniefer Farhan · Business Intelligence &amp; Analytics Portfolio</p>
+  </footer>
 
-const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const DEPTS  = ['Cardiology','Oncology','Orthopedics','Neurology','Emergency','Radiology','ICU','Pediatrics'];
-
-// Default chart options
-Chart.defaults.font.family = "'DM Mono', monospace";
-Chart.defaults.font.size   = 10;
-Chart.defaults.color       = mut;
-Chart.defaults.plugins.legend.display = false;
-
-function gridOpts(){ return { color: 'rgba(231,229,228,.6)', drawBorder:false } }
-function tickOpts(){ return { color: mut } }
-function baseOpts(){
-  return {
-    responsive:true, maintainAspectRatio:false,
-    plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'rgba(28,25,23,.9)', titleColor:'#f9f9f7', bodyColor:'rgba(249,249,247,.7)', padding:10, cornerRadius:6, titleFont:{family:"'DM Mono',monospace",size:10}, bodyFont:{family:"'DM Mono',monospace",size:10} } },
-    scales:{ x:{ grid:gridOpts(), ticks:tickOpts() }, y:{ grid:gridOpts(), ticks:tickOpts() } }
-  };
-}
-
-// ── Real data from dataset ───────────────────────────────────────────────────
-const admData  = [1555,1526,1752,1840,2019,1993,2076,1941,1804,1758,1603,1606];
-const revData  = [7.11,6.94,7.99,8.46,9.19,8.90,9.43,8.95,8.11,7.96,7.27,7.36];
-const costData = [5.99,5.89,6.70,7.15,7.82,7.52,7.87,7.61,6.90,6.73,6.15,6.18];
-const netData  = revData.map((r,i) => +(r - costData[i]).toFixed(2));
-
-const deptRev    = [13.90,17.44,11.39,10.11,12.81,8.82,20.84,7.43];
-const deptMargin = [23.0, 16.7, 26.7, 21.6, 13.8, 31.6, 10.7, 20.0];
-const deptAdm    = [2260,1900,2608,1569,4685,523,858,1901];
-
-const occData = [78.5,79.3,77.4,75.9,73.5,72.5,72.6,70.2,69.4,69.1,69.0,68.8,67.4,67.3,67.6,66.7];
-const occLabels = Array.from({length:16},(_,i)=>`W${37+i}`);
-
-// ── PAGE 1: Executive Summary ────────────────────────────────────────────────
-// Admissions + Revenue dual axis
-new Chart(document.getElementById('chart-adm-rev'),{
-  type:'bar',
-  data:{
-    labels:MONTHS,
-    datasets:[
-      { label:'Admissions', data:admData, backgroundColor:M2, borderColor:M, borderWidth:1.5, borderRadius:3, yAxisID:'y' },
-      { label:'Revenue ($M)', data:revData, type:'line', borderColor:T, backgroundColor:'transparent', borderWidth:2, pointRadius:3, pointBackgroundColor:T, tension:.35, yAxisID:'y1' }
-    ]
-  },
-  options:{...baseOpts(), plugins:{...baseOpts().plugins, legend:{display:true, labels:{color:mut,font:{family:"'DM Mono',monospace",size:10},boxWidth:12}}},
-    scales:{
-      x:{grid:gridOpts(),ticks:tickOpts()},
-      y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v.toLocaleString()}},
-      y1:{position:'right',grid:{display:false},ticks:{...tickOpts(),callback:v=>'$'+v+'M'}}
+  <script>
+    function switchTab(btn, panelId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(panelId).classList.add('active');
+      window.scrollTo({ top: document.querySelector('.tab-nav').offsetTop - 80, behavior: 'smooth' });
     }
-  }
-});
+  </script>
 
-// Dept revenue horizontal bar
-new Chart(document.getElementById('chart-dept-rev'),{
-  type:'bar',
-  data:{
-    labels:DEPTS,
-    datasets:[{data:deptRev,backgroundColor:[M2,A2,G2,B2,'rgba(220,38,38,.1)',T2,'rgba(109,40,217,.1)','rgba(217,119,6,.08)'],borderColor:[M,A,G,B,R,T,'#6d28d9','#d97706'],borderWidth:1.5,borderRadius:3}]
-  },
-  options:{...baseOpts(),indexAxis:'y',scales:{x:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>'$'+v+'M'}},y:{grid:{display:false},ticks:tickOpts()}}}
-});
-
-// Bed occupancy weekly sparkline
-new Chart(document.getElementById('chart-occupancy'),{
-  type:'line',
-  data:{labels:occLabels,datasets:[{data:occData,borderColor:B,backgroundColor:'rgba(29,78,216,.06)',fill:true,borderWidth:2,pointRadius:0,tension:.4}]},
-  options:{...baseOpts(),scales:{x:{grid:{display:false},ticks:{...tickOpts(),maxTicksLimit:6}},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v+'%'},min:60,max:85}}}
-});
-
-// Cost vs revenue
-new Chart(document.getElementById('chart-cost-rev'),{
-  type:'line',
-  data:{
-    labels:MONTHS,
-    datasets:[
-      {label:'Revenue',data:revData,borderColor:G,backgroundColor:G2,fill:true,borderWidth:2,pointRadius:2,tension:.35},
-      {label:'Costs',data:costData,borderColor:R,backgroundColor:'rgba(220,38,38,.06)',fill:true,borderWidth:2,pointRadius:2,tension:.35}
-    ]
-  },
-  options:{...baseOpts(),plugins:{...baseOpts().plugins,legend:{display:true,labels:{color:mut,font:{family:"'DM Mono',monospace",size:9},boxWidth:10}}},
-    scales:{x:{grid:{display:false},ticks:{...tickOpts(),maxTicksLimit:6}},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>'$'+v+'M'}}}}
-});
-
-// Weekday vs Weekend
-new Chart(document.getElementById('chart-wkd'),{
-  type:'bar',
-  data:{
-    labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
-    datasets:[{data:[72,74,73,71,70,48,46],backgroundColor:[M2,M2,M2,M2,M2,T2,T2],borderColor:[M,M,M,M,M,T,T],borderWidth:1.5,borderRadius:4}]
-  },
-  options:{...baseOpts(),scales:{x:{grid:{display:false},ticks:tickOpts()},y:{grid:gridOpts(),ticks:tickOpts()}}}
-});
-
-// ── PAGE 2: Department ───────────────────────────────────────────────────────
-new Chart(document.getElementById('chart-dept-margin'),{
-  type:'bar',
-  data:{
-    labels:DEPTS,
-    datasets:[{data:deptMargin,backgroundColor:deptMargin.map(v=>v>25?G2:v>18?T2:v>14?A2:M2),borderColor:deptMargin.map(v=>v>25?G:v>18?T:v>14?A:M),borderWidth:1.5,borderRadius:4}]
-  },
-  options:{...baseOpts(),scales:{x:{grid:{display:false},ticks:{...tickOpts(),maxRotation:30}},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v+'%'}}}}
-});
-
-new Chart(document.getElementById('chart-dept-adm'),{
-  type:'bar',
-  data:{labels:DEPTS,datasets:[{data:deptAdm,backgroundColor:[M2,A2,G2,B2,'rgba(220,38,38,.1)',T2,'rgba(109,40,217,.1)','rgba(217,119,6,.08)'],borderColor:[M,A,G,B,R,T,'#6d28d9','#d97706'],borderWidth:1.5,borderRadius:4}]},
-  options:{...baseOpts(),scales:{x:{grid:{display:false},ticks:{...tickOpts(),maxRotation:30}},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v.toLocaleString()}}}}
-});
-
-// Dept trend: top 4
-const deptRevMonthly = {
-  ICU:      [1.60,1.55,1.79,1.88,2.06,2.04,2.12,2.00,1.83,1.80,1.64,1.66],
-  Oncology: [1.28,1.25,1.44,1.52,1.66,1.64,1.71,1.60,1.47,1.44,1.32,1.33],
-  Cardiology:[1.02,1.00,1.15,1.21,1.32,1.31,1.37,1.28,1.17,1.15,1.05,1.06],
-  Emergency: [1.05,1.02,1.18,1.23,1.35,1.33,1.38,1.30,1.18,1.16,1.06,1.07],
-};
-new Chart(document.getElementById('chart-dept-trend'),{
-  type:'line',
-  data:{labels:MONTHS,datasets:[
-    {label:'ICU',data:deptRevMonthly.ICU,borderColor:'#6d28d9',backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:.35},
-    {label:'Oncology',data:deptRevMonthly.Oncology,borderColor:A,backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:.35},
-    {label:'Cardiology',data:deptRevMonthly.Cardiology,borderColor:M,backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:.35},
-    {label:'Emergency',data:deptRevMonthly.Emergency,borderColor:R,backgroundColor:'transparent',borderWidth:2,pointRadius:2,tension:.35},
-  ]},
-  options:{...baseOpts(),plugins:{...baseOpts().plugins,legend:{display:true,labels:{color:mut,font:{family:"'DM Mono',monospace",size:9},boxWidth:10}}},
-    scales:{x:{grid:{display:false},ticks:tickOpts()},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>'$'+v+'M'}}}}
-});
-
-// ── PAGE 3: Clinical ─────────────────────────────────────────────────────────
-// Scatter: protocol adherence vs success rate
-new Chart(document.getElementById('chart-scatter'),{
-  type:'scatter',
-  data:{datasets:[{
-    data:[
-      {x:94.2,y:94.0,label:'Diagnostic Imaging'},
-      {x:93.1,y:89.8,label:'Emergency'},
-      {x:92.8,y:83.7,label:'Orthopedic'},
-      {x:92.5,y:80.8,label:'Cardiovascular'},
-      {x:92.3,y:80.7,label:'Pediatric'},
-      {x:91.8,y:76.7,label:'Oncology'},
-      {x:91.2,y:69.8,label:'Neurological'},
-      {x:90.1,y:57.3,label:'Critical Care'},
-    ],
-    backgroundColor:M, borderColor:M, pointRadius:7, pointHoverRadius:9
-  }]},
-  options:{
-    responsive:true,maintainAspectRatio:false,
-    plugins:{
-      legend:{display:false},
-      tooltip:{
-        backgroundColor:'rgba(28,25,23,.9)',titleColor:'#f9f9f7',bodyColor:'rgba(249,249,247,.7)',
-        padding:10,cornerRadius:6,
-        callbacks:{
-          label:ctx=>{const d=ctx.raw; return [`${d.label}`,`Adherence: ${d.x}%`,`Success: ${d.y}%`]}
-        }
-      }
-    },
-    scales:{
-      x:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v+'%'},title:{display:true,text:'Protocol Adherence (%)',color:mut,font:{family:"'DM Mono',monospace",size:9}}},
-      y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v+'%'},title:{display:true,text:'Success Rate (%)',color:mut,font:{family:"'DM Mono',monospace",size:9}}}
-    }
-  }
-});
-
-// HAI monthly
-const haiMonthly = [1.0,1.0,0.98,0.96,0.94,0.92,0.91,0.90,0.89,0.88,0.87,0.86];
-new Chart(document.getElementById('chart-hai'),{
-  type:'line',
-  data:{labels:MONTHS,datasets:[
-    {data:haiMonthly,borderColor:A,backgroundColor:A2,fill:true,borderWidth:2,pointRadius:3,tension:.4},
-    {data:Array(12).fill(1.0),borderColor:'rgba(220,38,38,.4)',borderDash:[4,4],borderWidth:1.5,pointRadius:0,fill:false}
-  ]},
-  options:{...baseOpts(),scales:{x:{grid:{display:false},ticks:tickOpts()},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v+'%'},min:0.7,max:1.1}}}
-});
-
-// Cases by category
-new Chart(document.getElementById('chart-cases'),{
-  type:'bar',
-  data:{
-    labels:['Diag. Imaging','Emergency','Orthopedic','Cardiovascular','Pediatric','Oncology','Neurological','Critical Care'],
-    datasets:[{data:[6098,4333,2247,1906,1900,1568,1213,858],backgroundColor:[G2,R+'22',T2,M2,B2,A2,'rgba(109,40,217,.1)','rgba(220,38,38,.08)'],borderColor:[G,R,T,M,B,A,'#6d28d9','#dc2626'],borderWidth:1.5,borderRadius:3}]
-  },
-  options:{...baseOpts(),indexAxis:'y',scales:{x:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v.toLocaleString()}},y:{grid:{display:false},ticks:{...tickOpts(),font:{size:9}}}}}
-});
-
-// ── PAGE 4: Financial ────────────────────────────────────────────────────────
-new Chart(document.getElementById('chart-fin-monthly'),{
-  type:'bar',
-  data:{
-    labels:MONTHS,
-    datasets:[
-      {label:'Revenue',data:revData,backgroundColor:G2,borderColor:G,borderWidth:1.5,borderRadius:3},
-      {label:'Costs',data:costData,backgroundColor:'rgba(220,38,38,.08)',borderColor:R,borderWidth:1.5,borderRadius:3},
-    ]
-  },
-  options:{...baseOpts(),plugins:{...baseOpts().plugins,legend:{display:true,labels:{color:mut,font:{family:"'DM Mono',monospace",size:9},boxWidth:10}}},
-    scales:{x:{grid:{display:false},ticks:tickOpts()},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>'$'+v+'M'}}}}
-});
-
-// Revenue streams doughnut
-new Chart(document.getElementById('chart-streams'),{
-  type:'doughnut',
-  data:{
-    labels:['Inpatient (48%)','Outpatient (31%)','Procedure (21%)'],
-    datasets:[{data:[49.3,31.9,21.6],backgroundColor:[M,T,A],borderColor:'#f9f9f7',borderWidth:3,hoverOffset:4}]
-  },
-  options:{
-    responsive:true,maintainAspectRatio:false,cutout:'65%',
-    plugins:{
-      legend:{display:true,position:'bottom',labels:{color:mut,font:{family:"'DM Mono',monospace",size:9},boxWidth:10,padding:12}},
-      tooltip:{backgroundColor:'rgba(28,25,23,.9)',titleColor:'#f9f9f7',bodyColor:'rgba(249,249,247,.7)',padding:10,cornerRadius:6}
-    }
-  }
-});
-
-// EBITDA rank horizontal
-new Chart(document.getElementById('chart-ebitda-rank'),{
-  type:'bar',
-  data:{
-    labels:['Radiology','Orthopedics','Cardiology','Neurology','Pediatrics','Oncology','Emergency','ICU'],
-    datasets:[{data:[31.6,26.7,23.0,21.6,20.0,16.7,13.8,10.7],backgroundColor:['rgba(21,128,61,.15)','rgba(21,128,61,.12)','rgba(15,118,110,.12)','rgba(15,118,110,.10)','rgba(180,83,9,.10)','rgba(180,83,9,.12)','rgba(157,23,77,.10)','rgba(157,23,77,.14)'],borderColor:[G,G,T,T,A,A,M,M],borderWidth:1.5,borderRadius:3}]
-  },
-  options:{...baseOpts(),indexAxis:'y',scales:{x:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v+'%'}},y:{grid:{display:false},ticks:{...tickOpts(),font:{size:9}}}}}
-});
-
-// Cost composition donut
-new Chart(document.getElementById('chart-cost-comp'),{
-  type:'doughnut',
-  data:{
-    labels:['Staff (42%)','Supplies (18%)','Overhead (14%)','Equipment (8%)','Other (18%)'],
-    datasets:[{data:[42,18,14,8,18],backgroundColor:[M,A,B,G,T],borderColor:'#f9f9f7',borderWidth:3,hoverOffset:4}]
-  },
-  options:{
-    responsive:true,maintainAspectRatio:false,cutout:'65%',
-    plugins:{
-      legend:{display:true,position:'bottom',labels:{color:mut,font:{family:"'DM Mono',monospace",size:9},boxWidth:10,padding:10}},
-      tooltip:{backgroundColor:'rgba(28,25,23,.9)',titleColor:'#f9f9f7',bodyColor:'rgba(249,249,247,.7)',padding:10,cornerRadius:6}
-    }
-  }
-});
-
-// ── PAGE 5: Physician ────────────────────────────────────────────────────────
-const physNames = ['Nakamura','Kim','Patel','Thornton','Brooks','Rivera','Osei','Santos','Hartmann','Okafor','Mehta','Andrade'];
-const physRev   = [5.03,4.67,4.42,4.25,4.28,3.88,3.40,3.05,2.94,2.33,2.16,1.80];
-const physPts   = [3100,1885,1362,3435,1338,1325,1929,3990,1592,2486,3086,2476];
-
-new Chart(document.getElementById('chart-phys-rev'),{
-  type:'bar',
-  data:{labels:physNames,datasets:[{data:physRev,backgroundColor:physRev.map(v=>v>4?M2:v>3?T2:G2),borderColor:physRev.map(v=>v>4?M:v>3?T:G),borderWidth:1.5,borderRadius:4}]},
-  options:{...baseOpts(),scales:{x:{grid:{display:false},ticks:{...tickOpts(),maxRotation:35,font:{size:8}}},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>'$'+v+'M'}}}}
-});
-
-new Chart(document.getElementById('chart-phys-pts'),{
-  type:'bar',
-  data:{labels:physNames,datasets:[{data:physPts,backgroundColor:physPts.map(v=>v>3000?A2:v>2000?T2:B2),borderColor:physPts.map(v=>v>3000?A:v>2000?T:B),borderWidth:1.5,borderRadius:4}]},
-  options:{...baseOpts(),scales:{x:{grid:{display:false},ticks:{...tickOpts(),maxRotation:35,font:{size:8}}},y:{grid:gridOpts(),ticks:{...tickOpts(),callback:v=>v.toLocaleString()}}}}
-});
-
-// ── PAGE 6: Workforce ────────────────────────────────────────────────────────
-new Chart(document.getElementById('chart-staff-wkd'),{
-  type:'bar',
-  data:{
-    labels:DEPTS,
-    datasets:[
-      {label:'Weekday',data:[45,52,38,34,68,28,72,42],backgroundColor:M2,borderColor:M,borderWidth:1.5,borderRadius:[3,0,0,3]},
-      {label:'Weekend',data:[28,32,24,21,42,17,45,26],backgroundColor:T2,borderColor:T,borderWidth:1.5,borderRadius:[0,3,3,0]}
-    ]
-  },
-  options:{...baseOpts(),plugins:{...baseOpts().plugins,legend:{display:true,labels:{color:mut,font:{family:"'DM Mono',monospace",size:9},boxWidth:10}}},
-    scales:{x:{grid:{display:false},ticks:{...tickOpts(),maxRotation:30}},y:{grid:gridOpts(),ticks:tickOpts()}}}
-});
-
-// Overtime weekly (simulated from dataset pattern)
-const overtimeWkly = [820,795,840,810,830,780,760,800,770,750,720,740,710,695,680,670];
-new Chart(document.getElementById('chart-overtime'),{
-  type:'line',
-  data:{labels:occLabels,datasets:[{data:overtimeWkly,borderColor:A,backgroundColor:A2,fill:true,borderWidth:2,pointRadius:0,tension:.4}]},
-  options:{...baseOpts(),scales:{x:{grid:{display:false},ticks:{...tickOpts(),maxTicksLimit:8}},y:{grid:gridOpts(),ticks:tickOpts()}}}
-});
-
-// ── Navigation ───────────────────────────────────────────────────────────────
-function switchPage(el, pageId, label){
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('page-'+pageId).classList.add('active');
-  document.getElementById('crumb-page').textContent = label;
-  document.querySelector('.main').scrollTop = 0;
-}
-</script>
 </body>
 </html>
