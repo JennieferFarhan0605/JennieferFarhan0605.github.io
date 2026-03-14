@@ -259,9 +259,10 @@
     ===================================================== */
     .inst-list { list-style: none; padding: 0; margin: .85rem 0; }
     .inst-list li {
-      display: flex;
-      gap: .85rem;
-      align-items: flex-start;
+      display: grid;
+      grid-template-columns: 1.25rem 1fr;
+      gap: .6rem;
+      align-items: baseline;
       font-size: .87rem;
       color: var(--ink-soft);
       padding: .5rem 0;
@@ -269,7 +270,13 @@
       line-height: 1.65;
     }
     .inst-list li:last-child { border-bottom: none; }
-    .inst-list li::before { content: '→'; color: var(--mulberry); font-weight: 700; flex-shrink: 0; margin-top: .05rem; }
+    .inst-list li::before {
+      content: '→';
+      color: var(--mulberry);
+      font-weight: 700;
+      /* sits in its own fixed-width grid column — text always starts at col 2 */
+      line-height: 1.65;
+    }
 
     /* =====================================================
        INLINE CODE
@@ -756,11 +763,11 @@
           <div class="shot-grid shot-grid-wide">
             <div class="shot-card">
               <button class="shot-btn"
-                data-full="assets/screens/Healthcare_Operations_Dashboard__data-model_.png"
+                data-full="/mnt/user-data/uploads/Healthcare_Operations_Dashboard__data-model_.png"
                 data-title="Power BI Model View — 7 tables, 6 relationships via Date field">
                 <div class="shot-imgwrap">
                   <img class="shot-img"
-                    src="assets/screens/Healthcare_Operations_Dashboard__data-model_.png"
+                    src="/mnt/user-data/uploads/Healthcare_Operations_Dashboard__data-model_.png"
                     alt="Power BI Model View showing all 7 tables connected via Date relationships">
                 </div>
               </button>
@@ -1026,11 +1033,11 @@
           <div class="shot-grid">
             <div class="shot-card">
               <button class="shot-btn"
-                data-full="assets/screens/Healthcare_Operations_Dashboard__Executive_Summary_.png"
+                data-full="/mnt/user-data/uploads/Healthcare_Operations_Dashboard__Executive_Summary_.png"
                 data-title="Executive Summary — 6 KPI cards, monthly admissions + revenue, department revenue, bed occupancy trend, day of week pattern">
                 <div class="shot-imgwrap">
                   <img class="shot-img"
-                    src="assets/screens/Healthcare_Operations_Dashboard__Executive_Summary_.png"
+                    src="/mnt/user-data/uploads/Healthcare_Operations_Dashboard__Executive_Summary_.png"
                     alt="Executive Summary page of the Healthcare Operations Dashboard">
                 </div>
               </button>
@@ -1068,11 +1075,11 @@
           <div class="shot-grid">
             <div class="shot-card">
               <button class="shot-btn"
-                data-full="assets/screens/Healthcare_Operations_Dashboard__Department_Performance_.png"
+                data-full="/mnt/user-data/uploads/Healthcare_Operations_Dashboard__Department_Performance_.png"
                 data-title="Department Performance — EBITDA margin (conditional formatting), admissions, LOS, revenue trend top 4">
                 <div class="shot-imgwrap">
                   <img class="shot-img"
-                    src="assets/screens/Healthcare_Operations_Dashboard__Department_Performance_.png"
+                    src="/mnt/user-data/uploads/Healthcare_Operations_Dashboard__Department_Performance_.png"
                     alt="Department Performance page showing EBITDA margin, admissions, LOS and revenue trend">
                 </div>
               </button>
@@ -1100,11 +1107,11 @@
           <div class="shot-grid">
             <div class="shot-card">
               <button class="shot-btn"
-                data-full="assets/screens/Healthcare_Operations_Dashboard__Clinical_Quality_.png"
+                data-full="/mnt/user-data/uploads/Healthcare_Operations_Dashboard__Clinical_Quality_.png"
                 data-title="Clinical Quality — success rate by procedure, protocol adherence scatter, HAI trend with target line, case volume">
                 <div class="shot-imgwrap">
                   <img class="shot-img"
-                    src="assets/screens/Healthcare_Operations_Dashboard__Clinical_Quality_.png"
+                    src="/mnt/user-data/uploads/Healthcare_Operations_Dashboard__Clinical_Quality_.png"
                     alt="Clinical Quality page showing procedure success rates, scatter chart, HAI trend and case volume">
                 </div>
               </button>
@@ -1131,11 +1138,11 @@
           <div class="shot-grid">
             <div class="shot-card">
               <button class="shot-btn"
-                data-full="assets/screens/Healthcare_Operations_Dashboard__Financial_Performance_.png"
+                data-full="/mnt/user-data/uploads/Healthcare_Operations_Dashboard__Financial_Performance_.png"
                 data-title="Financial Performance — revenue vs costs, revenue stream donut, EBITDA margin ranking, cost composition">
                 <div class="shot-imgwrap">
                   <img class="shot-img"
-                    src="assets/screens/Healthcare_Operations_Dashboard__Financial_Performance_.png"
+                    src="/mnt/user-data/uploads/Healthcare_Operations_Dashboard__Financial_Performance_.png"
                     alt="Financial Performance page showing revenue vs costs, donuts and EBITDA ranking">
                 </div>
               </button>
@@ -1167,11 +1174,11 @@
           <div class="shot-grid">
             <div class="shot-card">
               <button class="shot-btn"
-                data-full="assets/screens/Healthcare_Operations_Dashboard__Physician_Performance_.png"
+                data-full="/mnt/user-data/uploads/Healthcare_Operations_Dashboard__Physician_Performance_.png"
                 data-title="Physician Productivity — revenue and patient volume bars, full summary table with satisfaction scores">
                 <div class="shot-imgwrap">
                   <img class="shot-img"
-                    src="assets/screens/Healthcare_Operations_Dashboard__Physician_Performance_.png"
+                    src="/mnt/user-data/uploads/Healthcare_Operations_Dashboard__Physician_Performance_.png"
                     alt="Physician Productivity page showing revenue and patient volume charts plus full performance table">
                 </div>
               </button>
@@ -1207,11 +1214,11 @@
           <div class="shot-grid">
             <div class="shot-card">
               <button class="shot-btn"
-                data-full="assets/screens/Healthcare_Operations_Dashboard__Workforce___Staffing_.png"
+                data-full="/mnt/user-data/uploads/Healthcare_Operations_Dashboard__Workforce___Staffing_.png"
                 data-title="Workforce & Staffing — agency usage, weekday vs weekend grouped bars, overtime monthly trend">
                 <div class="shot-imgwrap">
                   <img class="shot-img"
-                    src="assets/screens/Healthcare_Operations_Dashboard__Workforce___Staffing_.png"
+                    src="/mnt/user-data/uploads/Healthcare_Operations_Dashboard__Workforce___Staffing_.png"
                     alt="Workforce and Staffing page showing agency usage, weekday vs weekend staffing and overtime trend">
                 </div>
               </button>
